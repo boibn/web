@@ -1,0 +1,1441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#101010">
+  <meta name="description" content="Explore a collection of school-time game favorites, from racing and arcade to puzzles and sports.">
+  <title>Gameverse — School-Time Game Favorites</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      font-family: Inter, "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-synthesis: none;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      --ink: #f4f2ef;
+      --muted: #aaa8a5;
+      --line: rgb(255 255 255 / 15%);
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    body {
+      min-width: 320px;
+      min-height: 100vh;
+      margin: 0;
+      overflow-x: hidden;
+      background: #000;
+      color: var(--ink);
+    }
+
+    body::after {
+      position: fixed;
+      z-index: -1;
+      background: transparent;
+      content: "";
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .stone-background {
+      position: fixed;
+      z-index: -2;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      inset: 0;
+    }
+
+    .stone-background svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .grain {
+      position: fixed;
+      z-index: 2;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.92' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Cpath filter='url(%23n)' opacity='.22' d='M0 0h180v180H0z'/%3E%3C/svg%3E");
+      inset: 0;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .page {
+      display: flex;
+      min-height: 100svh;
+      flex-direction: column;
+      padding: 0 clamp(24px, 7.15vw, 112px);
+    }
+
+    .topbar {
+      display: flex;
+      min-height: 94px;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .wordmark {
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 650;
+      letter-spacing: .28em;
+      text-decoration: none;
+    }
+
+    .topbar-note {
+      color: var(--muted);
+      font-size: 10px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+
+    main {
+      display: grid;
+      flex: 1;
+      grid-template-columns: minmax(0, 1fr) minmax(120px, .24fr);
+      align-items: center;
+      gap: 30px;
+      padding: 72px 0 82px;
+    }
+
+    .hero {
+      align-self: center;
+      justify-self: start;
+      max-width: 790px;
+      animation: appear 1.1s .12s both;
+    }
+
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      margin: 0 0 28px 3px;
+      color: #c0bfbd;
+      font-size: 10px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      width: 28px;
+      height: 1px;
+      background: #bcbab7;
+      content: "";
+    }
+
+    h1 {
+      max-width: 780px;
+      margin: 0;
+      font-size: clamp(67px, 11.4vw, 154px);
+      font-weight: 430;
+      letter-spacing: -.092em;
+      line-height: .83;
+      animation: title-slide .9s cubic-bezier(.2, .75, .25, 1) .2s both;
+    }
+
+    h1 span {
+      display: block;
+      padding-left: .02em;
+      color: #c2c0bd;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: .79em;
+      font-style: italic;
+      font-weight: 400;
+      letter-spacing: -.085em;
+      line-height: 1.16;
+    }
+
+    .studio-credit {
+      margin: 10px 0 0 5px;
+      color: var(--muted);
+      font-size: 9px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+    }
+
+    .intro {
+      max-width: 390px;
+      margin: 29px 0 0 5px;
+      color: #c1bfbc;
+      font-size: 14px;
+      font-weight: 350;
+      line-height: 1.85;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 28px;
+      margin: 32px 0 0 5px;
+    }
+
+    .explore {
+      display: inline-flex;
+      min-height: 48px;
+      align-items: center;
+      justify-content: center;
+      gap: 22px;
+      padding: 0 18px;
+      border: 1px solid rgb(255 255 255 / 65%);
+      color: var(--ink);
+      font-size: 10px;
+      font-family: inherit;
+      letter-spacing: .16em;
+      text-decoration: none;
+      text-transform: uppercase;
+      cursor: pointer;
+      animation: outline-pulse 3.8s ease-in-out infinite;
+      transition: background .25s ease, color .25s ease, border-color .25s ease;
+    }
+
+    .explore:hover,
+    .explore:focus-visible {
+      border-color: var(--ink);
+      background: var(--ink);
+      color: #141414;
+    }
+
+    .explore:focus-visible,
+    .wordmark:focus-visible {
+      outline: 2px solid white;
+      outline-offset: 5px;
+    }
+
+    .explore span {
+      font-size: 17px;
+      line-height: 1;
+      transition: transform .25s ease;
+    }
+
+    .explore:hover span {
+      transform: translateX(3px);
+    }
+
+    .material-note {
+      align-self: end;
+      justify-self: end;
+      padding-bottom: 7px;
+      color: #b6b4b0;
+      font-size: 9px;
+      letter-spacing: .19em;
+      line-height: 1.9;
+      text-align: right;
+      text-transform: uppercase;
+      animation: appear 1s .45s both;
+    }
+
+    .material-note strong {
+      display: block;
+      color: #e7e5e2;
+      font-size: 10px;
+      font-weight: 500;
+    }
+
+    .games-bar {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 26px;
+      width: min(100%, 620px);
+    }
+
+    .game-stat {
+      padding: 16px 18px;
+      border: 1px solid var(--line);
+      background: rgb(255 255 255 / 3%);
+      animation: outline-pulse 4.6s ease-in-out infinite;
+    }
+
+    .game-stat:nth-child(2) {
+      animation-delay: .8s;
+    }
+
+    .game-stat:nth-child(3) {
+      animation-delay: 1.6s;
+    }
+
+    .game-stat strong {
+      display: block;
+      color: var(--ink);
+      font-size: clamp(20px, 2vw, 28px);
+      font-weight: 500;
+      letter-spacing: -.06em;
+    }
+
+    .game-stat span {
+      color: var(--muted);
+      font-size: 10px;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+    }
+
+    .footer {
+      display: flex;
+      min-height: 68px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      border-top: 1px solid var(--line);
+      color: #aaa8a5;
+      font-size: 9px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    .footer p {
+      margin: 0;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    .catalog-page {
+      width: min(100% - 64px, 1440px);
+      min-height: 100svh;
+      margin: 0 auto;
+    }
+
+    .catalog-topbar,
+    .player-topbar {
+      display: flex;
+      min-height: 72px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .catalog-note {
+      color: var(--muted);
+      font-size: 10px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    .catalog-topbar a:focus-visible,
+    .player-topbar a:focus-visible,
+    .catalog-card:focus-visible,
+    .player-action:focus-visible,
+    .discovery-card:focus-visible {
+      outline: 2px solid white;
+      outline-offset: 4px;
+    }
+
+    .catalog-main {
+      display: block;
+      flex: initial;
+      grid-template-columns: none;
+      align-items: initial;
+      gap: 0;
+      padding: clamp(48px, 8vw, 88px) 0 72px;
+    }
+
+    .catalog-heading {
+      margin-bottom: 38px;
+      text-align: center;
+    }
+
+    .catalog-heading .eyebrow {
+      justify-content: center;
+      margin: 0 0 18px;
+    }
+
+    .catalog-heading .eyebrow::after {
+      width: 24px;
+      height: 1px;
+      background: #bcbab7;
+      content: "";
+    }
+
+    .catalog-heading h1 {
+      max-width: none;
+      margin: 0;
+      font-size: clamp(40px, 7vw, 72px);
+      letter-spacing: -.075em;
+      line-height: 1.05;
+    }
+
+    .catalog-heading p:last-child {
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .catalog-grid {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    #geometry-dash-view .catalog-grid {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+    }
+
+    #geometry-dash-view .catalog-card {
+      width: min(32vw, 320px);
+      flex: 0 1 320px;
+    }
+
+    .catalog-card {
+      position: relative;
+      display: grid;
+      aspect-ratio: 1;
+      place-items: center;
+      overflow: hidden;
+      border: 1px solid rgb(255 255 255 / 15%);
+      background:
+        radial-gradient(circle at 50% 40%, rgb(255 255 255 / 6%), transparent 55%),
+        linear-gradient(145deg, rgb(255 255 255 / 4%), rgb(255 255 255 / 1%));
+      color: inherit;
+      text-decoration: none;
+      cursor: default;
+      animation: outline-pulse 4s ease-in-out infinite;
+      transition: background .35s ease, border-color .35s ease, transform .45s cubic-bezier(.2, .75, .25, 1);
+      isolation: isolate;
+    }
+
+    .catalog-card::before,
+    .catalog-card::after {
+      position: absolute;
+      z-index: 1;
+      content: "";
+      inset: 0;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .35s ease;
+    }
+
+    .catalog-card::before {
+      background: radial-gradient(ellipse at 50% 45%, rgb(255 255 255 / 14%), transparent 62%);
+    }
+
+    .catalog-card::after {
+      width: 55%;
+      background: linear-gradient(105deg, transparent, rgb(255 255 255 / 14%), transparent);
+      transform: translateX(-180%) skewX(-18deg);
+    }
+
+    .catalog-card:nth-child(2n) {
+      animation-delay: 1s;
+    }
+
+    .catalog-card[href] {
+      cursor: pointer;
+    }
+
+    .catalog-card img {
+      position: absolute;
+      z-index: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      inset: 0;
+      transition: filter .35s ease, transform .5s cubic-bezier(.2, .75, .25, 1);
+    }
+
+    .catalog-card h2 {
+      position: absolute;
+      z-index: 2;
+      right: auto;
+      bottom: 12px;
+      left: 12px;
+      display: flex;
+      width: max-content;
+      max-width: calc(100% - 24px);
+      align-items: center;
+      justify-content: flex-start;
+      gap: 9px;
+      margin: 0;
+      color: var(--ink);
+      font-size: clamp(10px, 1.1vw, 13px);
+      font-weight: 400;
+      letter-spacing: 0;
+      line-height: 1.25;
+      text-align: left;
+      text-shadow: 0 1px 8px rgb(0 0 0 / 90%);
+      opacity: 0;
+      transform: translateY(14px) scale(.96);
+      transition: opacity .25s ease, transform .4s cubic-bezier(.2, .75, .25, 1);
+    }
+
+    .catalog-card h2::before {
+      width: 13px;
+      height: 1px;
+      flex: 0 0 13px;
+      background: rgb(255 255 255 / 76%);
+      content: "";
+      transition: width .3s ease, flex-basis .3s ease, background .3s ease;
+    }
+
+    .catalog-card:hover,
+    .catalog-card:focus-visible {
+      border-color: rgb(255 255 255 / 62%);
+      background:
+        radial-gradient(circle at 50% 42%, rgb(255 255 255 / 12%), transparent 62%),
+        linear-gradient(145deg, rgb(255 255 255 / 8%), rgb(255 255 255 / 2%));
+    }
+
+    .catalog-card:hover::before,
+    .catalog-card:focus-visible::before {
+      opacity: 1;
+    }
+
+    .catalog-card:hover::after,
+    .catalog-card:focus-visible::after {
+      opacity: 1;
+      animation: card-sheen .8s ease-out both;
+    }
+
+    .catalog-card:hover img,
+    .catalog-card:focus-visible img {
+      filter: brightness(.55);
+      transform: scale(1.06);
+    }
+
+    .catalog-card:hover h2,
+    .catalog-card:focus-visible h2 {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .catalog-card:hover h2::before,
+    .catalog-card:focus-visible h2::before {
+      width: 20px;
+      flex-basis: 20px;
+      background: white;
+    }
+
+    .catalog-count {
+      margin: 28px 0 0;
+      color: var(--muted);
+      font-size: 10px;
+      letter-spacing: .16em;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .player-page {
+      min-height: 100svh;
+      background: radial-gradient(ellipse at 50% 45%, rgb(255 255 255 / 5%), transparent 58%);
+    }
+
+    .player-topbar {
+      position: sticky;
+      z-index: 5;
+      top: 0;
+      min-height: 60px;
+      padding: 8px 20px;
+      background: rgb(8 8 8 / 92%);
+      backdrop-filter: blur(14px);
+    }
+
+    .player-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .player-back,
+    .player-action {
+      color: #c0bfbd;
+      font-size: 10px;
+      letter-spacing: .12em;
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+
+    .player-back:hover,
+    .player-back:focus-visible {
+      color: white;
+    }
+
+    .player-action {
+      min-height: 36px;
+      padding: 0 12px;
+      border: 1px solid rgb(255 255 255 / 24%);
+      background: transparent;
+      cursor: pointer;
+      animation: outline-pulse 4.2s ease-in-out infinite;
+      transition: color .2s ease, background .2s ease, border-color .2s ease;
+    }
+
+    #reload-button { animation-delay: .7s; }
+    #fullscreen-button { animation-delay: 1.4s; }
+
+    .player-action:hover,
+    .player-action:focus-visible,
+    .player-action[aria-pressed="true"] {
+      border-color: #f4f2ef;
+      background: #f4f2ef;
+      color: #141414;
+    }
+
+    .player-main {
+      display: block;
+      flex: initial;
+      grid-template-columns: none;
+      align-items: initial;
+      gap: 0;
+      width: min(100% - 32px, 1600px);
+      margin: 0 auto;
+      padding: 24px 0 64px;
+    }
+
+    .player-heading {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 14px;
+    }
+
+    .player-kicker {
+      margin: 0 0 7px;
+      color: #b6b4b0;
+      font-size: 9px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+    }
+
+    .player-heading h1 {
+      max-width: none;
+      margin: 0;
+      font-size: clamp(22px, 3vw, 34px);
+      font-weight: 500;
+      letter-spacing: -.055em;
+      line-height: 1.1;
+      animation: none;
+    }
+
+    .player-hint {
+      margin: 0 0 3px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .game-wrap {
+      position: relative;
+      width: 100%;
+      height: min(86svh, 1000px);
+      min-height: 560px;
+      margin: 0 auto;
+      overflow: hidden;
+      border: 1px solid rgb(255 255 255 / 18%);
+      border-radius: 5px;
+      background: #000;
+      box-shadow: 0 24px 70px rgb(0 0 0 / 46%);
+      animation: outline-pulse 5s ease-in-out infinite;
+    }
+
+    .fullscreen-notice {
+      position: absolute;
+      z-index: 4;
+      top: 16px;
+      left: 50%;
+      max-width: calc(100% - 32px);
+      padding: 10px 14px;
+      transform: translateX(-50%);
+      border: 1px solid rgb(255 255 255 / 22%);
+      border-radius: 4px;
+      background: rgb(0 0 0 / 78%);
+      color: #fff;
+      font-size: 12px;
+      text-align: center;
+      pointer-events: none;
+    }
+
+    .game-wrap:fullscreen {
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      min-height: 0;
+      border: 0;
+      border-radius: 0;
+      animation: none;
+    }
+
+    .game-wrap:fullscreen #game-frame {
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+    }
+
+    #game-frame {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      background: #000;
+    }
+
+    #loading {
+      position: absolute;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      color: #c0bfbd;
+      font-size: 12px;
+      text-align: center;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    #loading[hidden] { display: none; }
+
+    #game-status {
+      position: absolute;
+      right: 12px;
+      bottom: 12px;
+      left: 12px;
+      color: #ddd;
+      font-size: 11px;
+      text-align: center;
+      pointer-events: none;
+    }
+
+    .discovery {
+      display: grid;
+      grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr);
+      gap: 32px;
+      margin-top: 42px;
+    }
+
+    .discovery-section { min-width: 0; }
+
+    .section-heading {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .section-heading h2 {
+      margin: 0;
+      font-size: 17px;
+      font-weight: 500;
+      letter-spacing: -.025em;
+    }
+
+    .section-heading a {
+      color: var(--muted);
+      font-size: 9px;
+      letter-spacing: .12em;
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+
+    .section-heading a:hover,
+    .section-heading a:focus-visible { color: white; }
+
+    .discovery-card {
+      display: flex;
+      min-height: 100px;
+      align-items: center;
+      gap: 15px;
+      padding: 12px;
+      border: 1px solid rgb(255 255 255 / 13%);
+      background: rgb(255 255 255 / 3%);
+      color: inherit;
+      text-decoration: none;
+      animation: outline-pulse 4.6s ease-in-out infinite;
+      transition: border-color .2s ease, background .2s ease, transform .2s ease;
+    }
+
+    .recommend-card:nth-child(2) { animation-delay: .8s; }
+    .recommend-card:nth-child(3) { animation-delay: 1.6s; }
+
+    .discovery-card:hover,
+    .discovery-card:focus-visible {
+      transform: translateY(-2px);
+      border-color: rgb(255 255 255 / 38%);
+      background: rgb(255 255 255 / 6%);
+    }
+
+    .recent-art,
+    .recommend-art {
+      display: grid;
+      width: 76px;
+      height: 76px;
+      flex: 0 0 76px;
+      overflow: hidden;
+      place-items: center;
+      background: linear-gradient(145deg, #315041, #141a17);
+    }
+
+    .recent-art img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .recent-copy strong,
+    .recommend-card strong {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .recent-copy span,
+    .recommend-card span {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 9px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .recommend-list {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .recommend-card {
+      min-height: 100px;
+      gap: 10px;
+      padding: 10px;
+    }
+
+    .recommend-art {
+      width: 54px;
+      height: 54px;
+      flex-basis: 54px;
+      color: #eee;
+      font-size: 24px;
+    }
+
+    .recommend-card strong { font-size: 11px; }
+    .recommend-card span { font-size: 8px; }
+    .recommend-card:nth-child(2) .recommend-art { background: linear-gradient(145deg, #4c3d6d, #1a1728); }
+    .recommend-card:nth-child(3) .recommend-art { background: linear-gradient(145deg, #5d492b, #231b15); }
+
+    @view-transition {
+      navigation: auto;
+    }
+
+    ::view-transition-old(root) {
+      animation: page-exit .18s ease-in both;
+    }
+
+    ::view-transition-new(root) {
+      animation: page-enter .38s ease-out both;
+    }
+
+    @keyframes page-exit {
+      to { opacity: 0; }
+    }
+
+    @keyframes page-enter {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes title-slide {
+      from {
+        opacity: 0;
+        transform: translateX(-42px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes card-sheen {
+      to { transform: translateX(280%) skewX(-18deg); }
+    }
+
+    @keyframes outline-pulse {
+      0%, 100% {
+        box-shadow: inset 0 0 0 0 rgb(255 255 255 / 0%);
+      }
+
+      50% {
+        box-shadow: inset 0 0 0 1px rgb(255 255 255 / 22%);
+      }
+    }
+
+    @keyframes appear {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .page {
+        padding-right: 24px;
+        padding-left: 24px;
+      }
+
+      .topbar {
+        min-height: 76px;
+      }
+
+      .topbar-note {
+        max-width: 125px;
+        font-size: 8px;
+        line-height: 1.6;
+        text-align: right;
+      }
+
+      main {
+        grid-template-columns: 1fr;
+        gap: 52px;
+        padding: 75px 0 54px;
+      }
+
+      h1 {
+        font-size: clamp(66px, 17vw, 106px);
+      }
+
+      .material-note {
+        justify-self: start;
+        text-align: left;
+      }
+
+      .games-bar {
+        grid-template-columns: 1fr;
+      }
+
+      .footer {
+        min-height: 62px;
+        font-size: 8px;
+        letter-spacing: .11em;
+      }
+
+      .catalog-page {
+        width: calc(100% - 48px);
+      }
+
+      .catalog-topbar,
+      .player-topbar {
+        min-height: 64px;
+      }
+
+      .catalog-main {
+        padding: 46px 0 56px;
+      }
+
+      .catalog-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .player-topbar {
+        gap: 8px;
+        padding: 7px 10px;
+      }
+
+      .player-actions {
+        gap: 6px;
+      }
+
+      .player-back,
+      .player-action {
+        font-size: 8px;
+        letter-spacing: .06em;
+      }
+
+      .player-action {
+        min-height: 34px;
+        padding: 0 8px;
+      }
+
+      .player-main {
+        width: calc(100% - 16px);
+        padding: 18px 0 42px;
+      }
+
+      .player-heading {
+        align-items: start;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .game-wrap {
+        height: 78svh;
+        min-height: 440px;
+      }
+
+      #geometry-dash-view .catalog-grid {
+        gap: 12px;
+      }
+
+      #geometry-dash-view .catalog-card {
+        width: calc(50% - 6px);
+        flex-basis: calc(50% - 6px);
+      }
+
+      .discovery {
+        grid-template-columns: 1fr;
+        gap: 26px;
+        margin-top: 30px;
+      }
+
+      .recommend-list {
+        grid-template-columns: 1fr;
+      }
+
+      .recommend-card {
+        min-height: 76px;
+      }
+    }
+
+    @media (min-width: 641px) and (max-width: 1100px) {
+      .catalog-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .recommend-list {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (min-width: 641px) and (max-width: 800px) {
+      .catalog-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="stone-background" aria-hidden="true">
+    <svg preserveAspectRatio="xMidYMid slice" viewBox="0 0 1440 900" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="granite" x="-10%" y="-10%" width="120%" height="120%">
+          <feTurbulence baseFrequency=".009 .014" numOctaves="4" seed="17" stitchTiles="stitch" type="fractalNoise">
+            <animate attributeName="baseFrequency" dur="38s" repeatCount="indefinite" values=".009 .014;.012 .008;.009 .014"/>
+          </feTurbulence>
+          <feColorMatrix type="saturate" values="0"/>
+          <feComponentTransfer>
+            <feFuncR slope="1.55" type="linear" intercept="-.37"/>
+            <feFuncG slope="1.55" type="linear" intercept="-.37"/>
+            <feFuncB slope="1.55" type="linear" intercept="-.37"/>
+          </feComponentTransfer>
+        </filter>
+        <filter id="mineral-veins" x="-10%" y="-10%" width="120%" height="120%">
+          <feTurbulence baseFrequency=".004 .012" numOctaves="2" seed="8" stitchTiles="stitch" type="turbulence">
+            <animate attributeName="baseFrequency" dur="52s" repeatCount="indefinite" values=".004 .012;.006 .009;.004 .012"/>
+          </feTurbulence>
+          <feColorMatrix values="1 0 0 0 .22  1 0 0 0 .22  1 0 0 0 .22  0 0 0 5 -2.55"/>
+          <feGaussianBlur stdDeviation="1.1"/>
+        </filter>
+      </defs>
+      <path d="M0 0h1440v900H0z" fill="#000"/>
+    </svg>
+  </div>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="page" id="home-view">
+    <header class="topbar">
+      <a class="wordmark" href="#home" aria-label="Game portal home">GAM<span aria-hidden="true">E</span>VERSE</a>
+      <span class="topbar-note">100+ games · school favorites</span>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="hero-title">
+        <p class="eyebrow">Unblocked fun</p>
+        <h1 id="hero-title">Play<br><span>school favorites.</span></h1>
+        <p class="studio-credit">A Gameverse Studio original</p>
+        <p class="intro">Explore games that are popular in school times. Try over 100+ games, from racing and arcade to puzzle and retro classics. Better than PixelNebula.</p>
+        <div class="actions">
+          <a class="explore" href="#games">Explore Games <span aria-hidden="true">↗</span></a>
+          <button class="explore" id="open-blob-site" type="button">Open Website <span aria-hidden="true">↗</span></button>
+        </div>
+        <div class="games-bar" aria-label="Game stats">
+          <div class="game-stat">
+            <strong>100+</strong>
+            <span>games</span>
+          </div>
+          <div class="game-stat">
+            <strong>Fast</strong>
+            <span>loading</span>
+          </div>
+          <div class="game-stat">
+            <strong>School</strong>
+            <span>favorites</span>
+          </div>
+        </div>
+      </section>
+
+      <aside class="material-note" id="material">
+        <strong>01 / Arcade</strong>
+        Fast play · no login<br>
+        Better than PixelNebula
+      </aside>
+    </main>
+
+    <footer class="footer">
+      <p>Made for game breaks.</p>
+      <p>Play simple. Play fast.</p>
+    </footer>
+  </div>
+
+  <section class="catalog-page" id="games-view" hidden aria-labelledby="games-title">
+    <header class="catalog-topbar">
+      <a class="wordmark" href="#home" aria-label="Gameverse home">GAMEVERSE</a>
+      <span class="catalog-note">100+ games · school favorites</span>
+    </header>
+    <main class="catalog-main">
+      <div class="catalog-heading">
+        <p class="eyebrow">The game shelf</p>
+        <h1 id="games-title">Pick your next game.</h1>
+        <p>Hover over a square to reveal its title.</p>
+      </div>
+      <div class="catalog-grid">
+        <article class="catalog-card" tabindex="0"><h2>Slope</h2></article>
+        <article class="catalog-card" tabindex="0"><h2>Run 3</h2></article>
+        <article class="catalog-card" tabindex="0"><h2>Retro Bowl</h2></article>
+        <article class="catalog-card" tabindex="0"><h2>Moto X3M</h2></article>
+        <article class="catalog-card" tabindex="0"><h2>2048</h2></article>
+        <a class="catalog-card" href="#play/block-blast" aria-label="Play Block Blast"><img src="https://cdn.jsdelivr.net/gh/boibn/port-images@main/6.png" alt=""><h2>Block Blast</h2></a>
+        <article class="catalog-card" tabindex="0"><h2>Space Invaders</h2></article>
+        <article class="catalog-card" tabindex="0"><h2>Soccer Skills</h2></article>
+        <a class="catalog-card" href="#play" aria-label="Play Clover Pit">
+          <img src="https://cdn.jsdelivr.net/gh/boibn/port-images/716.png" alt="">
+          <h2>Clover Pit</h2>
+        </a>
+        <a class="catalog-card" href="#geometry-dash" aria-label="Choose a Geometry Dash version">
+          <img src="https://cdn.jsdelivr.net/gh/boibn/port-images@main/geo.png" alt="">
+          <h2>Geometry Dash</h2>
+        </a>
+        <a class="catalog-card" href="#play/cookie-clicker" aria-label="Play Cookie Clicker">
+          <img src="https://cdn.jsdelivr.net/gh/boibn/port-images@main/82.png" alt="">
+          <h2>Cookie Clicker</h2>
+        </a>
+        <a class="catalog-card" href="#play/yohoho-io" aria-label="Play Yohoho.io">
+          <img src="https://cdn.jsdelivr.net/gh/boibn/port-images@main/835.png" alt="">
+          <h2>Yohoho.io</h2>
+        </a>
+        <a class="catalog-card" href="#play/buckshot-roulette" aria-label="Play Buckshot Roulette"><img src="https://cdn.jsdelivr.net/gh/boibn/port-images@main/205.png" alt=""><h2>Buckshot Roulette</h2></a>
+        <a class="catalog-card" href="#play/cluster-truck" aria-label="Play Cluster Truck"><img src="https://cdn.jsdelivr.net/gh/boibn/port-images@main/848.jpg" alt=""><h2>Cluster Truck</h2></a>
+        <article class="catalog-card" tabindex="0"><h2>Chess</h2></article>
+        <article class="catalog-card" tabindex="0"><h2>Tetris</h2></article>
+        <article class="catalog-card" tabindex="0"><h2>Flappy Bird</h2></article>
+        <article class="catalog-card" tabindex="0"><h2>Basketball Stars</h2></article>
+        <article class="catalog-card" tabindex="0"><h2>Drift Hunters</h2></article>
+        <article class="catalog-card" tabindex="0"><h2>Stickman Hook</h2></article>
+      </div>
+      <p class="catalog-count">21 quick picks · more favorites on the way</p>
+    </main>
+  </section>
+
+  <section class="catalog-page" id="geometry-dash-view" hidden aria-labelledby="geometry-dash-title">
+    <header class="catalog-topbar">
+      <a class="wordmark" href="#home" aria-label="Gameverse home">GAMEVERSE</a>
+      <a class="catalog-note" href="#games">Back to games</a>
+    </header>
+    <main class="catalog-main">
+      <div class="catalog-heading">
+        <p class="eyebrow">Choose a version</p>
+        <h1 id="geometry-dash-title">Geometry Dash</h1>
+        <p>Select which version you want to play.</p>
+      </div>
+      <div class="catalog-grid">
+        <a class="catalog-card" href="#play/geometry-dash" aria-label="Play Web Dashers"><img src="https://cdn.jsdelivr.net/gh/boibn/port-images@main/geo.png" alt=""><h2>Web Dashers</h2></a>
+        <a class="catalog-card" href="#play/geometry-dash-port" aria-label="Play Geometry Dash, Port"><img src="https://cdn.jsdelivr.net/gh/boibn/port-images@main/868.png" alt=""><h2>Geometry Dash, Port</h2></a>
+      </div>
+    </main>
+  </section>
+
+  <section class="player-page" id="player-view" hidden aria-label="Game player">
+    <header class="player-topbar">
+      <a class="wordmark" href="#home">GAMEVERSE</a>
+      <div class="player-actions">
+        <a class="player-back" href="#games">Back to games</a>
+        <button class="player-action" id="favorite-button" type="button" aria-pressed="false">☆ Favorite</button>
+        <button class="player-action" id="reload-button" type="button">↻ Reload</button>
+        <button class="player-action" id="fullscreen-button" type="button">⛶ Fullscreen</button>
+      </div>
+    </header>
+    <main class="player-main">
+      <div class="player-heading">
+        <div>
+          <p class="player-kicker">Now playing</p>
+          <h1 id="player-game-title">Clover Pit</h1>
+        </div>
+        <p class="player-hint">Your recent game · Pick up where you left off</p>
+      </div>
+      <div class="game-wrap" id="game-wrap">
+        <iframe id="game-frame" src="about:blank" title="Game player" allow="fullscreen; gamepad"></iframe>
+        <div class="fullscreen-notice" id="fullscreen-notice" role="status" hidden>Press Esc to exit fullscreen.</div>
+        <div id="loading" role="status" hidden>Loading game…</div>
+        <div id="game-status" role="status" aria-live="polite"></div>
+      </div>
+      <div class="discovery">
+        <section class="discovery-section" aria-labelledby="recent-title">
+          <div class="section-heading">
+            <h2 id="recent-title">Recently played</h2>
+            <a href="#games">All games</a>
+          </div>
+          <a class="discovery-card" id="recently-played-card" href="#play" aria-current="page">
+            <span class="recent-art"><img id="recent-game-image" src="https://cdn.jsdelivr.net/gh/boibn/port-images/716.png" alt=""></span>
+            <span class="recent-copy"><strong id="recent-game-title">Clover Pit</strong><span>Playing now · Continue</span></span>
+          </a>
+        </section>
+        <section class="discovery-section" aria-labelledby="recommend-title">
+          <div class="section-heading">
+            <h2 id="recommend-title">Recommended for you</h2>
+            <a href="#games">Browse games</a>
+          </div>
+          <div class="recommend-list">
+            <a class="discovery-card recommend-card" href="#games" aria-label="Browse games including Slope">
+              <span class="recommend-art" aria-hidden="true">↘</span>
+              <span><strong>Slope</strong><span>Arcade · Fast-paced</span></span>
+            </a>
+            <a class="discovery-card recommend-card" href="#games" aria-label="Browse games including Geometry Dash">
+              <span class="recommend-art" aria-hidden="true">◈</span>
+              <span><strong>Geometry Dash</strong><span>Rhythm · Platformer</span></span>
+            </a>
+            <a class="discovery-card recommend-card" href="#games" aria-label="Browse games including 2048">
+              <span class="recommend-art" aria-hidden="true">2048</span>
+              <span><strong>2048</strong><span>Puzzle · Quick play</span></span>
+            </a>
+          </div>
+        </section>
+      </div>
+    </main>
+  </section>
+
+  <script>
+    const openExternalSiteButton = document.getElementById("open-blob-site");
+
+    openExternalSiteButton.addEventListener("click", () => {
+      const openedPage = window.open("about:blank", "_blank");
+      if (!openedPage) {
+        window.alert("The new tab was blocked. Allow pop-ups for this page and try again.");
+        return;
+      }
+
+      openedPage.document.open();
+      openedPage.document.write(`<!doctype html>${document.documentElement.outerHTML}`);
+      openedPage.document.close();
+    });
+
+    const views = {
+      home: document.getElementById("home-view"),
+      games: document.getElementById("games-view"),
+      "geometry-dash": document.getElementById("geometry-dash-view"),
+      play: document.getElementById("player-view")
+    };
+    const gameCatalog = {
+      "clover-pit": { title: "Clover Pit", url: "https://cdn.jsdelivr.net/gh/boibn/ports@main/716-fix2.html", image: "https://cdn.jsdelivr.net/gh/boibn/port-images/716.png" },
+      "cookie-clicker": { title: "Cookie Clicker", url: "https://cdn.jsdelivr.net/gh/boibn/html@main/82-a.html", image: "https://cdn.jsdelivr.net/gh/boibn/port-images@main/82.png" },
+      "geometry-dash": { title: "Geometry Dash", url: "https://cdn.jsdelivr.net/gh/boibn/ports@main/785-upd3.html", image: "https://cdn.jsdelivr.net/gh/boibn/port-images@main/geo.png" },
+      "geometry-dash-port": { title: "Geometry Dash, Port", url: "https://cdn.jsdelivr.net/gh/boibn/html@main/geo.html", image: "https://cdn.jsdelivr.net/gh/boibn/port-images@main/868.png" },
+      "yohoho-io": { title: "Yohoho.io", url: "https://cdn.jsdelivr.net/gh/boibn/html@main/835.html", image: "https://cdn.jsdelivr.net/gh/boibn/port-images@main/835.png" },
+      "buckshot-roulette": { title: "Buckshot Roulette", url: "https://cdn.jsdelivr.net/gh/boibn/html@main/205-ff.html", image: "https://cdn.jsdelivr.net/gh/boibn/port-images@main/205.png" },
+      "cluster-truck": { title: "Cluster Truck", url: "https://cdn.jsdelivr.net/gh/boibn/html@main/848.html", image: "https://cdn.jsdelivr.net/gh/boibn/port-images@main/848.jpg" },
+      "block-blast": { title: "Block Blast", url: "https://cdn.jsdelivr.net/gh/boibn/html@main/6-f.html", image: "https://cdn.jsdelivr.net/gh/boibn/port-images@main/6.png" }
+    };
+    const gameFrame = document.getElementById("game-frame");
+    const loading = document.getElementById("loading");
+    const gameWrap = document.getElementById("game-wrap");
+    const playerGameTitle = document.getElementById("player-game-title");
+    const recentlyPlayedCard = document.getElementById("recently-played-card");
+    const recentGameTitle = document.getElementById("recent-game-title");
+    const recentGameImage = document.getElementById("recent-game-image");
+    const favoriteButton = document.getElementById("favorite-button");
+    const reloadButton = document.getElementById("reload-button");
+    const fullscreenButton = document.getElementById("fullscreen-button");
+    const fullscreenNotice = document.getElementById("fullscreen-notice");
+    const gameStatus = document.getElementById("game-status");
+    let activeGameKey = "clover-pit";
+    let loadedGameKey = "";
+    let gameMarkup = "";
+    let favoriteIsSaved = false;
+    function showView() {
+      const route = location.hash.slice(1).split("/");
+      const viewName = route[0] || "home";
+      const requestedGameKey = route[1] || "clover-pit";
+      const activeView = Object.prototype.hasOwnProperty.call(views, viewName) ? viewName : "home";
+      for (const [name, view] of Object.entries(views)) {
+        view.hidden = name !== activeView;
+      }
+      if (activeView === "play") {
+        activeGameKey = Object.prototype.hasOwnProperty.call(gameCatalog, requestedGameKey) ? requestedGameKey : "clover-pit";
+        const currentGame = gameCatalog[activeGameKey];
+        playerGameTitle.textContent = currentGame.title;
+        gameFrame.title = `${currentGame.title} game`;
+        recentlyPlayedCard.href = `#play/${activeGameKey}`;
+        recentGameTitle.textContent = currentGame.title;
+        recentGameImage.src = currentGame.image;
+        document.getElementById("player-view").setAttribute("aria-label", `${currentGame.title} game player`);
+        favoriteIsSaved = false;
+        try {
+          favoriteIsSaved = localStorage.getItem(`gameverse-favorite-${activeGameKey}`) === "true";
+        } catch (error) {
+          gameStatus.textContent = "Favorites cannot be loaded in this browser mode.";
+        }
+        updateFavoriteButton(favoriteIsSaved);
+      }
+      document.title = activeView === "play"
+        ? `${gameCatalog[activeGameKey].title} — Gameverse`
+        : activeView === "games"
+          ? "Games — Gameverse"
+          : activeView === "geometry-dash"
+            ? "Choose a Geometry Dash version — Gameverse"
+            : "Gameverse — School-Time Game Favorites";
+      if (activeView === "play" && loadedGameKey !== activeGameKey) {
+        fetchGame(activeGameKey);
+      }
+      window.scrollTo(0, 0);
+    }
+
+    window.addEventListener("hashchange", showView);
+
+    function fetchGame(gameKey) {
+      const selectedGame = gameCatalog[gameKey];
+      loading.hidden = false;
+      loading.textContent = `Loading ${selectedGame.title}…`;
+      fetch(selectedGame.url)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`Game source returned HTTP ${response.status}`);
+          }
+          return response.text();
+        })
+        .then(source => {
+          if (activeGameKey !== gameKey || location.hash.slice(1).split("/")[0] !== "play") {
+            return;
+          }
+          gameMarkup = source;
+          loadGame(gameKey);
+        })
+        .catch(error => {
+          if (activeGameKey === gameKey) {
+            loading.textContent = `Unable to load ${selectedGame.title}: ${error.message}`;
+          }
+        });
+    }
+
+    function loadGame(gameKey) {
+      const selectedGame = gameCatalog[gameKey];
+      loading.hidden = false;
+      loading.textContent = `Loading ${selectedGame.title}…`;
+      gameStatus.textContent = "";
+      const gameDocument = new DOMParser().parseFromString(gameMarkup, "text/html");
+      let baseElement = gameDocument.querySelector("base");
+      if (!baseElement) {
+        baseElement = gameDocument.createElement("base");
+        baseElement.href = selectedGame.url;
+        gameDocument.head.prepend(baseElement);
+      }
+      const storageShim = gameDocument.createElement("script");
+      storageShim.textContent = '(()=>{const createStorage=()=>{const values=new Map();return{getItem:key=>values.has(String(key))?values.get(String(key)):null,setItem:(key,value)=>values.set(String(key),String(value)),removeItem:key=>values.delete(String(key)),clear:()=>values.clear(),key:index=>Array.from(values.keys())[index]??null,get length(){return values.size}}};const cache={match:async()=>undefined,put:async()=>{},delete:async()=>false,keys:async()=>[]};const cacheStorage={open:async()=>cache,match:async()=>undefined,has:async()=>false,keys:async()=>[],delete:async()=>false};Object.defineProperty(window,"localStorage",{configurable:true,value:createStorage()});Object.defineProperty(window,"sessionStorage",{configurable:true,value:createStorage()});Object.defineProperty(window,"caches",{configurable:true,value:cacheStorage});Object.defineProperty(document,"cookie",{configurable:true,get:()=>"",set:()=>{}});Object.defineProperty(document,"URL",{configurable:true,value:document.baseURI})})();';
+      baseElement.after(storageShim);
+
+      const frameDocument = gameFrame.contentDocument;
+      frameDocument.open();
+      frameDocument.write(`<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body,#game{width:100%;height:100%;margin:0;background:#000}#game{display:block;border:0}</style></head><body><iframe id="game" sandbox="allow-scripts allow-forms allow-pointer-lock" allow="fullscreen; gamepad" allowfullscreen title="${selectedGame.title}"></iframe></body></html>`);
+      frameDocument.close();
+      const game = frameDocument.getElementById("game");
+      game.addEventListener("load", () => {
+        if (activeGameKey !== gameKey) {
+          return;
+        }
+        loading.hidden = true;
+        loadedGameKey = gameKey;
+      }, { once: true });
+      game.srcdoc = `<!doctype html>${gameDocument.documentElement.outerHTML}`;
+    }
+
+    function updateFavoriteButton(isFavorite) {
+      favoriteButton.setAttribute("aria-pressed", String(isFavorite));
+      favoriteButton.textContent = isFavorite ? "★ Favorited" : "☆ Favorite";
+    }
+
+    try {
+      favoriteIsSaved = localStorage.getItem(favoriteKey) === "true";
+    } catch (error) {
+      gameStatus.textContent = "Favorites cannot be saved in this browser mode.";
+    }
+    updateFavoriteButton(favoriteIsSaved);
+
+    favoriteButton.addEventListener("click", () => {
+      favoriteIsSaved = !favoriteIsSaved;
+      updateFavoriteButton(favoriteIsSaved);
+      try {
+        localStorage.setItem(`gameverse-favorite-${activeGameKey}`, String(favoriteIsSaved));
+        gameStatus.textContent = favoriteIsSaved ? `${gameCatalog[activeGameKey].title} added to favorites.` : `${gameCatalog[activeGameKey].title} removed from favorites.`;
+      } catch (error) {
+        gameStatus.textContent = "Favorite changed for this visit, but could not be saved.";
+      }
+    });
+
+    reloadButton.addEventListener("click", () => {
+      loadedGameKey = "";
+      fetchGame(activeGameKey);
+    });
+
+    fullscreenButton.addEventListener("click", async () => {
+      try {
+        if (document.fullscreenElement) {
+          await document.exitFullscreen();
+        } else {
+          await gameWrap.requestFullscreen();
+        }
+      } catch (error) {
+        gameStatus.textContent = `Fullscreen is unavailable: ${error.message}`;
+      }
+    });
+
+    document.addEventListener("fullscreenchange", async () => {
+      const isFullscreen = document.fullscreenElement === gameWrap;
+      fullscreenButton.textContent = isFullscreen ? "⛶ Exit fullscreen" : "⛶ Fullscreen";
+      fullscreenNotice.hidden = !isFullscreen;
+      if (!isFullscreen) {
+        if (navigator.keyboard && typeof navigator.keyboard.unlock === "function") {
+          navigator.keyboard.unlock();
+        }
+        return;
+      }
+
+      if (!navigator.keyboard || typeof navigator.keyboard.lock !== "function") {
+        fullscreenNotice.textContent = "Press Esc to exit fullscreen (hold-to-exit is not supported by this browser).";
+        return;
+      }
+
+      try {
+        await navigator.keyboard.lock(["Escape"]);
+        fullscreenNotice.textContent = "Press and hold Esc to exit fullscreen.";
+      } catch (error) {
+        fullscreenNotice.textContent = "Press Esc to exit fullscreen (hold-to-exit could not be enabled).";
+        gameStatus.textContent = `Escape key lock is unavailable: ${error.message}`;
+      }
+    });
+
+    showView();
+  </script>
+</body>
+</html>
