@@ -678,26 +678,6 @@
       transform: translateX(3px);
     }
 
-    .material-note {
-      align-self: end;
-      justify-self: end;
-      padding-bottom: 7px;
-      color: #b6b4b0;
-      font-size: 9px;
-      letter-spacing: .19em;
-      line-height: 1.9;
-      text-align: right;
-      text-transform: uppercase;
-      animation: appear 1s .45s both;
-    }
-
-    .material-note strong {
-      display: block;
-      color: #e7e5e2;
-      font-size: 10px;
-      font-weight: 500;
-    }
-
     .games-bar {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1939,13 +1919,8 @@
         font-size: clamp(66px, 17vw, 106px);
       }
 
-      .material-note {
-        justify-self: start;
-        text-align: left;
-      }
-
       .games-bar {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
       }
 
       .footer {
@@ -2239,13 +2214,47 @@
     }
 
     #home-view > main {
-      grid-template-columns: minmax(0, 1fr) minmax(180px, .3fr);
-      gap: clamp(28px, 4vw, 64px);
-      padding: clamp(54px, 9vh, 100px) 0 74px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      justify-items: center;
+      align-content: center;
+      gap: 0;
+      padding: clamp(32px, 6vh, 64px) 0;
     }
 
-    .hero {
+    #home-view .hero {
+      width: min(100%, 960px);
       max-width: 960px;
+      justify-self: center;
+      text-align: center;
+    }
+
+    #home-view .eyebrow {
+      justify-content: center;
+      margin-right: 0;
+      margin-left: 0;
+    }
+
+    #home-view .school-crown-mark {
+      display: block;
+      margin-right: auto;
+      margin-left: auto;
+    }
+
+    #home-view .home-welcome,
+    #home-view .studio-credit,
+    #home-view .intro,
+    #home-view .actions {
+      margin-right: auto;
+      margin-left: auto;
+    }
+
+    #home-view .intro {
+      max-width: 520px;
+    }
+
+    #home-view .actions {
+      justify-content: center;
     }
 
     .home-welcome {
@@ -2275,6 +2284,7 @@
     }
 
     #hero-title {
+      max-width: none;
       font-size: clamp(76px, 12vw, 166px);
       font-weight: 480;
       letter-spacing: -.105em;
@@ -2331,7 +2341,9 @@
     .games-bar {
       gap: 10px;
       margin-top: 30px;
-      width: min(100%, 640px);
+      width: min(100%, 720px);
+      margin-right: auto;
+      margin-left: auto;
     }
 
     .game-stat {
@@ -2351,21 +2363,6 @@
     .game-stat span {
       font-size: 8px;
       letter-spacing: .16em;
-    }
-
-    .material-note {
-      max-width: 210px;
-      padding: 18px 0 8px 18px;
-      border-left: 1px solid #393939;
-      color: #888;
-      font-size: 8px;
-      letter-spacing: .16em;
-    }
-
-    .material-note strong {
-      margin-bottom: 8px;
-      color: #e4e4e4;
-      font-size: 11px;
     }
 
     .footer {
@@ -2721,13 +2718,8 @@
         font-size: clamp(64px, 16vw, 100px);
       }
 
-      .material-note {
-        justify-self: start;
-        text-align: left;
-      }
-
       .games-bar {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
       }
 
       .catalog-page {
@@ -2978,68 +2970,6 @@
 
     .catalog-count {
       padding-top: 6px;
-    }
-
-    .continue-section {
-      margin: 0 0 48px;
-      padding: 22px;
-      border: 1px solid #292929;
-      border-radius: 4px;
-      background:
-        radial-gradient(ellipse at 100% 0, rgb(255 255 255 / 5%), transparent 48%),
-        linear-gradient(145deg, #111, #090909);
-    }
-
-    .continue-heading {
-      display: flex;
-      align-items: end;
-      justify-content: space-between;
-      gap: 18px;
-      margin-bottom: 16px;
-    }
-
-    .continue-heading .eyebrow {
-      margin: 0 0 8px;
-    }
-
-    .continue-heading h2 {
-      margin: 0;
-      color: #f4f4f4;
-      font-size: clamp(20px, 2.4vw, 28px);
-      font-weight: 560;
-      letter-spacing: -.04em;
-    }
-
-    .continue-heading > span {
-      color: #888;
-      font-size: 10px;
-      letter-spacing: .04em;
-      text-align: right;
-    }
-
-    .continue-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 14px;
-    }
-
-    .continue-grid .game-card-cover {
-      aspect-ratio: 16 / 10;
-    }
-
-    .continue-empty {
-      margin: 0;
-      padding: 18px;
-      border: 1px dashed #383838;
-      border-radius: 3px;
-      color: #999;
-      font-size: 12px;
-      line-height: 1.6;
-    }
-
-    .continue-empty[hidden],
-    .continue-grid[hidden] {
-      display: none;
     }
 
     .player-topbar {
@@ -3865,9 +3795,6 @@
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
-      .continue-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
     }
 
     @media (max-width: 640px) {
@@ -3896,23 +3823,6 @@
 
       .fresh-picks-grid {
         gap: 10px;
-      }
-
-      .continue-section {
-        padding: 14px;
-      }
-
-      .continue-grid {
-        gap: 10px;
-      }
-
-      .continue-heading {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .continue-heading > span {
-        text-align: left;
       }
 
       .game-card-info {
@@ -3965,8 +3875,7 @@
 
     @media (max-width: 380px) {
       #games-view .catalog-grid,
-      .fresh-picks-grid,
-      .continue-grid {
+      .fresh-picks-grid {
         grid-template-columns: 1fr;
       }
     }
@@ -5631,8 +5540,7 @@
     body[data-theme="light"] .hero h1 span,
     body[data-theme="light"] #hero-title,
     body[data-theme="light"] #hero-title span,
-    body[data-theme="light"] .continue-heading h2,
-    body[data-theme="light"] .material-note strong {
+    body[data-theme="light"] .game-stat strong {
       color: #263743;
       text-shadow: none;
     }
@@ -5659,20 +5567,8 @@
     body[data-theme="light"] .studio-credit,
     body[data-theme="light"] .intro,
     body[data-theme="light"] .eyebrow,
-    body[data-theme="light"] .material-note,
-    body[data-theme="light"] .continue-heading > span,
-    body[data-theme="light"] .continue-empty,
     body[data-theme="light"] .footer {
       color: #596e7b;
-    }
-
-    body[data-theme="light"] .continue-section {
-      border-color: #cbd7df;
-      background: rgb(255 255 255 / 68%);
-    }
-
-    body[data-theme="light"] .continue-empty {
-      border-color: #aabac5;
     }
 
     body[data-theme="light"] .footer {
@@ -6123,7 +6019,6 @@
         <p class="intro">Explore games that are popular in school times. Try over 100+ games, from racing and arcade to puzzle and retro classics. Better than PixelNebula.</p>
         <div class="actions">
           <a class="explore" href="#games">Explore Games <span aria-hidden="true">↗</span></a>
-          <button class="explore" id="open-blob-site" type="button">Open Website <span aria-hidden="true">↗</span></button>
         </div>
         <div class="games-bar" aria-label="Game stats">
           <div class="game-stat">
@@ -6131,34 +6026,16 @@
             <span>games</span>
           </div>
           <div class="game-stat">
-            <strong>Fast</strong>
-            <span>loading</span>
+            <strong id="online-count" aria-live="polite">—</strong>
+            <span id="online-count-label" title="Counts connected browser sessions, not unique accounts">sessions online</span>
           </div>
           <div class="game-stat">
-            <strong>School</strong>
-            <span>favorites</span>
+            <strong id="games-played-today">—</strong>
+            <span id="games-played-today-label">games played today (UTC)</span>
           </div>
         </div>
       </section>
-
-      <aside class="material-note" id="material">
-        <strong>01 / Arcade</strong>
-        Fast play · no login<br>
-        Better than PixelNebula
-      </aside>
     </main>
-
-      <section class="continue-section" aria-labelledby="continue-title">
-        <div class="continue-heading">
-          <div>
-            <p class="eyebrow">Pick up where you left off</p>
-            <h2 id="continue-title">Continue playing</h2>
-          </div>
-          <span>Saved on this browser</span>
-        </div>
-        <p class="continue-empty" id="continue-empty">Games you open will be saved here so you can jump back in later.</p>
-        <div class="continue-grid" id="continue-grid" hidden></div>
-      </section>
 
       <footer class="footer">
       <p>Made for game breaks.</p>
@@ -6355,6 +6232,7 @@
             <div class="geometry-port-notice-actions">
               <button id="geometry-port-continue" type="button">Continue playing here</button>
               <button id="geometry-port-open-window" type="button">Open in separate window</button>
+              <button id="geometry-port-open-blob" type="button">Open using Blob URL</button>
             </div>
           </div>
         </section>
@@ -6406,7 +6284,7 @@
         <h1 id="chat-title">Chat room</h1>
         <p>Rooms, friends, and direct messages.</p>
       </div>
-      <span class="chat-room-status">Local preview</span>
+      <span class="chat-room-status">Global chat</span>
     </header>
     <div class="chat-layout">
       <aside class="chat-sidebar" aria-label="Chat navigation">
@@ -6426,7 +6304,7 @@
         </section>
         <section class="chat-panel" id="chat-panel-online" role="tabpanel" aria-labelledby="chat-tab-online" data-chat-panel="online" hidden>
           <h2 class="chat-panel-title">Online now</h2>
-          <p class="chat-list-empty">Online status only works between tabs of this browser. Add a friend by name to start a local DM.</p>
+          <p class="chat-list-empty">People listed here are connected to Global chat now. Display names are unverified.</p>
           <div class="chat-item-list" id="chat-online-list"></div>
           <h2 class="chat-panel-title">Friends</h2>
           <div class="chat-item-list" id="chat-friend-list"></div>
@@ -6446,15 +6324,15 @@
         <header class="chat-conversation-heading">
           <div>
             <h2 id="chat-conversation-title"># global</h2>
-            <p id="chat-conversation-description">The main Gameverse room · local preview</p>
+            <p id="chat-conversation-description">Public room · messages appear live to everyone connected</p>
           </div>
-          <span class="chat-room-status" id="chat-conversation-status">Room</span>
+          <span class="chat-room-status" id="chat-conversation-status" aria-live="polite">Connecting</span>
         </header>
         <div class="chat-transcript" id="chat-transcript" role="log" aria-label="Chat messages" aria-live="polite" aria-relevant="additions text">
           <div class="chat-empty" id="chat-empty">
             <span class="chat-empty-icon" aria-hidden="true">✳</span>
             <strong>Start the conversation</strong>
-            <span>Messages are saved in this browser, so you can pick up where you left off.</span>
+            <span>Waiting for messages from everyone online.</span>
           </div>
         </div>
         <form class="chat-composer" id="chat-composer">
@@ -6462,7 +6340,7 @@
           <textarea id="chat-input" name="message" maxlength="500" placeholder="Write a message..." rows="1" required></textarea>
           <button class="chat-send" id="chat-send" type="submit">Send <span aria-hidden="true">↗</span></button>
         </form>
-        <p class="chat-note" id="chat-note" role="status" aria-live="polite">Local preview: messages are saved in this browser and are not shared online.</p>
+        <p class="chat-note" id="chat-note" role="status" aria-live="polite">Connecting to Global chat. Display names are not verified; do not share private information.</p>
       </div>
     </div>
   </section>
@@ -6472,7 +6350,7 @@
       <h1 id="settings-title">Settings</h1>
       <p>Changes save automatically in this browser.</p>
     </header>
-    <section class="settings-card" aria-labelledby="settings-profile-title">
+    <section class="settings-card" aria-labelledby="settings-profile-title" hidden>
       <h2 id="settings-profile-title">Profile</h2>
       <p>Your display name is used in local chat and friend lists.</p>
       <label class="setting-row" for="settings-display-name">
@@ -6488,19 +6366,19 @@
         <select id="settings-theme"><option value="dark">Dark</option><option value="light">Light</option></select>
       </label>
       <label class="setting-row" for="settings-24-hour">
-        <span class="setting-copy"><strong>24-hour clock</strong><small>Use 24-hour time in the bottom bar and chat</small></span>
+        <span class="setting-copy"><strong>24-hour clock</strong><small>Use 24-hour time in the bottom bar</small></span>
         <input id="settings-24-hour" type="checkbox">
       </label>
       <label class="setting-row" for="settings-reduced-motion">
         <span class="setting-copy"><strong>Reduce motion</strong><small>Turn off decorative movement and transitions</small></span>
         <input id="settings-reduced-motion" type="checkbox">
       </label>
-      <label class="setting-row" for="settings-compact">
+      <label class="setting-row" for="settings-compact" hidden>
         <span class="setting-copy"><strong>Compact chat lists</strong><small>Fit more rooms and friends in the sidebar</small></span>
         <input id="settings-compact" type="checkbox">
       </label>
     </section>
-    <section class="settings-card" aria-labelledby="settings-data-title">
+    <section class="settings-card" aria-labelledby="settings-data-title" hidden>
       <h2 id="settings-data-title">Local data</h2>
       <p>These actions only affect data saved by Gameverse in this browser.</p>
       <div class="setting-row">
@@ -6526,10 +6404,6 @@
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 8h10a4 4 0 0 1 3.8 2.8l1.1 3.5a2.4 2.4 0 0 1-3.8 2.6l-2.3-1.8H8.2l-2.3 1.8a2.4 2.4 0 0 1-3.8-2.6l1.1-3.5A4 4 0 0 1 7 8Z"/><path d="M8 10v4m-2-2h4m7-1h.01M18 13h.01"/></svg>
       <span>Games</span>
     </a>
-    <a class="bottom-nav-link" href="#chat" data-bottom-view="chat">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5H6l-3 2v-6.5A7.5 7.5 0 1 1 20 11.5Z"/><path d="M8 11h.01M12 11h.01M16 11h.01"/></svg>
-      <span>Chat room</span>
-    </a>
     <a class="bottom-nav-link" href="#settings" data-bottom-view="settings">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Z"/><path d="m19.4 15 .1.1a1.7 1.7 0 0 1-2.4 2.4l-.1-.1a1.7 1.7 0 0 0-2.9 1.2v.2a1.7 1.7 0 0 1-3.4 0v-.2a1.7 1.7 0 0 0-2.9-1.2l-.1.1a1.7 1.7 0 0 1-2.4-2.4l.1-.1a1.7 1.7 0 0 0-1.2-2.9H4a1.7 1.7 0 0 1 0-3.4h.2a1.7 1.7 0 0 0 1.2-2.9l-.1-.1a1.7 1.7 0 0 1 2.4-2.4l.1.1a1.7 1.7 0 0 0 2.9-1.2V2a1.7 1.7 0 0 1 3.4 0v.2a1.7 1.7 0 0 0 2.9 1.2l.1-.1a1.7 1.7 0 0 1 2.4 2.4l-.1.1a1.7 1.7 0 0 0 1.2 2.9h.2a1.7 1.7 0 0 1 0 3.4h-.2a1.7 1.7 0 0 0-1.2 2.9Z"/></svg>
       <span>Settings</span>
@@ -6551,6 +6425,14 @@
     const creditsScreen = document.getElementById("credits-screen");
     const creditsContinue = document.getElementById("credits-continue");
     const homeWelcome = document.getElementById("home-welcome");
+    const onlineCount = document.getElementById("online-count");
+    const onlineCountLabel = document.getElementById("online-count-label");
+    const gamesPlayedToday = document.getElementById("games-played-today");
+    const gamesPlayedTodayLabel = document.getElementById("games-played-today-label");
+    let onlineCounterSocket = null;
+    let onlineCounterRetryTimer = null;
+    let onlineCounterStopped = false;
+    let pendingGamePlayEvents = 0;
     const chatTranscript = document.getElementById("chat-transcript");
     const chatEmpty = document.getElementById("chat-empty");
     const chatComposer = document.getElementById("chat-composer");
@@ -6583,6 +6465,15 @@
     const chatStorageKey = "gameverse-chat-v2";
     const presenceStorageKey = "gameverse-chat-presence";
     const legacyChatStorageKey = "gameverse-chat-messages";
+    const globalChatMessages = [];
+    const globalChatUsers = [];
+    const pendingGlobalMessages = new Map();
+    const pendingFriendLookups = new Map();
+    let globalChatSocket = null;
+    let globalChatReconnectTimer = null;
+    let globalChatConnectionRequested = false;
+    let globalChatConnected = false;
+    let globalChatUserId = "";
     const defaultChatRooms = [
       { id: "global", name: "Global" },
       { id: "arcade", name: "Arcade" },
@@ -6632,6 +6523,86 @@
       } catch (error) {
         settingsStatus.textContent = "Settings could not be saved in this browser.";
         return false;
+      }
+    }
+
+    function showOnlineCounterUnavailable(message) {
+      onlineCount.textContent = "—";
+      onlineCountLabel.textContent = message;
+      gamesPlayedToday.textContent = "—";
+      gamesPlayedTodayLabel.textContent = "daily total unavailable";
+    }
+
+    function flushPendingGamePlayEvents() {
+      if (!onlineCounterSocket || onlineCounterSocket.readyState !== WebSocket.OPEN) {
+        return;
+      }
+      while (pendingGamePlayEvents > 0) {
+        try {
+          onlineCounterSocket.send(JSON.stringify({ type: "game-played" }));
+          pendingGamePlayEvents -= 1;
+        } catch (error) {
+          return;
+        }
+      }
+    }
+
+    function connectOnlineCounter() {
+      if (onlineCounterStopped || (onlineCounterSocket
+        && (onlineCounterSocket.readyState === WebSocket.OPEN || onlineCounterSocket.readyState === WebSocket.CONNECTING))) {
+        return;
+      }
+      if (location.protocol !== "http:" && location.protocol !== "https:") {
+        showOnlineCounterUnavailable("online count needs the site server");
+        return;
+      }
+
+      const socketProtocol = location.protocol === "https:" ? "wss:" : "ws:";
+      try {
+        const socket = new WebSocket(`${socketProtocol}//${location.host}/ws/presence`);
+        onlineCounterSocket = socket;
+        onlineCountLabel.textContent = "connecting…";
+        gamesPlayedTodayLabel.textContent = "connecting…";
+        socket.addEventListener("message", event => {
+          let packet;
+          try {
+            packet = JSON.parse(event.data);
+          } catch (error) {
+            showOnlineCounterUnavailable("online count unavailable");
+            return;
+          }
+          if (packet.type === "stats-error") {
+            gamesPlayedToday.textContent = "—";
+            gamesPlayedTodayLabel.textContent = "daily total unavailable";
+            return;
+          }
+          if (packet.type !== "site-stats"
+            || !Number.isSafeInteger(packet.onlineSessions) || packet.onlineSessions < 0
+            || !Number.isSafeInteger(packet.gamesPlayedToday) || packet.gamesPlayedToday < 0) {
+            showOnlineCounterUnavailable("stats unavailable");
+            return;
+          }
+          onlineCount.textContent = String(packet.onlineSessions);
+          onlineCountLabel.textContent = packet.onlineSessions === 1 ? "session online" : "sessions online";
+          gamesPlayedToday.textContent = String(packet.gamesPlayedToday);
+          gamesPlayedTodayLabel.textContent = "games played today (UTC)";
+          flushPendingGamePlayEvents();
+        });
+        socket.addEventListener("error", () => {
+          showOnlineCounterUnavailable("online count unavailable");
+        });
+        socket.addEventListener("close", () => {
+          if (onlineCounterSocket !== socket) {
+            return;
+          }
+          onlineCounterSocket = null;
+          showOnlineCounterUnavailable("reconnecting…");
+          if (!onlineCounterStopped) {
+            onlineCounterRetryTimer = window.setTimeout(connectOnlineCounter, 3000);
+          }
+        });
+      } catch (error) {
+        showOnlineCounterUnavailable("online count unavailable");
       }
     }
 
@@ -6733,7 +6704,169 @@
     }
 
     function getSelectedMessages() {
+      if (selectedChatPanel !== "dms" && selectedRoomId === "global") {
+        return globalChatMessages;
+      }
       return chatState.messages[getSelectedChatKey()] || [];
+    }
+
+    function updateGlobalChatConnectionStatus(message, connected = globalChatConnected) {
+      globalChatConnected = connected;
+      if (selectedChatPanel === "rooms" && selectedRoomId === "global") {
+        chatConversationStatus.textContent = connected ? "Live" : "Offline";
+        chatNote.textContent = message;
+      }
+    }
+
+    function connectGlobalChat() {
+      globalChatConnectionRequested = true;
+      if (globalChatSocket && (globalChatSocket.readyState === WebSocket.OPEN || globalChatSocket.readyState === WebSocket.CONNECTING)) {
+        return;
+      }
+      if (location.protocol !== "http:" && location.protocol !== "https:") {
+        updateGlobalChatConnectionStatus("Open Gameverse from the chat server URL to use Global chat.", false);
+        return;
+      }
+
+      const socketProtocol = location.protocol === "https:" ? "wss:" : "ws:";
+      const socketUrl = `${socketProtocol}//${location.host}/ws`;
+      updateGlobalChatConnectionStatus("Connecting to Global chat…", false);
+      try {
+        const socket = new WebSocket(socketUrl);
+        globalChatSocket = socket;
+        socket.addEventListener("open", () => {
+          updateGlobalChatConnectionStatus("Connected to Global chat. Display names are not verified; do not share private information.", true);
+          identifyGlobalChatUser();
+        });
+        socket.addEventListener("message", event => {
+          let packet;
+          try {
+            packet = JSON.parse(event.data);
+          } catch (error) {
+            chatNote.textContent = "The chat server sent an unreadable response.";
+            return;
+          }
+          if (packet.type === "history" && Array.isArray(packet.messages)) {
+            globalChatMessages.splice(0, globalChatMessages.length, ...packet.messages);
+            if (selectedChatPanel === "rooms" && selectedRoomId === "global") {
+              renderChatMessages();
+            }
+          } else if (packet.type === "identified" && packet.user
+            && typeof packet.user.id === "string"
+            && typeof packet.user.name === "string") {
+            globalChatUserId = packet.user.id;
+            renderChatLists();
+          } else if (packet.type === "users" && Array.isArray(packet.users)) {
+            globalChatUsers.splice(0, globalChatUsers.length, ...packet.users.filter(user =>
+              user
+              && typeof user.id === "string"
+              && typeof user.name === "string"
+            ));
+            renderChatLists();
+          } else if (packet.type === "user-lookup"
+            && typeof packet.requestId === "string"
+            && pendingFriendLookups.has(packet.requestId)) {
+            const requestedName = pendingFriendLookups.get(packet.requestId);
+            pendingFriendLookups.delete(packet.requestId);
+            if (packet.found === true && typeof packet.name === "string") {
+              if (addFriend(packet.name)) {
+                addFriendName.value = "";
+              }
+            } else {
+              chatNote.textContent = `No one named "${requestedName}" is connected to Global chat right now.`;
+            }
+          } else if (packet.type === "message" && packet.message
+            && typeof packet.message.author === "string"
+            && typeof packet.message.text === "string"
+            && typeof packet.message.createdAt === "string"
+            && !Number.isNaN(Date.parse(packet.message.createdAt))) {
+            globalChatMessages.push(packet.message);
+            if (globalChatMessages.length > 100) {
+              globalChatMessages.splice(0, globalChatMessages.length - 100);
+            }
+            if (selectedChatPanel === "rooms" && selectedRoomId === "global") {
+              renderChatMessages();
+            }
+          } else if (packet.type === "error" && typeof packet.message === "string") {
+            const pending = pendingGlobalMessages.get(packet.clientMessageId);
+            if (pending) {
+              pendingGlobalMessages.delete(packet.clientMessageId);
+              if (!chatInput.value) {
+                chatInput.value = pending.text;
+              }
+            }
+            chatNote.textContent = packet.message;
+          } else if (packet.type === "sent" && typeof packet.clientMessageId === "string") {
+            const pending = pendingGlobalMessages.get(packet.clientMessageId);
+            if (pending) {
+              pendingGlobalMessages.delete(packet.clientMessageId);
+              chatNote.textContent = "Message sent to Global chat.";
+            }
+          }
+        });
+        socket.addEventListener("close", () => {
+          if (globalChatSocket !== socket) {
+            return;
+          }
+          globalChatSocket = null;
+          globalChatUserId = "";
+          globalChatUsers.splice(0);
+          pendingFriendLookups.clear();
+          renderChatLists();
+          const pending = [...pendingGlobalMessages.values()];
+          pendingGlobalMessages.clear();
+          if (!chatInput.value && pending.length) {
+            chatInput.value = pending[pending.length - 1].text;
+          }
+          updateGlobalChatConnectionStatus("Global chat disconnected. Reconnecting…", false);
+          if (globalChatConnectionRequested) {
+            globalChatReconnectTimer = window.setTimeout(connectGlobalChat, 2500);
+          }
+        });
+        socket.addEventListener("error", () => {
+          updateGlobalChatConnectionStatus("Could not reach the Global chat server. Retrying…", false);
+        });
+      } catch (error) {
+        updateGlobalChatConnectionStatus("Could not start Global chat. Check the server address and try again.", false);
+      }
+    }
+
+    function identifyGlobalChatUser() {
+      if (!globalChatSocket || globalChatSocket.readyState !== WebSocket.OPEN) {
+        return;
+      }
+      try {
+        globalChatSocket.send(JSON.stringify({
+          type: "identify",
+          name: currentChatName || "Guest"
+        }));
+      } catch (error) {
+        updateGlobalChatConnectionStatus("Could not share your display name with Global chat.", false);
+      }
+    }
+
+    function requestGlobalFriendLookup(name) {
+      const requestedName = name.trim().replace(/\s+/g, " ").slice(0, 24);
+      if (!requestedName) {
+        chatNote.textContent = "Enter a display name to check whether that player is online.";
+        return;
+      }
+      if (!globalChatSocket || globalChatSocket.readyState !== WebSocket.OPEN || !globalChatUserId) {
+        chatNote.textContent = "Connect to Global chat before adding an online player.";
+        return;
+      }
+      const requestId = `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+      try {
+        globalChatSocket.send(JSON.stringify({
+          type: "lookup-user",
+          requestId,
+          name: requestedName
+        }));
+        pendingFriendLookups.set(requestId, requestedName);
+        chatNote.textContent = `Checking whether ${requestedName} is connected…`;
+      } catch (error) {
+        chatNote.textContent = "Could not check that player. Check your connection and try again.";
+      }
     }
 
     function readOnlineUsers() {
@@ -6827,7 +6960,7 @@
           value: room.id
         })
       ));
-      const activeUsers = readOnlineUsers().filter(user => user.id !== tabId);
+      const activeUsers = globalChatUsers.filter(user => user.id !== globalChatUserId);
       const listedOnline = activeUsers.filter(user => user.name.toLocaleLowerCase() !== currentChatName.toLocaleLowerCase());
       chatOnlineList.replaceChildren(...(listedOnline.length
         ? listedOnline.map(user => {
@@ -6835,7 +6968,7 @@
           return createChatListItem({
             icon: "+",
             title: user.name,
-            subtitle: alreadyFriend ? "Friend · online in this browser" : "Online in this browser · add friend",
+            subtitle: alreadyFriend ? "Friend · online in Global chat" : "Online in Global chat · add friend",
             online: true,
             action: alreadyFriend ? "dm" : "add-online-friend",
             value: user.name
@@ -6843,7 +6976,9 @@
         })
         : [Object.assign(document.createElement("p"), {
           className: "chat-list-empty",
-          textContent: "No other Gameverse tabs are active right now."
+          textContent: globalChatConnected
+            ? "No other players are connected to Global chat right now."
+            : "Connect to Global chat to see who's online."
         })]));
       chatFriendList.replaceChildren(...(chatState.friends.length
         ? chatState.friends.map(friend => {
@@ -6851,7 +6986,7 @@
           return createChatListItem({
             icon: [...friend][0]?.toLocaleUpperCase() || "?",
             title: friend,
-            subtitle: isOnline ? "Online in this browser" : "Friend · local contact",
+            subtitle: isOnline ? "Online in Global chat" : "Friend · not connected",
             online: isOnline,
             action: "dm",
             value: friend
@@ -6913,7 +7048,9 @@
         chatEmpty.querySelector("strong").textContent = selectedChatPanel === "dms" ? `Start a DM with ${selectedDmName}` : "Start the conversation";
         chatEmpty.querySelector("span:last-child").textContent = selectedChatPanel === "dms"
           ? "Messages in this direct conversation are saved only in this browser."
-          : "Messages are saved in this browser and are not sent to a server.";
+          : selectedRoomId === "global"
+            ? "Waiting for messages from everyone online."
+            : "Messages in this room are saved only in this browser.";
       }
       chatTranscript.scrollTop = chatTranscript.scrollHeight;
     }
@@ -6928,9 +7065,11 @@
         const room = chatState.rooms.find(candidate => candidate.id === selectedRoomId) || defaultChatRooms[0];
         chatConversationTitle.textContent = `# ${room.name.toLocaleLowerCase()}`;
         chatConversationDescription.textContent = room.id === "global"
-          ? "Main room · saved locally and shared only between tabs of this browser"
+          ? "Public room · messages appear live to everyone connected"
           : "Room · saved locally in this browser";
-        chatConversationStatus.textContent = "Local";
+        chatConversationStatus.textContent = room.id === "global"
+          ? globalChatConnected ? "Live" : "Offline"
+          : "Local";
         chatInput.placeholder = `Message #${room.name.toLocaleLowerCase()}...`;
       }
       renderChatMessages();
@@ -7007,9 +7146,7 @@
     });
     addFriendForm.addEventListener("submit", event => {
       event.preventDefault();
-      if (addFriend(addFriendName.value)) {
-        addFriendName.value = "";
-      }
+      requestGlobalFriendLookup(addFriendName.value);
     });
     chatState = readChatState();
     renderChatLists();
@@ -7018,6 +7155,32 @@
       event.preventDefault();
       const text = chatInput.value.trim();
       if (!text) {
+        chatInput.focus();
+        return;
+      }
+      if (selectedChatPanel !== "dms" && selectedRoomId === "global") {
+        if (!globalChatSocket || globalChatSocket.readyState !== WebSocket.OPEN) {
+          updateGlobalChatConnectionStatus("Global chat is offline. Your message was not sent.", false);
+          return;
+        }
+        const clientMessageId = `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+        pendingGlobalMessages.set(clientMessageId, { text: text.slice(0, 500) });
+        try {
+          globalChatSocket.send(JSON.stringify({
+            type: "message",
+            clientMessageId,
+            author: currentChatName || "Guest",
+            text: text.slice(0, 500)
+          }));
+        } catch (error) {
+          pendingGlobalMessages.delete(clientMessageId);
+          updateGlobalChatConnectionStatus("Your message could not be sent. Check your connection and try again.", false);
+          return;
+        }
+        chatInput.value = "";
+        if (pendingGlobalMessages.has(clientMessageId)) {
+          chatNote.textContent = "Sending message…";
+        }
         chatInput.focus();
         return;
       }
@@ -7032,7 +7195,7 @@
       renderChatMessages();
       renderChatLists();
       chatNote.textContent = saveChatState()
-        ? "Message saved locally. It is not sent to other players or an online server."
+        ? "Message saved locally in this browser."
         : "Message is visible here, but could not be saved.";
       chatInput.value = "";
       chatInput.focus();
@@ -7055,6 +7218,7 @@
         settings = readSettings();
         currentChatName = settings.displayName || currentChatName;
         applySettings();
+        identifyGlobalChatUser();
         updatePresence();
         renderChatLists();
         renderChatConversation();
@@ -7062,6 +7226,13 @@
     });
     let presenceHeartbeat = null;
     window.addEventListener("beforeunload", () => {
+      globalChatConnectionRequested = false;
+      if (globalChatReconnectTimer !== null) {
+        window.clearTimeout(globalChatReconnectTimer);
+      }
+      if (globalChatSocket) {
+        globalChatSocket.close();
+      }
       if (presenceHeartbeat !== null) {
         window.clearInterval(presenceHeartbeat);
       }
@@ -7077,6 +7248,7 @@
       const displayName = settingsDisplayName.value.trim().replace(/\s+/g, " ").slice(0, 24);
       settings.displayName = displayName;
       currentChatName = displayName || "Guest";
+      identifyGlobalChatUser();
       homeWelcome.textContent = `Welcome, ${currentChatName}!`;
       homeWelcome.hidden = false;
       saveSettings();
@@ -7166,20 +7338,17 @@
       appShell.hidden = false;
       window.history.replaceState(null, "", "#home");
       showView();
+      connectOnlineCounter();
     });
 
-    const openExternalSiteButton = document.getElementById("open-blob-site");
-
-    openExternalSiteButton.addEventListener("click", () => {
-      const openedPage = window.open("about:blank", "_blank");
-      if (!openedPage) {
-        window.alert("The new tab was blocked. Allow pop-ups for this page and try again.");
-        return;
+    window.addEventListener("beforeunload", () => {
+      onlineCounterStopped = true;
+      if (onlineCounterRetryTimer !== null) {
+        window.clearTimeout(onlineCounterRetryTimer);
       }
-
-      openedPage.document.open();
-      openedPage.document.write(`<!doctype html>${document.documentElement.outerHTML}`);
-      openedPage.document.close();
+      if (onlineCounterSocket) {
+        onlineCounterSocket.close();
+      }
     });
 
     const views = {
@@ -7187,7 +7356,6 @@
       games: document.getElementById("games-view"),
       game: document.getElementById("geometry-dash-view"),
       play: document.getElementById("player-view"),
-      chat: document.getElementById("chat-view"),
       settings: document.getElementById("settings-view")
     };
     const gameCatalog = {
@@ -7382,6 +7550,7 @@
     const fullscreenButton = document.getElementById("fullscreen-button");
     const openHtmlButton = document.getElementById("open-html-button");
     const geometryPortOpenWindowButton = document.getElementById("geometry-port-open-window");
+    const geometryPortOpenBlobButton = document.getElementById("geometry-port-open-blob");
     const geometryPortContinueButton = document.getElementById("geometry-port-continue");
     const fullscreenNotice = document.getElementById("fullscreen-notice");
     const gameStatus = document.getElementById("game-status");
@@ -7394,8 +7563,6 @@
     const playedGamesStorageKey = "gameverse-played-games";
     const freshPicksGrid = document.getElementById("fresh-picks-grid");
     const freshPicksStatus = document.getElementById("fresh-picks-status");
-    const continueGrid = document.getElementById("continue-grid");
-    const continueEmpty = document.getElementById("continue-empty");
     const catalogCards = [...document.querySelectorAll("#games-view .catalog-card")];
     const categoryFilters = document.getElementById("catalog-categories");
     const gameSearch = document.getElementById("game-search");
@@ -7427,11 +7594,11 @@
       return shuffled;
     }
 
-    function createFreshPickCard(gameKey, game, isPlayed, actionLabel = "Play") {
+    function createFreshPickCard(gameKey, game, isPlayed) {
       const card = document.createElement("a");
       card.className = "fresh-pick-card";
-      card.href = actionLabel === "Continue" ? `#play/${gameKey}` : `#game/${gameKey}`;
-      card.setAttribute("aria-label", `${actionLabel} ${game.title}`);
+      card.href = `#game/${gameKey}`;
+      card.setAttribute("aria-label", `View details for ${game.title}`);
       if (isPlayed) {
         card.classList.add("is-played");
       }
@@ -7457,21 +7624,10 @@
       playedBadge.textContent = "Played";
       const playLabel = document.createElement("span");
       playLabel.className = "game-card-play";
-      playLabel.textContent = actionLabel;
+      playLabel.textContent = "View details";
       info.append(title, description, playedBadge, playLabel);
       card.append(cover, info);
       return card;
-    }
-
-    function renderContinuePlaying() {
-      const recentGames = readPlayedGameKeys()
-        .slice(0, 4)
-        .filter(gameKey => Object.prototype.hasOwnProperty.call(gameCatalog, gameKey));
-      continueGrid.replaceChildren(...recentGames.map(gameKey =>
-        createFreshPickCard(gameKey, gameCatalog[gameKey], false, "Continue")
-      ));
-      continueGrid.hidden = recentGames.length === 0;
-      continueEmpty.hidden = recentGames.length > 0;
     }
 
     function renderFreshPicks() {
@@ -7483,7 +7639,7 @@
         const played = shuffleGames(allGames.filter(([key]) => playedKeys.includes(key)));
         selection.push(...played.slice(0, 4 - selection.length));
       }
-      freshPicksGrid.replaceChildren(...selection.map(([key, game]) => createFreshPickCard(key, game, playedKeys.includes(key), "View details")));
+      freshPicksGrid.replaceChildren(...selection.map(([key, game]) => createFreshPickCard(key, game, playedKeys.includes(key))));
       if (!freshPicksStatus.textContent.includes("unavailable")) {
         freshPicksStatus.textContent = selection.some(([key]) => playedKeys.includes(key))
           ? "You've explored our new picks—some familiar favorites are mixed in."
@@ -7496,17 +7652,17 @@
         const recentGames = readPlayedGameKeys().filter(key => key !== gameKey);
         recentGames.unshift(gameKey);
         localStorage.setItem(playedGamesStorageKey, JSON.stringify(recentGames.slice(0, 20)));
-        renderContinuePlaying();
+        pendingGamePlayEvents += 1;
+        flushPendingGamePlayEvents();
+        renderFreshPicks();
       } catch (error) {
-        continueEmpty.textContent = "Play history could not be saved in this browser.";
-        continueEmpty.hidden = false;
-        continueGrid.hidden = true;
+        freshPicksStatus.textContent = "Play history could not be saved in this browser.";
       }
     }
 
     window.addEventListener("storage", event => {
       if (event.key === playedGamesStorageKey) {
-        renderContinuePlaying();
+        renderFreshPicks();
       }
     });
 
@@ -7645,6 +7801,9 @@
           : Object.prototype.hasOwnProperty.call(views, viewName)
             ? viewName
             : "home";
+      if (viewName === "chat") {
+        window.history.replaceState(null, "", "#home");
+      }
       const navView = activeView === "game" || activeView === "play" ? "games" : activeView;
       if (activeView !== "game") {
         cancelGeometryDashInstall();
@@ -7665,14 +7824,6 @@
       });
       if (activeView === "games") {
         renderFreshPicks();
-      }
-      if (activeView === "home") {
-        renderContinuePlaying();
-      }
-      if (activeView === "chat") {
-        updatePresence();
-        renderChatLists();
-        renderChatConversation();
       }
       if (activeView === "game") {
         renderGameDetails(detailGameKey);
@@ -7706,11 +7857,9 @@
           ? "Games — Gameverse"
           : activeView === "game"
             ? `${gameCatalog[detailGameKey].title} — Gameverse`
-              : activeView === "chat"
-                ? "Chat Room — Gameverse"
-                : activeView === "settings"
-                  ? "Settings — Gameverse"
-                  : "Gameverse — School-Time Game Favorites";
+              : activeView === "settings"
+                ? "Settings — Gameverse"
+                : "Gameverse — School-Time Game Favorites";
       if (activeView === "play" && loadedGameKey !== activeGameKey) {
         fetchGame(activeGameKey);
       }
@@ -7764,7 +7913,10 @@
         gameMarkup = `<!doctype html>${wrapperDocument.documentElement.outerHTML}`;
         gameMarkupKey = gameKey;
         openHtmlButton.disabled = false;
-        gameFrame.srcdoc = gameMarkup;
+        const frameDocument = gameFrame.contentDocument;
+        frameDocument.open();
+        frameDocument.write(gameMarkup);
+        frameDocument.close();
         return;
       }
       loading.textContent = `Loading ${selectedGame.title}…`;
@@ -7896,8 +8048,36 @@
       openedPage.document.close();
     }
 
+    function openGeometryDashBlobWindow() {
+      if (activeGameKey !== "geometry-dash-port" || gameMarkupKey !== activeGameKey || !gameMarkup) {
+        gameStatus.textContent = "Geometry Dash is still preparing. Try again when it has loaded.";
+        return;
+      }
+      const blobUrl = URL.createObjectURL(new Blob([gameMarkup], { type: "text/html" }));
+      const width = Math.max(320, Math.min(1200, window.screen.availWidth - 80));
+      const height = Math.max(320, Math.min(850, window.screen.availHeight - 100));
+      const left = Math.max(0, window.screenX + (window.outerWidth - width) / 2);
+      const top = Math.max(0, window.screenY + (window.outerHeight - height) / 2);
+      const features = `popup=yes,width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes`;
+      const openedPage = window.open(blobUrl, "_blank", features);
+      if (!openedPage) {
+        URL.revokeObjectURL(blobUrl);
+        gameStatus.textContent = "The Blob URL window was blocked. Allow pop-ups for this page and try again.";
+        return;
+      }
+      openedPage.opener = null;
+      const releaseBlobUrl = window.setInterval(() => {
+        if (openedPage.closed) {
+          window.clearInterval(releaseBlobUrl);
+          URL.revokeObjectURL(blobUrl);
+        }
+      }, 1000);
+      geometryPortNotice.hidden = true;
+    }
+
     openHtmlButton.addEventListener("click", openGameHtmlWindow);
     geometryPortOpenWindowButton.addEventListener("click", openGameHtmlWindow);
+    geometryPortOpenBlobButton.addEventListener("click", openGeometryDashBlobWindow);
     geometryPortContinueButton.addEventListener("click", () => {
       geometryPortNotice.hidden = true;
       gameFrame.focus();
