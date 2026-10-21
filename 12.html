@@ -6474,6 +6474,16 @@
       outline: none;
     }
 
+    .home-shortcuts svg {
+      width: 17px;
+      height: 17px;
+      fill: none;
+      stroke: currentColor;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-width: 1.7;
+    }
+
     .catalog-page,
     .player-page,
     .settings-page,
@@ -6710,6 +6720,109 @@
       .home-shortcuts a {
         width: 34px;
         height: 34px;
+      }
+    }
+
+    #player-view.player-page {
+      position: fixed;
+      z-index: 5;
+      inset: var(--fern-toolbar-height) 0 0 var(--fern-sidebar-width);
+      width: auto;
+      height: auto;
+      min-height: 0;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: #050806;
+    }
+
+    #player-view .player-topbar {
+      position: fixed;
+      z-index: 19;
+      top: calc(var(--fern-toolbar-height) + 10px);
+      right: 12px;
+      display: block;
+      min-height: 0;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    #player-view .player-topbar > .wordmark,
+    #player-view .player-back,
+    #player-view .player-heading {
+      display: none;
+    }
+
+    #player-view .player-actions {
+      justify-content: flex-end;
+      gap: 7px;
+    }
+
+    #player-view .player-action {
+      display: grid;
+      width: 40px;
+      height: 40px;
+      min-height: 40px;
+      padding: 0;
+      place-items: center;
+      font-size: 0;
+    }
+
+    #player-view #favorite-button {
+      display: none;
+    }
+
+    #player-view .player-action svg {
+      width: 18px;
+      height: 18px;
+      fill: none;
+      stroke: currentColor;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-width: 1.8;
+    }
+
+    #player-view .player-main {
+      width: 100%;
+      height: 100%;
+      min-height: 0;
+      margin: 0;
+      padding: 0;
+    }
+
+    #player-view .game-wrap {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      min-height: 0;
+      margin: 0;
+      isolation: auto;
+      border: 0;
+      border-radius: 0;
+      background: #000;
+      box-shadow: none;
+    }
+
+    #player-view .game-wrap::after {
+      content: none;
+    }
+
+    #player-view .game-wrap iframe {
+      border-radius: 0;
+    }
+
+    #player-view #game-frame {
+      transform: none;
+      backface-visibility: visible;
+      will-change: auto;
+    }
+
+    @media (max-width: 760px) {
+      #player-view.player-page {
+        inset: var(--fern-toolbar-height) 0 62px;
       }
     }
 
@@ -7105,6 +7218,214 @@
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
+
+    .html-viewer-main {
+      max-width: 900px;
+    }
+
+    .html-viewer-card {
+      padding: clamp(18px, 3vw, 28px);
+      border: 1px solid rgb(187 226 199 / 11%);
+      border-radius: 16px;
+      background: rgb(8 21 13 / 89%);
+      box-shadow: 0 10px 32px rgb(0 0 0 / 15%);
+    }
+
+    .html-viewer-heading,
+    .html-viewer-output-heading {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .html-viewer-heading h2,
+    .html-viewer-output-heading h3 {
+      margin: 0;
+      color: #edf5ef;
+      font-size: 16px;
+      font-weight: 500;
+    }
+
+    .html-viewer-heading p {
+      max-width: 620px;
+      margin: 8px 0 0;
+      color: #9eafa4;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .html-viewer-badge {
+      flex: 0 0 auto;
+      padding: 6px 9px;
+      border: 1px solid rgb(189 247 215 / 15%);
+      border-radius: 20px;
+      color: #bdf7d9;
+      font-size: 9px;
+      letter-spacing: .08em;
+    }
+
+    .html-viewer-label {
+      display: block;
+      margin: 22px 0 8px;
+      color: #dce9e0;
+      font-size: 11px;
+    }
+
+    #html-viewer-input {
+      display: block;
+      width: 100%;
+      min-height: 190px;
+      resize: vertical;
+      padding: 13px;
+      border: 1px solid rgb(188 228 201 / 13%);
+      border-radius: 10px;
+      outline: none;
+      background: #07110b;
+      color: #d8e8dd;
+      font: 12px/1.65 Consolas, "Courier New", monospace;
+      tab-size: 2;
+    }
+
+    #html-viewer-input:focus-visible {
+      border-color: rgb(189 247 215 / 55%);
+      box-shadow: 0 0 0 3px rgb(189 247 215 / 8%);
+    }
+
+    .html-viewer-help,
+    .html-viewer-status {
+      min-height: 16px;
+      margin: 8px 0 0;
+      color: #91a498;
+      font-size: 10px;
+      line-height: 1.5;
+    }
+
+    .html-viewer-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .html-viewer-actions button {
+      min-height: 36px;
+      padding: 0 14px;
+      border: 1px solid rgb(188 228 201 / 15%);
+      border-radius: 20px;
+      background: #102219;
+      color: #dce9e0;
+      font: inherit;
+      font-size: 11px;
+      cursor: pointer;
+    }
+
+    .html-viewer-actions button:hover,
+    .html-viewer-actions button:focus-visible {
+      border-color: rgb(189 247 215 / 45%);
+      outline: none;
+    }
+
+    .html-viewer-actions .html-viewer-primary {
+      border-color: #bdf7d9;
+      background: #bdf7d9;
+      color: #102319;
+    }
+
+    .html-viewer-output-wrap {
+      margin-top: 18px;
+      overflow: hidden;
+      border: 1px solid rgb(188 228 201 / 10%);
+      border-radius: 10px;
+      background: #050a07;
+    }
+
+    .html-viewer-output-heading {
+      min-height: 40px;
+      align-items: center;
+      padding: 0 12px;
+      border-bottom: 1px solid rgb(188 228 201 / 9%);
+    }
+
+    .html-viewer-output-heading h3 {
+      font-size: 11px;
+    }
+
+    #html-viewer-line-count {
+      color: #8fa195;
+      font-size: 10px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .html-viewer-output {
+      min-height: 100px;
+      max-height: min(52vh, 520px);
+      margin: 0;
+      overflow: auto;
+      padding: 14px;
+      color: #c8d9ce;
+      font: 11px/1.6 Consolas, "Courier New", monospace;
+      tab-size: 2;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    body[data-theme="light"] .html-viewer-card {
+      border-color: rgb(48 82 61 / 10%);
+      background: rgb(244 249 245 / 94%);
+    }
+
+    body[data-theme="light"] .html-viewer-heading h2,
+    body[data-theme="light"] .html-viewer-output-heading h3 {
+      color: #263a2d;
+    }
+
+    body[data-theme="light"] .html-viewer-heading p,
+    body[data-theme="light"] .html-viewer-help,
+    body[data-theme="light"] .html-viewer-status {
+      color: #53685a;
+    }
+
+    body[data-theme="light"] #html-viewer-input {
+      border-color: rgb(48 82 61 / 15%);
+      background: #f8fbf9;
+      color: #263a2d;
+    }
+
+    body[data-theme="light"] .html-viewer-output-wrap {
+      border-color: rgb(48 82 61 / 12%);
+      background: #f7faf8;
+    }
+
+    body[data-theme="light"] .html-viewer-output {
+      color: #263a2d;
+    }
+
+    body[data-theme="light"] .html-viewer-actions button:not(.html-viewer-primary) {
+      border-color: rgb(48 82 61 / 15%);
+      background: #e6f0e9;
+      color: #314d3b;
+    }
+
+    @media (max-width: 720px) {
+      .sidebar-primary,
+      .sidebar-secondary {
+        flex: initial;
+        gap: 4px;
+      }
+
+      .app-nav-link {
+        min-width: 62px;
+        padding: 0 8px;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .html-viewer-heading {
+        flex-direction: column;
+        gap: 10px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -7202,6 +7523,9 @@
       <a class="app-nav-link" href="#games" data-bottom-view="games">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 8h10a4 4 0 0 1 3.8 2.8l1.1 3.5a2.4 2.4 0 0 1-3.8 2.6l-2.3-1.8H8.2l-2.3 1.8a2.4 2.4 0 0 1-3.8-2.6l1.1-3.5A4 4 0 0 1 7 8Z"/><path d="M8 10v4m-2-2h4m7-1h.01M18 13h.01"/></svg><span>Games</span>
       </a>
+      <a class="app-nav-link" href="#apps" data-bottom-view="apps">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 8 4 12l4 4m8-8 4 4-4 4m-3-10-2 12"/></svg><span>Apps</span>
+      </a>
     </div>
     <div class="sidebar-spacer"></div>
     <div class="sidebar-secondary">
@@ -7280,6 +7604,9 @@
           <a href="#game/block-blast" aria-label="Block Blast" title="Block Blast"><span aria-hidden="true">▦</span></a>
           <a href="#games" aria-label="Browse games" title="Browse games"><span aria-hidden="true">🎮</span></a>
           <a href="#settings" aria-label="Settings" title="Settings"><span aria-hidden="true">⚙</span></a>
+          <a href="#home" target="_blank" rel="noopener noreferrer" aria-label="Open Gameverse in a new tab" title="Open Gameverse in a new tab">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 13v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h5"/></svg>
+          </a>
         </nav>
         <p class="studio-credit">A Gameverse Studio original</p>
         <p class="intro">Explore a growing collection of browser games, from arcade and platform favorites to puzzles and strategy.</p>
@@ -7347,6 +7674,44 @@
     </main>
   </section>
 
+  <section class="catalog-page" id="apps-view" hidden aria-labelledby="apps-title">
+    <main class="catalog-main html-viewer-main">
+      <header class="catalog-heading">
+        <p class="eyebrow">Gameverse tools</p>
+        <h1 id="apps-title">Apps</h1>
+        <p>View HTML source safely without running it.</p>
+      </header>
+      <section class="html-viewer-card" aria-labelledby="html-viewer-title">
+        <div class="html-viewer-heading">
+          <div>
+            <h2 id="html-viewer-title">HTML Viewer</h2>
+            <p>View source safely, or run a standalone HTML experiment in a restricted preview.</p>
+          </div>
+          <span class="html-viewer-badge">READ ONLY PREVIEW</span>
+        </div>
+        <form id="html-viewer-form">
+          <label class="html-viewer-label" for="html-viewer-input">HTML code</label>
+          <textarea id="html-viewer-input" spellcheck="false" autocapitalize="off" autocomplete="off" placeholder="Paste HTML source here…" aria-describedby="html-viewer-help"></textarea>
+          <p class="html-viewer-help" id="html-viewer-help">Source preview never runs code. The sandbox preview runs inline HTML, CSS, and JavaScript, but blocks network access, nested frames, pop-ups, and access to Gameverse.</p>
+          <div class="html-viewer-actions">
+            <button class="html-viewer-primary" type="submit">View source</button>
+            <button class="html-viewer-secondary" id="html-viewer-run" type="button" title="Open a blank window with a sandboxed, offline preview">Open in about:blank sandbox</button>
+            <button class="html-viewer-secondary" id="html-viewer-copy" type="button">Copy source</button>
+            <button class="html-viewer-secondary" id="html-viewer-clear" type="button">Clear</button>
+          </div>
+        </form>
+        <p class="html-viewer-status" id="html-viewer-status" role="status" aria-live="polite"></p>
+        <section class="html-viewer-output-wrap" aria-labelledby="html-viewer-output-title">
+          <div class="html-viewer-output-heading">
+            <h3 id="html-viewer-output-title">Source preview</h3>
+            <span id="html-viewer-line-count">0 lines</span>
+          </div>
+          <pre class="html-viewer-output"><code id="html-viewer-output" aria-label="HTML source preview"></code></pre>
+        </section>
+      </section>
+    </main>
+  </section>
+
   <section class="catalog-page" id="geometry-dash-view" hidden aria-labelledby="geometry-dash-title">
     <header class="catalog-topbar">
       <a class="wordmark" href="#home" aria-label="Gameverse home">GAMEVERSE</a>
@@ -7401,9 +7766,15 @@
       <div class="player-actions">
         <a class="player-back" href="#games">Back to games</a>
         <button class="player-action" id="favorite-button" type="button" aria-pressed="false">☆ Favorite</button>
-        <button class="player-action" id="reload-button" type="button">↻ Reload</button>
-        <button class="player-action" id="fullscreen-button" type="button">⛶ Fullscreen</button>
-        <button class="player-action" id="open-html-button" type="button" aria-label="Open game HTML in a separate window" title="Open game HTML in a separate window" disabled>↗ Open HTML</button>
+        <button class="player-action" id="reload-button" type="button" aria-label="Reload game" title="Reload game">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7v5h-5"/><path d="M19 12a7 7 0 1 1-2-4.9L20 12"/></svg>
+        </button>
+        <button class="player-action" id="fullscreen-button" type="button" aria-label="Enter fullscreen" aria-pressed="false" title="Enter fullscreen">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4H4v4m12-4h4v4M4 16v4h4m12-4v4h-4"/></svg>
+        </button>
+        <button class="player-action" id="open-html-button" type="button" aria-label="Open game in a new window" title="Open game in a new window">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 13v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h5"/></svg>
+        </button>
       </div>
     </header>
     <main class="player-main">
@@ -7419,7 +7790,7 @@
         <p class="player-hint">Game controls vary by title · Fullscreen for the best view</p>
       </div>
       <div class="game-wrap" id="game-wrap">
-        <iframe id="game-frame" src="about:blank" title="Game player" allow="fullscreen; gamepad"></iframe>
+        <iframe id="game-frame" src="about:blank" title="Game player" loading="eager" allow="fullscreen; gamepad"></iframe>
         <div class="fullscreen-notice" id="fullscreen-notice" role="status" hidden>Press Esc to exit fullscreen.</div>
         <div id="geometry-port-loading" role="status" aria-live="polite" hidden>
           <div class="geometry-loading-panel">
@@ -7665,6 +8036,11 @@
     const settingsReducedMotion = document.getElementById("settings-reduced-motion");
     const settingsCompact = document.getElementById("settings-compact");
     const settingsStatus = document.getElementById("settings-status");
+    const htmlViewerForm = document.getElementById("html-viewer-form");
+    const htmlViewerInput = document.getElementById("html-viewer-input");
+    const htmlViewerOutput = document.getElementById("html-viewer-output");
+    const htmlViewerLineCount = document.getElementById("html-viewer-line-count");
+    const htmlViewerStatus = document.getElementById("html-viewer-status");
     const settingsStorageKey = "gameverse-settings";
     const chatStorageKey = "gameverse-chat-v2";
     const presenceStorageKey = "gameverse-chat-presence";
@@ -8561,6 +8937,7 @@
     const views = {
       home: document.getElementById("home-view"),
       games: document.getElementById("games-view"),
+      apps: document.getElementById("apps-view"),
       game: document.getElementById("geometry-dash-view"),
       play: document.getElementById("player-view"),
       settings: document.getElementById("settings-view")
@@ -9049,6 +9426,73 @@
     document.getElementById("app-forward").addEventListener("click", () => window.history.forward());
     document.getElementById("app-refresh").addEventListener("click", () => window.location.reload());
 
+    htmlViewerForm.addEventListener("submit", event => {
+      event.preventDefault();
+      const source = htmlViewerInput.value;
+      htmlViewerOutput.textContent = source;
+      const lineCount = source ? source.split(/\r\n|\r|\n/).length : 0;
+      htmlViewerLineCount.textContent = `${lineCount} ${lineCount === 1 ? "line" : "lines"}`;
+      htmlViewerStatus.textContent = source
+        ? "Source displayed as text. No HTML or scripts were executed."
+        : "Paste HTML source above to view it here.";
+    });
+
+    document.getElementById("html-viewer-copy").addEventListener("click", async () => {
+      const source = htmlViewerOutput.textContent;
+      if (!source) {
+        htmlViewerStatus.textContent = "There is no source to copy yet.";
+        return;
+      }
+      try {
+        await navigator.clipboard.writeText(source);
+        htmlViewerStatus.textContent = "HTML source copied to the clipboard.";
+      } catch (error) {
+        htmlViewerStatus.textContent = "Clipboard access is unavailable. Select the preview text and copy it manually.";
+      }
+    });
+
+    document.getElementById("html-viewer-run").addEventListener("click", () => {
+      const source = htmlViewerInput.value;
+      if (!source.trim()) {
+        htmlViewerStatus.textContent = "Paste standalone HTML code before opening a sandbox preview.";
+        return;
+      }
+
+      const openedPage = window.open("about:blank", "_blank", "popup=yes,width=1100,height=760,resizable=yes");
+      if (!openedPage) {
+        htmlViewerStatus.textContent = "The preview window was blocked. Allow pop-ups for this page and try again.";
+        return;
+      }
+
+      try {
+        openedPage.opener = null;
+        openedPage.document.open();
+        openedPage.document.write("<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>Sandboxed HTML Preview</title><style>html,body{width:100%;height:100%;margin:0;background:#111}iframe{display:block;width:100%;height:100%;border:0;background:#fff}</style></head><body><iframe id=\"html-preview\" title=\"Sandboxed HTML preview\" sandbox=\"allow-scripts allow-modals allow-pointer-lock\" allow=\"fullscreen\"></iframe></body></html>");
+        openedPage.document.close();
+
+        const previewDocument = new DOMParser().parseFromString(source, "text/html");
+        const contentPolicy = previewDocument.createElement("meta");
+        contentPolicy.httpEquiv = "Content-Security-Policy";
+        contentPolicy.content = "default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data: blob:; font-src data:; media-src data: blob:; connect-src 'none'; frame-src 'none'; child-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'";
+        previewDocument.head.prepend(contentPolicy);
+
+        const previewFrame = openedPage.document.getElementById("html-preview");
+        previewFrame.srcdoc = `<!doctype html>${previewDocument.documentElement.outerHTML}`;
+        htmlViewerStatus.textContent = "Opened a sandboxed preview. Inline code can run; network access and nested frames are blocked.";
+      } catch (error) {
+        openedPage.close();
+        htmlViewerStatus.textContent = `Unable to open the sandbox preview: ${error.message}`;
+      }
+    });
+
+    document.getElementById("html-viewer-clear").addEventListener("click", () => {
+      htmlViewerInput.value = "";
+      htmlViewerOutput.textContent = "";
+      htmlViewerLineCount.textContent = "0 lines";
+      htmlViewerStatus.textContent = "HTML source cleared.";
+      htmlViewerInput.focus();
+    });
+
     function updateGeometryPortProgress(text) {
       const progressMatch = text.match(/(\d+(?:\.\d+)?)\s*MB\s*\/\s*(\d+(?:\.\d+)?)\s*MB/i);
       if (progressMatch) {
@@ -9131,7 +9575,7 @@
         playerGameCategory.textContent = currentGame.category;
         playerGameDescription.textContent = currentGame.description;
         gameFrame.title = `${currentGame.title} game`;
-        openHtmlButton.disabled = gameMarkupKey !== activeGameKey;
+        openHtmlButton.disabled = !currentGame.url;
         recentlyPlayedCard.href = `#play/${activeGameKey}`;
         recentGameTitle.textContent = currentGame.title;
         recentGameImage.closest(".recent-art").hidden = !currentGame.image;
@@ -9153,6 +9597,8 @@
         ? `${gameCatalog[activeGameKey].title} — Gameverse`
         : activeView === "games"
           ? "Games — Gameverse"
+          : activeView === "apps"
+            ? "Apps — Gameverse"
           : activeView === "game"
             ? `${gameCatalog[detailGameKey].title} — Gameverse`
               : activeView === "settings"
@@ -9173,12 +9619,11 @@
     function fetchGame(gameKey) {
       const selectedGame = gameCatalog[gameKey];
       const isGeometryDashPort = gameKey === "geometry-dash-port";
-      const skipsLoadingOverlay = gameKey === "yohoho-io";
+      const skipsLoadingOverlay = gameKey === "yohoho-io" || gameKey === "the-long-hall";
       if (geometryPortLoadingTimer !== null) {
         window.clearTimeout(geometryPortLoadingTimer);
         geometryPortLoadingTimer = null;
       }
-      openHtmlButton.disabled = true;
       geometryPortLoading.hidden = !isGeometryDashPort;
       geometryPortNotice.hidden = true;
       loading.hidden = isGeometryDashPort || skipsLoadingOverlay;
@@ -9210,7 +9655,6 @@
         wrapperDocument.body.append(wrapperScript);
         gameMarkup = `<!doctype html>${wrapperDocument.documentElement.outerHTML}`;
         gameMarkupKey = gameKey;
-        openHtmlButton.disabled = false;
         const frameDocument = gameFrame.contentDocument;
         frameDocument.open();
         frameDocument.write(gameMarkup);
@@ -9231,7 +9675,6 @@
           }
           gameMarkup = source;
           gameMarkupKey = gameKey;
-          openHtmlButton.disabled = false;
           loadGame(gameKey);
         })
         .catch(error => {
@@ -9270,7 +9713,7 @@
 
     function loadGame(gameKey) {
       const selectedGame = gameCatalog[gameKey];
-      const skipsLoadingOverlay = gameKey === "yohoho-io";
+      const skipsLoadingOverlay = gameKey === "yohoho-io" || gameKey === "the-long-hall";
       loading.hidden = skipsLoadingOverlay;
       if (!skipsLoadingOverlay) {
         loading.textContent = `Loading ${selectedGame.title}…`;
@@ -9289,7 +9732,7 @@
 
       const frameDocument = gameFrame.contentDocument;
       frameDocument.open();
-      frameDocument.write(`<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body,#game{width:100%;height:100%;margin:0;background:#000}#game{display:block;border:0;transform:translateZ(0);backface-visibility:hidden;will-change:transform}</style></head><body><iframe id="game" sandbox="allow-scripts allow-forms allow-pointer-lock" allow="fullscreen; gamepad" allowfullscreen title="${selectedGame.title}"></iframe></body></html>`);
+      frameDocument.write(`<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body,#game{width:100%;height:100%;margin:0;background:#000}#game{display:block;border:0;contain:strict}</style></head><body><iframe id="game" loading="eager" sandbox="allow-scripts allow-forms allow-pointer-lock" allow="fullscreen; gamepad" allowfullscreen title="${selectedGame.title}"></iframe></body></html>`);
       frameDocument.close();
       const game = frameDocument.getElementById("game");
       game.addEventListener("load", () => {
@@ -9321,29 +9764,11 @@
     });
 
     function openGameHtmlWindow() {
-      if (gameMarkupKey !== activeGameKey || !gameMarkup) {
+      const selectedGame = gameCatalog[activeGameKey];
+      if (!selectedGame || !selectedGame.url) {
         return;
       }
-      const width = Math.max(320, Math.min(1200, window.screen.availWidth - 80));
-      const height = Math.max(320, Math.min(850, window.screen.availHeight - 100));
-      const left = Math.max(0, window.screenX + (window.outerWidth - width) / 2);
-      const top = Math.max(0, window.screenY + (window.outerHeight - height) / 2);
-      const features = `popup=yes,width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes`;
-      const openedPage = window.open("about:blank", "_blank", features);
-      if (!openedPage) {
-        gameStatus.textContent = "The new window was blocked. Allow pop-ups for this page and try again.";
-        return;
-      }
-      openedPage.opener = null;
-      const gameDocument = new DOMParser().parseFromString(gameMarkup, "text/html");
-      if (!gameDocument.querySelector("base")) {
-        const baseElement = gameDocument.createElement("base");
-        baseElement.href = gameCatalog[activeGameKey].url;
-        gameDocument.head.prepend(baseElement);
-      }
-      openedPage.document.open();
-      openedPage.document.write(`<!doctype html>${gameDocument.documentElement.outerHTML}`);
-      openedPage.document.close();
+      window.open(selectedGame.url, "_blank", "noopener,noreferrer");
     }
 
     function openGeometryDashBlobWindow() {
@@ -9411,21 +9836,29 @@
       fetchGame(activeGameKey);
     });
 
+    function updateFullscreenButton(isFullscreen) {
+      const label = isFullscreen ? "Exit fullscreen" : "Enter fullscreen";
+      fullscreenButton.setAttribute("aria-label", label);
+      fullscreenButton.setAttribute("aria-pressed", String(isFullscreen));
+      fullscreenButton.title = label;
+    }
+
     fullscreenButton.addEventListener("click", async () => {
       try {
         if (document.fullscreenElement) {
           await document.exitFullscreen();
         } else {
-          await gameWrap.requestFullscreen();
+          await gameFrame.requestFullscreen();
         }
+        updateFullscreenButton(document.fullscreenElement === gameFrame);
       } catch (error) {
         gameStatus.textContent = `Fullscreen is unavailable: ${error.message}`;
       }
     });
 
     document.addEventListener("fullscreenchange", async () => {
-      const isFullscreen = document.fullscreenElement === gameWrap;
-      fullscreenButton.textContent = isFullscreen ? "⛶ Exit fullscreen" : "⛶ Fullscreen";
+      const isFullscreen = document.fullscreenElement === gameFrame;
+      updateFullscreenButton(isFullscreen);
       fullscreenNotice.hidden = !isFullscreen;
       if (!isFullscreen) {
         if (navigator.keyboard && typeof navigator.keyboard.unlock === "function") {
