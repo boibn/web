@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>fern</title>
+<title>Lols</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Kaushan+Script&display=swap" rel="stylesheet">
 <style>
 :root{color-scheme:dark;--fr:#040807;--bg:#07130f;--pn:#0c1a14;--pn2:#11241c;--ln:#16271f;--tx:#e9f3ee;--mu:#7c9387;--ac:#c4f9de;--ad:#06241a;--e:cubic-bezier(.22,.8,.24,1);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -81,9 +81,25 @@ h1{font-size:19px;margin:0 0 14px;font-weight:600;letter-spacing:-.2px}
 .card{aspect-ratio:1;border-radius:16px;background:linear-gradient(110deg,#10211a 30%,#15291f 50%,#10211a 70%) 0 0/250% 100%;animation:pop .5s var(--e) both,sk 3.2s linear infinite;transition:transform .25s var(--e),box-shadow .25s}
 .card:hover{transform:translateY(-4px) scale(1.04);box-shadow:0 12px 28px #0007}
 .card:active{transform:scale(.97)}
-.gd-card{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;color:#f4f8ff;background:linear-gradient(145deg,#17213a,#304f82);border:1px solid #46669e;animation:pop .5s var(--e) both}
-.gd-card svg{width:38px;height:38px;fill:#f4cb54;stroke:#fff2a1;stroke-width:1.5}
-.gd-card span{font-size:11px;font-weight:600;text-align:center}
+.game-tile{display:flex;flex-direction:column;gap:7px;min-width:0}
+.gd-card{position:relative;width:100%;padding:0;overflow:hidden;color:#fff;background:#17213a;border:1px solid #46669e;animation:pop .5s var(--e) both;transition:transform .3s var(--e),box-shadow .3s var(--e),border-color .3s}
+.gd-card img{display:block;width:100%;height:100%;object-fit:cover;transition:transform .45s var(--e)}
+.game-title{color:#c3d3c9;font-size:11px;font-weight:600;text-align:center;transition:color .25s,transform .3s var(--e)}
+.game-tile:hover .gd-card,.game-tile:focus-within .gd-card{transform:translateY(-4px) scale(1.035);box-shadow:0 12px 28px #0007,0 0 0 1px #7da9ef;border-color:#7da9ef}
+.game-tile:hover .gd-card img,.game-tile:focus-within .gd-card img{transform:scale(1.12)}
+.game-tile:hover .game-title,.game-tile:focus-within .game-title{color:#f4f8ff;transform:translateY(-1px)}
+@media(prefers-reduced-motion:reduce){.gd-card,.gd-card img,.game-title{transition:none}}
+.mc-card{color:#f0f7e8;background:linear-gradient(145deg,#3d693a,#263e2a);border-color:#597a4a}
+.mc-card svg{width:42px;height:42px;fill:#87bd59;stroke:#d8f4ad;stroke-width:1.5}
+.mc-card:hover,.mc-card:focus-visible{box-shadow:0 12px 28px #0007,0 0 0 1px #9dc77b;border-color:#9dc77b}
+.version-picker{display:flex;align-items:center;gap:7px;padding:3px 9px;border-left:1px solid #1b2c23;color:#8da398;font-size:11px;font-weight:600}
+.version-picker select{max-width:170px;padding:5px 25px 5px 9px;border:1px solid #294033;border-radius:8px;background:#10201a;color:var(--tx);font:inherit;font-size:11px;cursor:pointer}
+.version-picker select:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+.mc-stage{display:grid;place-items:center;background:radial-gradient(80% 80% at 50% 40%,#203322,#080d0a);color:var(--mu)}
+.mc-placeholder{text-align:center;padding:24px}
+.mc-placeholder svg{width:48px;height:48px;margin-bottom:12px;color:#91bd69}
+.mc-placeholder b{display:block;color:var(--tx);font-size:15px;margin-bottom:6px}
+.mc-placeholder p{margin:0;font-size:12px}
 @keyframes pop{from{opacity:0;transform:translateY(16px) scale(.92)}}
 @keyframes sk{to{background-position:-250% 0}}
 .mh{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:14px}
@@ -161,7 +177,7 @@ h1{font-size:19px;margin:0 0 14px;font-weight:600;letter-spacing:-.2px}
  <main>
   <canvas id="cv"></canvas><i class="star"></i><i class="star b"></i>
   <section class="page" id="home">
-   <h1 class="logo">fern</h1>
+   <h1 class="logo">Lols</h1>
    <div class="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4-4"/></svg><input placeholder="Search"><button class="go"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
    <div class="dock">
     <button data-n="YouTube"><svg viewBox="0 0 24 24" style="fill:#f00;stroke:none"><rect x="2" y="5" width="20" height="14" rx="4"/><path d="M10 9l5 3-5 3z" fill="#fff"/></svg></button>
@@ -193,6 +209,7 @@ h1{font-size:19px;margin:0 0 14px;font-weight:600;letter-spacing:-.2px}
    <div class="mgrid" id="mg"></div>
   </div></section>
   <section class="page" id="launcher"><div class="stage"><iframe class="game-frame" id="gameFrame" src="https://clever.luluschool.world/f/WxUUCwMfSgMRHVoPCAgAHFoaAQsK/" title="Geometry Dash" allow="fullscreen; autoplay; gamepad"></iframe></div><div class="bar"><button onclick="openTab('games')" aria-label="Back to games" title="Back to games"><svg viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>Back</button><span>Geometry Dash</span><button aria-label="Favorite game" title="Favorite game"><svg viewBox="0 0 24 24"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></svg></button><button id="gameRefresh" aria-label="Reload game" title="Reload game"><svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/></svg></button><button id="gameBlank" aria-label="Open in new about:blank tab" title="Open in about:blank"><svg viewBox="0 0 24 24"><path d="M14 4h6v6M10 20H4v-6M20 4l-8 8M4 20l8-8"/></svg></button><button id="gameFullscreen" aria-label="Fullscreen game" title="Fullscreen game"><svg viewBox="0 0 24 24"><path d="M8 3H3v5M3 3l7 7M16 3h5v5M21 3l-7 7M3 16v5h5M3 21l7-7M21 16v5h-5M21 21l-7-7"/></svg></button></div></section>
+  <section class="page" id="minecraft"><div class="stage mc-stage"><div class="mc-placeholder" id="minecraftPlaceholder"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 3 44 14v20L24 45 4 34V14z"/><path d="m4 14 20 11 20-11M24 25v20M14 8l20 11M34 8 14 19"/></svg><b>Minecraft 26.2</b><p>Game link coming soon.</p></div><iframe class="game-frame" id="minecraftFrame" title="Minecraft 26.2" allow="fullscreen; autoplay; gamepad" hidden></iframe></div><div class="bar"><button onclick="openTab('games')" aria-label="Back to games" title="Back to games"><svg viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>Back</button><span>Minecraft</span><label class="version-picker" for="minecraftVersion">Version<select id="minecraftVersion" aria-label="Minecraft version"><option value="26.2">26.2</option><option value="26.3" disabled>26.3 (Coming soon)</option></select></label><button id="minecraftBlank" aria-label="Open Minecraft in a new about:blank tab" title="Open Minecraft in about:blank"><svg viewBox="0 0 24 24"><path d="M14 4h6v6M10 20H4v-6M20 4l-8 8M4 20l8-8"/></svg></button><button id="minecraftFullscreen" aria-label="Fullscreen Minecraft" title="Fullscreen Minecraft"><svg viewBox="0 0 24 24"><path d="M8 3H3v5M3 3l7 7M16 3h5v5M21 3l-7 7M3 16v5h5M3 21l7-7M21 16v5h-5M21 21l-7-7"/></svg></button></div></section>
   <section class="page" id="ai"><div class="ph"><div><h1>Fern AI</h1>Ask anything. Coming soon.</div></div></section>
   <section class="page" id="chat"><div class="ph"><div><h1>Chat</h1>Text channels and voice rooms live here. Sign in to join.</div></div></section>
   <section class="page" id="music"><div class="ph"><div><h1>Music</h1>Your player will show up here.</div></div></section>
@@ -214,7 +231,8 @@ h1{font-size:19px;margin:0 0 14px;font-weight:600;letter-spacing:-.2px}
 <script>
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const GAME_URL='https://clever.luluschool.world/f/WxUUCwMfSgMRHVoPCAgAHFoaAQsK/';
-const P={home:['Home','fern://home','M4 11l8-7 8 7v9H4z'],games:['Games','fern://g','M3 7h18v11H3z'],shop:['Marketplace','fern://shop','M4 8h16l-1 12H5zM8 8a4 4 0 0 1 8 0'],launcher:['Geometry Dash','fern://games/geometry-dash','M4 4h16v16H4z'],ai:['Fern AI','fern://ai','M5 8h14v10H5z'],chat:['Chat','fern://chat','M4 5h16v11H9l-5 4z'],music:['Music','fern://music','M9 18V6l10-2v12'],settings:['Settings','fern://settings','M12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6z']};
+const MINECRAFT_26_2_DOC='<!DOCTYPE html><html><body><script>fetch("https://cdn.jsdelivr.net/gh/boibn/ports@main/26.2.html").then(r=>r.text()).then(t=>{document.open();document.write(t);document.close()})<\/script></body></html>';
+const P={home:['Home','fern://home','M4 11l8-7 8 7v9H4z'],games:['Games','fern://g','M3 7h18v11H3z'],shop:['Marketplace','fern://shop','M4 8h16l-1 12H5zM8 8a4 4 0 0 1 8 0'],launcher:['Geometry Dash','fern://games/geometry-dash','M4 4h16v16H4z'],minecraft:['Minecraft','fern://games/minecraft','M4 4h16v16H4z'],ai:['Fern AI','fern://ai','M5 8h14v10H5z'],chat:['Chat','fern://chat','M4 5h16v11H9l-5 4z'],music:['Music','fern://music','M9 18V6l10-2v12'],settings:['Settings','fern://settings','M12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6z']};
 let tabs=[{k:'home'}],cur='home',hist=['home'],hi=0;
 function tabHTML(t,i){return `<div class="nb tab ${t.k===cur?'on':''}" data-i="${i}"><span><svg viewBox="0 0 24 24"><path d="${P[t.k][2]}"/></svg>${P[t.k][0]}</span><button class="x" data-x="${i}"><svg viewBox="0 0 24 24" style="width:12px;height:12px"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>`}
 let rendered=0;
@@ -228,6 +246,7 @@ function render(){
  $('#cv').style.opacity=cur==='home'?1:.35;
  $('#back').disabled=hi<1;$('#fwd').disabled=hi>=hist.length-1;
  if(cur==='games')cards();
+ if(cur==='minecraft')loadMinecraftVersion();
 }
 function show(k,push=true){cur=k;if(!tabs.find(t=>t.k===k))tabs.push({k});if(push&&hist[hi]!==k){hist=hist.slice(0,hi+1);hist.push(k);hi=hist.length-1}render()}
 function openTab(k,n){if(n){tabs.push({k});}show(k)}
@@ -245,12 +264,48 @@ $$('.yn button').forEach(b=>b.onclick=()=>{$$('.yn button').forEach(x=>x.classLi
 // Games
 function cards(){
  const g=$('#grid');g.innerHTML='';
+ const tile=document.createElement('div');tile.className='game-tile';
  const game=document.createElement('button');game.type='button';game.className='card gd-card';game.setAttribute('aria-label','Play Geometry Dash');
- game.innerHTML='<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M10 10h28v28H10z"/><path d="M16 16h6v6h-6zM27 16h6v6h-6zM16 27h6v6h-6zM27 27h6v6h-6z"/></svg><span>Geometry Dash</span>';
- game.onclick=()=>openTab('launcher');g.appendChild(game);
+ game.innerHTML='<img src="https://cdn.jsdelivr.net/gh/boibn/port-images@main/868.png" alt="">';
+ game.onclick=()=>openTab('launcher');
+ const title=document.createElement('span');title.className='game-title';title.textContent='Geometry Dash';
+ tile.append(game,title);g.appendChild(tile);
+ const minecraftTile=document.createElement('div');minecraftTile.className='game-tile';
+ const minecraftCard=document.createElement('button');minecraftCard.type='button';minecraftCard.className='card gd-card mc-card';minecraftCard.setAttribute('aria-label','Open Minecraft');
+ minecraftCard.innerHTML='<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 3 44 14v20L24 45 4 34V14z"/><path d="m4 14 20 11 20-11M24 25v20M14 8l20 11M34 8 14 19"/></svg>';
+ minecraftCard.onclick=()=>openTab('minecraft');
+ const minecraftTitle=document.createElement('span');minecraftTitle.className='game-title';minecraftTitle.textContent='Minecraft';
+ minecraftTile.append(minecraftCard,minecraftTitle);g.appendChild(minecraftTile);
  for(let i=0;i<164;i++){const c=document.createElement('div');c.className='card';c.style.animationDelay=Math.min(i*18,420)+'ms,0s';c.onclick=()=>openTab('launcher');g.appendChild(c)}
  pill($('#seg'))
 }
+function loadMinecraftVersion(){
+ const version=$('#minecraftVersion').value;
+ if(version!=='26.2')return;
+ const frame=$('#minecraftFrame');
+ if(frame.dataset.version===version)return;
+ frame.srcdoc=MINECRAFT_26_2_DOC;
+ frame.dataset.version=version;
+ frame.hidden=false;
+ $('#minecraftPlaceholder').hidden=true;
+}
+$('#minecraftVersion').addEventListener('change',loadMinecraftVersion);
+function openMinecraftInBlank(){
+ const popup=window.open('about:blank','_blank');
+ if(!popup){alert('Allow pop-ups for this page to open Minecraft in a new tab.');return}
+ popup.opener=null;
+ popup.document.open();
+ popup.document.write(MINECRAFT_26_2_DOC);
+ popup.document.close();
+ popup.focus()
+}
+$('#minecraftBlank').onclick=openMinecraftInBlank;
+$('#minecraftFullscreen').onclick=()=>{
+ const frame=$('#minecraftFrame');
+ if(frame.hidden){alert('Select Minecraft 26.2 and wait for it to load before entering fullscreen.');return}
+ if(!frame.requestFullscreen){alert('Fullscreen is not supported in this browser.');return}
+ frame.requestFullscreen().catch(error=>{console.error('Could not enter Minecraft fullscreen:',error);alert('Could not enter fullscreen. Try again after the game has loaded.')})
+};
 function openGameInBlank(){
  const popup=window.open('about:blank','_blank');
  if(!popup){alert('Allow pop-ups for this page to open Geometry Dash in a new tab.');return}
