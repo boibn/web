@@ -315,7 +315,7 @@ document.getElementById('bm').onclick=()=>{const u=prompt('Bookmark URL');if(u)a
 
 // Minecraft player. loadGame is the one-line loader: downloads the parts, joins them, and points the iframe at the result.
 const loadGame=async(b,n,f)=>{f.src=URL.createObjectURL(new Blob(await Promise.all([...Array(n).keys()].map(i=>fetch(b+(i+1)).then(r=>{if(!r.ok)throw 0;return r.blob()}))),{type:"text/html;charset=utf-8"}))};
-const VERS={"26.3":["https://cdn.jsdelivr.net/gh/boibn/ports@main/eaglercraft26-3.html.part",4],"26.2":["https://cdn.jsdelivr.net/gh/boibn/ports@main/eaglercraft26-2.html.part",4]};
+const VERS={"26.3":["https://cdn.jsdelivr.net/gh/boibn/ports@main/eaglercraft26-3.html.part",4],"26.2":["https://cdn.jsdelivr.net/gh/boibn/ports@main/eaglercraft26-2%5B1%5D.html.part",4]};
 const play=document.getElementById('play'),gf=document.getElementById('gf'),gs=document.getElementById('gs'),gst=document.getElementById('gst'),pause=document.getElementById('pause'),fsb=document.getElementById('fs'),ver=document.getElementById('ver');
 let hoverT;
 function startVer(v){gs.classList.remove('hide');gst.textContent='Loading Minecraft '+v+'...';gf.onload=()=>{gs.classList.add('hide');gf.focus()};
