@@ -297,9 +297,9 @@ function applyDisg(){let ic=document.querySelector('link[rel=icon]');const d=DIS
   if(!d){document.title='Nebula';if(ic)ic.remove();return}
   document.title=d[0];if(!ic){ic=document.createElement('link');ic.rel='icon';document.head.appendChild(ic)}
   ic.href='data:image/svg+xml,'+encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='"+d[1]+"'/><text x='16' y='23' font-size='20' font-family='Arial' font-weight='700' text-anchor='middle' fill='white'>"+d[2]+"</text></svg>")}
-function cloak(){if(self!==top)return;const w=window.open('about:blank','_blank');if(!w)return alert('Allow pop-ups for this page to use the cloak.');
-  const d=w.document,f=d.createElement('iframe');d.title=document.title;d.body.style.margin='0';f.src=location.href;f.allow='fullscreen; autoplay; pointer-lock';f.style.cssText='position:fixed;inset:0;width:100%;height:100%;border:0';d.body.appendChild(f);
-  window.onbeforeunload=null;location.replace('https://www.google.com')}
+async function cloak(){if(self!==top||location.protocol==='about:')return;const w=window.open('about:blank','_blank');if(!w)return alert('Allow pop-ups for this page to use the cloak.');
+  let h;try{h=await(await fetch(location.href)).text()}catch(e){h='<!DOCTYPE html>'+document.documentElement.outerHTML}
+  w.document.open();w.document.write(h);w.document.close();window.onbeforeunload=null;location.replace('https://www.google.com')}
 const T={cloak:'t-cloak',anti:'t-anti',sub:'subtog'};
 function sync(){for(const k in T)document.getElementById(T[k]).classList.toggle('on',cfg[k]);
   document.getElementById('disg').value=cfg.disg;applyDisg();updTag();
@@ -308,7 +308,7 @@ for(const k in T)document.getElementById(T[k]).onclick=()=>{cfg[k]=!cfg[k];save(
 document.getElementById('disg').onchange=e=>{cfg.disg=e.target.value;save();sync()};
 document.getElementById('cloakNow').onclick=cloak;
 document.getElementById('reset').onclick=()=>{cfg={...DEF};save();sync()};
-if(cfg.cloak&&self===top)document.addEventListener('pointerdown',cloak,{once:true});
+if(cfg.cloak&&self===top&&location.protocol!=='about:')document.addEventListener('pointerdown',cloak,{once:true});
 sync();
 
 document.getElementById('bm').onclick=()=>{const u=prompt('Bookmark URL');if(u)alert('Saved: '+u)};
