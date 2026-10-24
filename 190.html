@@ -303,13 +303,16 @@ function applyDisg(){let ic=document.querySelector('link[rel=icon]');const d=DIS
   ic.href='data:image/svg+xml,'+encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='"+d[1]+"'/><text x='16' y='23' font-size='20' font-family='Arial' font-weight='700' text-anchor='middle' fill='white'>"+d[2]+"</text></svg>")}
 const toastEl=document.createElement('div');toastEl.id='toast';document.body.appendChild(toastEl);let toastT;
 function toast(m){toastEl.textContent=m;toastEl.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>toastEl.classList.remove('show'),5000)}
+function leave(){const u='https://www.google.com';try{top.location.replace(u);return}catch(e){}try{window.open(u,'_top')}catch(e){}if(self===top)location.replace(u)}
 function cloak(){if(window.name==='nebula-cloaked')return toast('This tab is already cloaked.');
   let w=null;try{w=window.open('about:blank','_blank')}catch(e){}
   if(!w)return toast('Pop-up blocked ('+(self!==top?'page is embedded inside another page':'top-level page')+', '+location.protocol+'). Allow pop-ups for this site, or open the site directly instead of inside another page.');
-  try{w.name='nebula-cloaked';w.document.open();w.document.write(SRC);w.document.close();
-    if(!w.document.body||!w.document.body.children.length)w.location.href=URL.createObjectURL(new Blob([SRC],{type:'text/html'}));
-    window.onbeforeunload=null;setTimeout(()=>{try{top.location.replace('https://www.google.com')}catch(e){location.replace('https://www.google.com')}},400)
-  }catch(e){toast('Cloak failed: '+e.message+' ('+location.protocol+')')}}
+  let n=0,err='';try{w.name='nebula-cloaked'}catch(e){}
+  const ok=()=>{try{return w.document.body&&w.document.body.children.length>3}catch(e){err=e.message;return false}};
+  const put=()=>{try{w.document.open();w.document.write(SRC);w.document.close()}catch(e){err=e.message}};
+  const done=()=>{window.onbeforeunload=null;setTimeout(leave,300)};
+  const step=()=>{if(n>0&&ok())return done();if(n++>=4){try{w.location.href=URL.createObjectURL(new Blob([SRC],{type:'text/html'}));toast('Could not write into about:blank here'+(err?' ('+err+')':'')+'. Opened the page in the new tab instead.')}catch(e){toast('Cloak failed: '+(err||e.message))}return done()}put();setTimeout(step,500)};
+  setTimeout(step,100)}
 const T={cloak:'t-cloak',anti:'t-anti',sub:'subtog'};
 function sync(){for(const k in T)document.getElementById(T[k]).classList.toggle('on',cfg[k]);
   document.getElementById('disg').value=cfg.disg;applyDisg();updTag();
