@@ -228,6 +228,7 @@ body:not(.ready) .dock{opacity:0;transform:translate(-50%,40px)}
 </div>
 
 <script>
+const SRC='<!DOCTYPE html>'+document.documentElement.outerHTML; // pristine copy of this page, used by the cloak
 // view switching
 const views=document.querySelectorAll('.view'),tabs=document.querySelectorAll('.dock button');
 let busy=false;
@@ -302,12 +303,12 @@ function applyDisg(){let ic=document.querySelector('link[rel=icon]');const d=DIS
   ic.href='data:image/svg+xml,'+encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='"+d[1]+"'/><text x='16' y='23' font-size='20' font-family='Arial' font-weight='700' text-anchor='middle' fill='white'>"+d[2]+"</text></svg>")}
 const toastEl=document.createElement('div');toastEl.id='toast';document.body.appendChild(toastEl);let toastT;
 function toast(m){toastEl.textContent=m;toastEl.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>toastEl.classList.remove('show'),5000)}
-async function cloak(){if(window.name==='nebula-cloaked')return toast('This tab is already cloaked.');
+function cloak(){if(window.name==='nebula-cloaked')return toast('This tab is already cloaked.');
   let w=null;try{w=window.open('about:blank','_blank')}catch(e){}
   if(!w)return toast('Pop-up blocked ('+(self!==top?'page is embedded inside another page':'top-level page')+', '+location.protocol+'). Allow pop-ups for this site, or open the site directly instead of inside another page.');
-  try{w.name='nebula-cloaked';let h;try{h=await(await fetch(location.href)).text()}catch(e){h='<!DOCTYPE html>'+document.documentElement.outerHTML}
-    w.document.open();w.document.write(h);w.document.close();window.onbeforeunload=null;
-    try{top.location.replace('https://www.google.com')}catch(e){location.replace('https://www.google.com')}
+  try{w.name='nebula-cloaked';w.document.open();w.document.write(SRC);w.document.close();
+    if(!w.document.body||!w.document.body.children.length)w.location.href=URL.createObjectURL(new Blob([SRC],{type:'text/html'}));
+    window.onbeforeunload=null;setTimeout(()=>{try{top.location.replace('https://www.google.com')}catch(e){location.replace('https://www.google.com')}},400)
   }catch(e){toast('Cloak failed: '+e.message+' ('+location.protocol+')')}}
 const T={cloak:'t-cloak',anti:'t-anti',sub:'subtog'};
 function sync(){for(const k in T)document.getElementById(T[k]).classList.toggle('on',cfg[k]);
