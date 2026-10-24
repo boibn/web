@@ -1,3 +1,7 @@
+Claude
+
+
+Nebula · HTML
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -74,7 +78,7 @@ select{appearance:none;-webkit-appearance:none;background:#0b0b0b url("data:imag
 .dock button.active{color:#fff;font-weight:600}
 @media(max-width:1100px){.grid{grid-template-columns:repeat(2,1fr)}.wrap{width:calc(100% - 36px)}}
 @media(max-width:640px){.grid{grid-template-columns:1fr}.finput{width:100%}.filter{flex-wrap:wrap}#home .logo{font-size:36px}.search{height:48px}.dock{height:46px;gap:2px;padding:0 8px}.dock button{font-size:11px;padding:6px}.row{flex-wrap:wrap;padding:10px 14px}select{width:105px}}
-
+ 
 /* transitions + startup */
 .view.active{animation:viewIn .5s cubic-bezier(.22,1,.36,1) both}
 .view.leaving{opacity:0;transform:translateY(-10px);transition:opacity .22s ease,transform .22s ease}
@@ -96,7 +100,7 @@ body:not(.ready) .dock{opacity:0;transform:translate(-50%,40px)}
 @keyframes logoIn{from{opacity:0;letter-spacing:.5em;filter:blur(10px);transform:scale(.92)}to{opacity:1;letter-spacing:.02em;filter:blur(0);transform:none}}
 @keyframes load{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 @media(prefers-reduced-motion:reduce){#splash{display:none}.view.active,.game,.ready #home.active>*{animation:none}body:not(.ready) #home>*{opacity:1}body:not(.ready) .dock{opacity:1;transform:translateX(-50%)}}
-
+ 
 .search{position:relative}
 .results{position:absolute;left:0;right:0;top:calc(100% + 8px);z-index:20;background:rgba(12,12,12,.97);border:1px solid #2a2a2a;border-radius:18px;padding:6px;display:none;backdrop-filter:blur(8px);box-shadow:0 18px 40px rgba(0,0,0,.6)}
 .results.open{display:block;animation:viewIn .25s cubic-bezier(.22,1,.36,1) both}
@@ -104,7 +108,7 @@ body:not(.ready) .dock{opacity:0;transform:translate(-50%,40px)}
 .results button:hover,.results button.sel{background:#1a1a1a}
 .results .ico{width:32px;height:32px;border-radius:8px;font-size:15px}
 .results .web{color:#a8a8a8}
-
+ 
 /* game player */
 #play{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;background:radial-gradient(ellipse 60% 50% at 50% 40%,#1a1a1a,#030303)}
 #play.open{display:flex;animation:viewIn .4s cubic-bezier(.22,1,.36,1) both}
@@ -133,7 +137,7 @@ body:not(.ready) .dock{opacity:0;transform:translate(-50%,40px)}
 .pmenu button{height:50px;border-radius:25px;background:#0e0e0e;border:1px solid #2e2e2e;color:#ddd;font:500 16px Inter,sans-serif;cursor:pointer;transition:background .15s,border-color .15s}
 .pmenu button:hover{background:#1c1c1c;border-color:#555;color:#fff}
 .pmenu button.main{background:#f2f2f2;color:#000;border-color:#f2f2f2}.pmenu button.main:hover{background:#fff}
-
+ 
 #bat{display:flex;align-items:center;gap:9px;justify-self:end;color:#f2f2f2;font:500 14px Inter,sans-serif}
 #bat[hidden]{display:none}
 .batic{position:relative;width:34px;height:16px;border:2px solid #9a9a9a;border-radius:5px;padding:1px}
@@ -142,7 +146,7 @@ body:not(.ready) .dock{opacity:0;transform:translate(-50%,40px)}
 .batic svg{position:absolute;inset:0;margin:auto;width:11px;height:11px;display:none;fill:#fff;stroke:#000;stroke-width:1.4;paint-order:stroke;stroke-linejoin:round}
 #bat.charging i{background:#4ade80}#bat.charging svg{display:block}
 #bat.low i{background:#fb923c}
-
+ 
 /* transparent top bar + side panels */
 #pbar{background:transparent;border:0;display:flex;justify-content:center;align-items:center;padding:0}
 #clock{position:static;transform:none;font-family:'Pixelify Sans','Press Start 2P',monospace;font-weight:700;font-size:38px;letter-spacing:.04em;pointer-events:none}
@@ -157,12 +161,15 @@ body:not(.ready) .dock{opacity:0;transform:translate(-50%,40px)}
 #pause .batic{width:46px;height:22px;border-radius:6px}#pause .batic::after{top:5px;height:8px}
 #pause .batic svg{width:15px;height:15px}
 @media(max-width:900px){.pside{top:auto;bottom:22px;transform:translateY(24px)}.pl{left:22px}.pr{right:22px}#pause.open .pside{transform:none}#pause .pgame{flex-direction:row;align-items:center}#pause .pgame .ico{width:44px;height:44px;font-size:18px}}
+ 
+#toast{position:fixed;left:50%;bottom:120px;z-index:90;max-width:min(440px,88vw);padding:12px 18px;border-radius:14px;background:rgba(14,14,14,.97);border:1px solid #333;color:#eee;font:500 14px Inter,sans-serif;text-align:center;opacity:0;transform:translate(-50%,12px);pointer-events:none;transition:opacity .3s,transform .4s cubic-bezier(.22,1,.36,1)}
+#toast.show{opacity:1;transform:translate(-50%,0)}
 </style>
 </head>
 <body>
 <div class="bg"></div>
 <div id="splash"><div class="pixel">nebula</div><div class="bar"><i></i></div></div>
-
+ 
 <!-- HOME -->
 <section class="view active" id="home">
   <div class="pixel logo">nebula</div>
@@ -176,7 +183,7 @@ body:not(.ready) .dock{opacity:0;transform:translate(-50%,40px)}
   <button class="addbm" id="bm"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Add Bookmark</button>
   <div class="tagline" id="tag"></div>
 </section>
-
+ 
 <!-- GAMES -->
 <section class="view" id="games">
   <div class="wrap">
@@ -189,7 +196,7 @@ body:not(.ready) .dock{opacity:0;transform:translate(-50%,40px)}
     <div class="grid" id="grid"></div>
   </div>
 </section>
-
+ 
 <!-- SETTINGS -->
 <section class="view" id="settings">
   <div class="wrap">
@@ -204,14 +211,14 @@ body:not(.ready) .dock{opacity:0;transform:translate(-50%,40px)}
     <div class="foot"><span>Nebula Unblocker</span><button class="btn" id="reset">Reset settings</button></div>
   </div>
 </section>
-
+ 
 <!-- DOCK -->
 <nav class="dock">
   <button data-v="home" class="active"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><path d="M4 11l8-7 8 7v9H4z"/><path d="M10 20v-6h4v6"/></svg>Home</button>
   <button data-v="games"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="15" height="8" rx="3"/><path d="M7 10.5v4M5 12.5h4M16 11h.01M18 14h.01"/></svg>Games</button>
   <button data-v="settings"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>Settings</button>
 </nav>
-
+ 
 <!-- GAME PLAYER -->
 <div id="play">
   <div class="stage" id="stage"><iframe id="gf" allow="fullscreen; autoplay; pointer-lock; clipboard-read; clipboard-write" title="Minecraft"></iframe><div class="gstat" id="gs"><div class="bar"><i></i></div><span id="gst">Loading game...</span></div></div>
@@ -223,7 +230,7 @@ body:not(.ready) .dock{opacity:0;transform:translate(-50%,40px)}
   </div>
   <button class="fs" id="fs" aria-label="Fullscreen (hold hover for menu)"><svg class="ring" viewBox="0 0 44 44"><circle cx="22" cy="22" r="21"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
 </div>
-
+ 
 <script>
 // view switching
 const views=document.querySelectorAll('.view'),tabs=document.querySelectorAll('.dock button');
@@ -234,12 +241,12 @@ function show(id){const cur=document.querySelector('.view.active'),next=document
   cur.classList.add('leaving');
   setTimeout(()=>{cur.classList.remove('leaving','active');next.classList.add('active');scrollTo(0,0);busy=false},220)}
 tabs.forEach(b=>b.onclick=()=>show(b.dataset.v));
-
+ 
 // startup animation
 const splash=document.getElementById('splash');
 setTimeout(()=>{splash.classList.add('out');document.body.classList.add('ready')},1700);
 setTimeout(()=>splash.remove(),2500);
-
+ 
 // game search
 const q=document.getElementById('q'),res=document.getElementById('res');
 let sel=-1,items=[];
@@ -268,7 +275,7 @@ document.getElementById('sf').onsubmit=e=>{e.preventDefault();const v=q.value.tr
   if(sel>=0&&items[sel])return items[sel].run();
   openGames(v)};
 document.addEventListener('click',e=>{if(!e.target.closest('#sf'))closeRes()});
-
+ 
 // games (replace the placeholder names/colors with your own list)
 const games=[["Minecraft","#2f5a2f","https://cdn.jsdelivr.net/gh/boibn/port-images@main/minecraft.webp"]];
 function makeIcon(g){const i=document.createElement('span');i.className='ico';i.style.background=g[1];if(g[2]){i.style.backgroundImage='url("'+g[2]+'")';i.style.backgroundSize='cover';i.style.backgroundPosition='center'}else{if(['#eee','#f4f4f4','#edc22e','#e8c21a'].includes(g[1]))i.style.color='#111';i.textContent=g[0][0]}return i}
@@ -280,14 +287,14 @@ function render(f=''){grid.innerHTML='';const list=games.filter(g=>g[0].toLowerC
     const nm=document.createElement('span');nm.textContent=g[0];b.append(makeIcon(g),nm);b.onclick=()=>{if(g[0]==='Minecraft')openGame()};grid.appendChild(b)})}
 //
 render();document.getElementById('fq').oninput=e=>render(e.target.value);
-
+ 
 // settings toggles
 // rotating tagline (Subtexts)
 const lines=["Browse freely.","Take a breather.","Fast, simple, yours.","Nothing to see here."];let i=0;
 const tag=document.getElementById('tag');
 function updTag(){tag.textContent=cfg.sub?lines[i%lines.length]:''}
 setInterval(()=>{i++;updTag()},4000);
-
+ 
 // settings (saved in this browser)
 const DEF={cloak:false,anti:false,sub:false,disg:'None'};let cfg={...DEF};
 try{cfg={...DEF,...JSON.parse(localStorage.getItem('nebula-settings')||'{}')}}catch(e){}
@@ -297,9 +304,15 @@ function applyDisg(){let ic=document.querySelector('link[rel=icon]');const d=DIS
   if(!d){document.title='Nebula';if(ic)ic.remove();return}
   document.title=d[0];if(!ic){ic=document.createElement('link');ic.rel='icon';document.head.appendChild(ic)}
   ic.href='data:image/svg+xml,'+encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='"+d[1]+"'/><text x='16' y='23' font-size='20' font-family='Arial' font-weight='700' text-anchor='middle' fill='white'>"+d[2]+"</text></svg>")}
-async function cloak(){if(self!==top||location.protocol==='about:')return;const w=window.open('about:blank','_blank');if(!w)return alert('Allow pop-ups for this page to use the cloak.');
-  let h;try{h=await(await fetch(location.href)).text()}catch(e){h='<!DOCTYPE html>'+document.documentElement.outerHTML}
-  w.document.open();w.document.write(h);w.document.close();window.onbeforeunload=null;location.replace('https://www.google.com')}
+const toastEl=document.createElement('div');toastEl.id='toast';document.body.appendChild(toastEl);let toastT;
+function toast(m){toastEl.textContent=m;toastEl.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>toastEl.classList.remove('show'),5000)}
+async function cloak(){if(window.name==='nebula-cloaked')return toast('This tab is already cloaked.');
+  let w=null;try{w=window.open('about:blank','_blank')}catch(e){}
+  if(!w)return toast('Pop-up blocked. Allow pop-ups for this site, or open it directly instead of inside another page.');
+  try{w.name='nebula-cloaked';let h;try{h=await(await fetch(location.href)).text()}catch(e){h='<!DOCTYPE html>'+document.documentElement.outerHTML}
+    w.document.open();w.document.write(h);w.document.close();window.onbeforeunload=null;
+    try{top.location.replace('https://www.google.com')}catch(e){location.replace('https://www.google.com')}
+  }catch(e){toast('Cloak failed: '+e.message)}}
 const T={cloak:'t-cloak',anti:'t-anti',sub:'subtog'};
 function sync(){for(const k in T)document.getElementById(T[k]).classList.toggle('on',cfg[k]);
   document.getElementById('disg').value=cfg.disg;applyDisg();updTag();
@@ -308,11 +321,11 @@ for(const k in T)document.getElementById(T[k]).onclick=()=>{cfg[k]=!cfg[k];save(
 document.getElementById('disg').onchange=e=>{cfg.disg=e.target.value;save();sync()};
 document.getElementById('cloakNow').onclick=cloak;
 document.getElementById('reset').onclick=()=>{cfg={...DEF};save();sync()};
-if(cfg.cloak&&self===top&&location.protocol!=='about:')document.addEventListener('pointerdown',cloak,{once:true});
+if(cfg.cloak&&window.name!=='nebula-cloaked')document.addEventListener('pointerdown',cloak,{once:true});
 sync();
-
+ 
 document.getElementById('bm').onclick=()=>{const u=prompt('Bookmark URL');if(u)alert('Saved: '+u)};
-
+ 
 // Minecraft player. loadGame is the one-line loader: downloads the parts, joins them, and points the iframe at the result.
 const loadGame=async(b,n,f)=>{f.src=URL.createObjectURL(new Blob(await Promise.all([...Array(n).keys()].map(i=>fetch(b+(i+1)).then(r=>{if(!r.ok)throw 0;return r.blob()}))),{type:"text/html;charset=utf-8"}))};
 const VERS={"26.3":["https://cdn.jsdelivr.net/gh/boibn/ports@main/eaglercraft26-3.html.part",4],"26.2":["https://cdn.jsdelivr.net/gh/boibn/ports@main/eaglercraft26-2%5B1%5D.html.part",4]};
@@ -334,10 +347,15 @@ document.getElementById('pr').onclick=closePause;
 document.getElementById('pf').onclick=toggleFS;
 document.getElementById('px').onclick=exitGame;
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&pause.classList.contains('open'))closePause()});
-
+ 
 // battery (Chromium browsers only; hidden elsewhere). "Low power" is estimated as 20% or less and not charging.
 const bat=document.getElementById('bat');
 navigator.getBattery&&navigator.getBattery().then(b=>{const u=()=>{const p=Math.round(b.level*100);bat.hidden=false;document.getElementById('batp').textContent=p+'%';bat.style.setProperty('--lv',p+'%');bat.querySelector('i').style.setProperty('--lv',p+'%');bat.classList.toggle('charging',b.charging);bat.classList.toggle('low',!b.charging&&p<=20)};u();b.onchargingchange=b.onlevelchange=u}).catch(()=>{});
 </script>
 </body>
 </html>
+ 
+
+
+
+Claude is responding
