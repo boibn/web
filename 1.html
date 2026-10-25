@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nebula</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Pixelify+Sans:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#000;--card:#0e0e0e;--line:#262626;--text:#f2f2f2;--mute:#9a9a9a}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{background:#000;color:var(--text);font-family:Inter,system-ui,sans-serif;overflow-x:hidden;position:relative}
+.bg{position:fixed;inset:0;z-index:0;background:#000;overflow:hidden}
+.bg::before{content:"";position:absolute;inset:-25%;background:
+ radial-gradient(ellipse 38% 22% at 30% 52%,rgba(70,70,70,.55),transparent 70%),
+ radial-gradient(ellipse 45% 30% at 68% 30%,rgba(75,75,75,.5),transparent 72%),
+ radial-gradient(ellipse 25% 25% at 90% 18%,rgba(40,40,40,.5),transparent 70%);
+ animation:drift 24s ease-in-out infinite alternate;will-change:transform}
+.bg::after{content:"";position:absolute;inset:-50%;background:linear-gradient(115deg,transparent 40%,rgba(255,255,255,.05) 50%,transparent 60%);animation:sheen 16s ease-in-out infinite alternate;will-change:transform}
+@keyframes drift{0%{transform:translate(-6%,3%) rotate(-3deg) scale(1)}50%{transform:translate(5%,-4%) rotate(2deg) scale(1.12)}100%{transform:translate(-3%,-6%) rotate(5deg) scale(1.05)}}
+@keyframes sheen{from{transform:translateX(-18%)}to{transform:translateX(18%)}}
+@media(prefers-reduced-motion:reduce){.bg::before,.bg::after{animation:none}}
+.pixel{font-family:'Pixelify Sans','Press Start 2P',monospace;font-weight:700;letter-spacing:.02em;line-height:1}
+.view{position:relative;z-index:1;display:none;min-height:100vh;padding-bottom:98px}
+.view.active{display:block}
+/* home */
+#home.active{display:flex;flex-direction:column;align-items:center;justify-content:center;padding-bottom:45px}
+#home .logo{font-size:48px;margin-bottom:26px}
+.search{display:flex;align-items:center;width:min(720px,90vw);height:63px;background:#0d0d0d;border:1px solid #2a2a2a;border-radius:32px;padding:0 15px 0 24px}
+.search svg{flex:none;color:#bbb}
+.search input{flex:1;background:none;border:0;outline:0;color:var(--text);font:400 16px Inter,sans-serif;padding:0 16px}
+.search input::placeholder{color:#8e8e8e}
+.search .sep{width:1px;height:26px;background:#2e2e2e;margin-right:16px}
+.search button{background:none;border:0;color:#ccc;cursor:pointer;display:grid;place-items:center;padding:4px}
+.search button:hover{color:#fff}
+.addbm{margin-top:21px;display:inline-flex;align-items:center;gap:6px;background:#0d0d0d;border:1px dashed #333;color:#b0b0b0;border-radius:16px;height:34px;padding:0 22px;font:500 11px Inter,sans-serif;cursor:pointer}
+.addbm:hover{color:#fff;border-color:#555}
+.tagline{margin-top:16px;color:var(--mute);font-size:10px;min-height:15px}
+/* games */
+.wrap{width:min(1170px,calc(100% - 255px));margin:0 auto;padding-top:79px}
+h1.pixel{font-size:34px}
+.sub{color:#bdbdbd;font-size:14px;margin-top:10px}
+.filter{display:flex;align-items:center;gap:14px;margin:27px 0 20px}
+.finput{display:flex;align-items:center;gap:12px;width:360px;height:47px;background:#0b0b0b;border:1px solid #2a2a2a;border-radius:24px;padding:0 20px;color:#aaa}
+.finput input{flex:1;background:none;border:0;outline:0;color:var(--text);font:400 15px Inter,sans-serif}
+.finput input::placeholder{color:#8e8e8e}
+.count{color:#a5a5a5;font-size:14px}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px 12px}
+.game{display:flex;align-items:center;gap:15px;height:71px;padding:0 12px;background:rgba(14,14,14,.92);border:1px solid #232323;border-radius:15px;color:var(--text);font:500 16px Inter,sans-serif;text-align:left;cursor:pointer;transition:border-color .15s,background .15s}
+.game:hover{border-color:#444;background:#151515}
+.ico{flex:none;width:47px;height:47px;border-radius:10px;display:grid;place-items:center;font:700 20px 'Pixelify Sans',monospace;color:#fff}
+.empty{grid-column:1/-1;color:var(--mute);padding:22px 0}
+/* settings */
+#settings .wrap{width:min(570px,calc(100% - 30px));padding-top:56px}
+#settings h1.pixel{font-size:30px}
+#settings .sub{font-size:10px;margin-top:6px;color:#bbb}
+.rows{margin-top:16px;display:flex;flex-direction:column;gap:7px}
+.row{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:55px;padding:0 14px;background:rgba(14,14,14,.92);border:1px solid #232323;border-radius:12px}
+.row b{display:block;font:600 11px Inter,sans-serif}
+.row small{display:block;margin-top:3px;color:#b3b3b3;font-size:10px}
+.ctl{display:flex;align-items:center;gap:8px;flex:none}
+.btn{background:#0b0b0b;border:1px solid #333;color:#cfcfcf;border-radius:6px;height:25px;padding:0 10px;font:400 10px Inter,sans-serif;cursor:pointer}
+.btn:hover{color:#fff;border-color:#555}
+.tog{position:relative;width:33px;height:20px;border-radius:10px;background:#1c1c1c;border:1px solid #333;cursor:pointer;transition:background .2s}
+.tog::after{content:"";position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:#8a8a8a;transition:transform .2s,background .2s}
+.tog.on{background:#3a3a3a}
+.tog.on::after{transform:translateX(14px);background:#fff}
+select{appearance:none;-webkit-appearance:none;background:#0b0b0b url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%23ccc' stroke-width='1.8'%3E%3Cpath d='M2 4l4 4 4-4'/%3E%3C/svg%3E") no-repeat right 9px center;border:1px solid #333;color:#e6e6e6;border-radius:6px;height:27px;width:120px;padding:0 24px 0 9px;font:400 10px Inter,sans-serif;cursor:pointer;outline:0}
+.foot{display:flex;justify-content:space-between;align-items:center;margin-top:18px;color:#888;font-size:9px}
+/* dock */
+.dock{position:fixed;z-index:10;left:50%;bottom:15px;transform:translateX(-50%);display:flex;align-items:center;gap:9px;padding:0 15px;height:58px;background:rgba(12,12,12,.94);border:1px solid #2a2a2a;border-radius:29px;backdrop-filter:blur(6px)}
+.dock button{display:flex;align-items:center;gap:8px;background:none;border:0;border-radius:18px;padding:8px 9px;color:#a8a8a8;font:500 15px Inter,sans-serif;cursor:pointer}
+.dock button:hover{color:#fff}
+.dock button.active{color:#fff;font-weight:600}
+@media(max-width:1100px){.grid{grid-template-columns:repeat(2,1fr)}.wrap{width:calc(100% - 36px)}}
+@media(max-width:640px){.grid{grid-template-columns:1fr}.finput{width:100%}.filter{flex-wrap:wrap}#home .logo{font-size:36px}.search{height:48px}.dock{height:46px;gap:2px;padding:0 8px}.dock button{font-size:11px;padding:6px}.row{flex-wrap:wrap;padding:10px 14px}select{width:105px}}
+
+/* transitions + startup */
+.view.active{animation:viewIn .5s cubic-bezier(.22,1,.36,1) both}
+.view.leaving{opacity:0;transform:translateY(-10px);transition:opacity .22s ease,transform .22s ease}
+@keyframes viewIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.game{animation:rise .55s cubic-bezier(.22,1,.36,1) both;animation-delay:calc(var(--i,0)*35ms)}
+.ready #home.active>*{animation:rise .8s cubic-bezier(.22,1,.36,1) both}
+.ready #home.active>:nth-child(2){animation-delay:.1s}
+.ready #home.active>:nth-child(3){animation-delay:.2s}
+.ready #home.active>:nth-child(4){animation-delay:.3s}
+body:not(.ready) #home>*{opacity:0}
+.dock{transition:opacity .6s ease,transform .8s cubic-bezier(.22,1,.36,1)}
+body:not(.ready) .dock{opacity:0;transform:translate(-50%,40px)}
+#splash{position:fixed;inset:0;z-index:100;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;transition:opacity .7s ease,visibility .7s}
+#splash.out{opacity:0;visibility:hidden}
+#splash .pixel{font-size:54px;animation:logoIn 1.3s cubic-bezier(.22,1,.36,1) both}
+#splash .bar{width:140px;height:2px;background:#1c1c1c;border-radius:2px;overflow:hidden}
+#splash .bar i{display:block;height:100%;width:100%;background:#fff;transform-origin:left;animation:load 1.4s cubic-bezier(.65,0,.35,1) both}
+@keyframes logoIn{from{opacity:0;letter-spacing:.5em;filter:blur(10px);transform:scale(.92)}to{opacity:1;letter-spacing:.02em;filter:blur(0);transform:none}}
+@keyframes load{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@media(prefers-reduced-motion:reduce){#splash{display:none}.view.active,.game,.ready #home.active>*{animation:none}body:not(.ready) #home>*{opacity:1}body:not(.ready) .dock{opacity:1;transform:translateX(-50%)}}
+
+.search{position:relative}
+.results{position:absolute;left:0;right:0;top:calc(100% + 8px);z-index:20;background:rgba(12,12,12,.97);border:1px solid #2a2a2a;border-radius:18px;padding:6px;display:none;backdrop-filter:blur(8px);box-shadow:0 18px 40px rgba(0,0,0,.6)}
+.results.open{display:block;animation:viewIn .25s cubic-bezier(.22,1,.36,1) both}
+.results button{display:flex;align-items:center;gap:12px;width:100%;background:none;border:0;border-radius:12px;padding:8px 10px;color:var(--text);font:500 15px Inter,sans-serif;text-align:left;cursor:pointer}
+.results button:hover,.results button.sel{background:#1a1a1a}
+.results .ico{width:32px;height:32px;border-radius:8px;font-size:15px}
+.results .web{color:#a8a8a8}
+
+/* game player */
+#play{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;background:radial-gradient(ellipse 60% 50% at 50% 40%,#1a1a1a,#030303)}
+#play.open{display:flex;animation:viewIn .4s cubic-bezier(.22,1,.36,1) both}
+.stage{position:absolute;inset:0;overflow:hidden;background:#000}
+.stage iframe{width:100%;height:100%;border:0;display:block}
+.gstat{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:#000;color:#bbb;font-size:15px;transition:opacity .4s}
+.gstat.hide{opacity:0;pointer-events:none}
+.gstat .bar{width:120px;height:2px;background:#1c1c1c;overflow:hidden;border-radius:2px}.gstat .bar i{display:block;width:40%;height:100%;background:#fff;animation:slide 1.1s ease-in-out infinite alternate}
+@keyframes slide{from{transform:translateX(-30%)}to{transform:translateX(200%)}}
+.fs{position:fixed;top:16px;right:16px;z-index:70;width:44px;height:44px;border-radius:50%;background:rgba(14,14,14,.9);border:1px solid #333;color:#ddd;display:grid;place-items:center;cursor:pointer;padding:0}
+.fs:hover{color:#fff;background:#1a1a1a}
+.fs svg{grid-area:1/1}
+.fs .ring{position:absolute;inset:-1px;width:44px;height:44px;transform:rotate(-90deg);pointer-events:none}
+.fs .ring circle{fill:none;stroke:#fff;stroke-width:2;stroke-dasharray:132;stroke-dashoffset:132;transition:stroke-dashoffset .2s}
+.fs:hover .ring circle{stroke-dashoffset:0;transition:stroke-dashoffset 3s linear}
+#pause{position:absolute;inset:0;z-index:65;background:rgba(0,0,0,.74);backdrop-filter:blur(6px);opacity:0;visibility:hidden;transition:opacity .4s,visibility .4s;display:flex;align-items:center;justify-content:center}
+#pause.open{opacity:1;visibility:visible}
+#pbar{position:absolute;top:0;left:0;right:0;height:68px;display:grid;grid-template-columns:1fr auto;align-items:center;gap:14px;padding:0 84px 0 22px;background:rgba(12,12,12,.97);border-bottom:1px solid #2a2a2a;transform:translateX(100%);transition:transform .55s cubic-bezier(.22,1,.36,1)}
+#pause.open #pbar{transform:none}
+.pgame{display:flex;align-items:center;gap:12px;min-width:0}.pgame .ico{width:42px;height:42px;font-size:18px;border-radius:10px}.pgame small{display:block;color:#9a9a9a;font-size:12px}.pgame b{display:block;font:600 16px Inter,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#clock{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font:600 22px Inter,sans-serif;letter-spacing:.02em;color:#f2f2f2;pointer-events:none}
+.pver{display:flex;align-items:center;justify-content:center;gap:10px;color:#bbb;font-size:14px;margin-bottom:6px}.pver select{width:150px}
+.pmenu{display:flex;flex-direction:column;gap:12px;width:min(320px,80vw);transform:scale(.95);opacity:0;transition:transform .5s .1s cubic-bezier(.22,1,.36,1),opacity .4s .1s}
+#pause.open .pmenu{transform:none;opacity:1}
+.pmenu .pixel{font-size:44px;text-align:center;margin-bottom:12px}
+.pmenu button{height:50px;border-radius:25px;background:#0e0e0e;border:1px solid #2e2e2e;color:#ddd;font:500 16px Inter,sans-serif;cursor:pointer;transition:background .15s,border-color .15s}
+.pmenu button:hover{background:#1c1c1c;border-color:#555;color:#fff}
+.pmenu button.main{background:#f2f2f2;color:#000;border-color:#f2f2f2}.pmenu button.main:hover{background:#fff}
+
+#bat{display:flex;align-items:center;gap:9px;justify-self:end;color:#f2f2f2;font:500 14px Inter,sans-serif}
+#bat[hidden]{display:none}
+.batic{position:relative;width:34px;height:16px;border:2px solid #9a9a9a;border-radius:5px;padding:1px}
+.batic::after{content:"";position:absolute;right:-5px;top:3px;width:3px;height:6px;background:#9a9a9a;border-radius:0 2px 2px 0}
+.batic i{display:block;height:100%;width:var(--lv,100%);min-width:2px;border-radius:2px;background:#fff;transition:width .4s,background .3s}
+.batic svg{position:absolute;inset:0;margin:auto;width:11px;height:11px;display:none;fill:#fff;stroke:#000;stroke-width:1.4;paint-order:stroke;stroke-linejoin:round}
+#bat.charging i{background:#4ade80}#bat.charging svg{display:block}
+#bat.low i{background:#fb923c}
+
+/* transparent top bar + side panels */
+#pbar{background:transparent;border:0;display:flex;justify-content:center;align-items:center;padding:0}
+#clock{position:static;transform:none;font-family:'Pixelify Sans','Press Start 2P',monospace;font-weight:700;font-size:38px;letter-spacing:.04em;pointer-events:none}
+.pside{position:absolute;top:50%;z-index:2;opacity:0;transition:transform .6s .15s cubic-bezier(.22,1,.36,1),opacity .5s .15s}
+.pl{left:44px;transform:translate(-50px,-50%)}
+.pr{right:44px;transform:translate(50px,-50%)}
+#pause.open .pside{opacity:1;transform:translateY(-50%)}
+#pause .pgame{flex-direction:column;align-items:flex-start;gap:14px}
+#pause .pgame .ico{width:84px;height:84px;font-size:34px;border-radius:18px}
+#pause .pgame small{font-size:13px}#pause .pgame b{font-size:20px;margin-top:2px}
+#pause #bat{font-size:18px;gap:12px}
+#pause .batic{width:46px;height:22px;border-radius:6px}#pause .batic::after{top:5px;height:8px}
+#pause .batic svg{width:15px;height:15px}
+@media(max-width:900px){.pside{top:auto;bottom:22px;transform:translateY(24px)}.pl{left:22px}.pr{right:22px}#pause.open .pside{transform:none}#pause .pgame{flex-direction:row;align-items:center}#pause .pgame .ico{width:44px;height:44px;font-size:18px}}
+
+#toast{position:fixed;left:50%;bottom:120px;z-index:90;max-width:min(440px,88vw);padding:12px 18px;border-radius:14px;background:rgba(14,14,14,.97);border:1px solid #333;color:#eee;font:500 14px Inter,sans-serif;text-align:center;opacity:0;transform:translate(-50%,12px);pointer-events:none;transition:opacity .3s,transform .4s cubic-bezier(.22,1,.36,1)}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* better game loading screen */
+.gstat{background:#030303;overflow:hidden;color:#bbb}
+.gstat::before{content:"";position:absolute;inset:-25%;background:radial-gradient(ellipse 38% 24% at 30% 55%,rgba(80,80,80,.5),transparent 70%),radial-gradient(ellipse 45% 30% at 70% 30%,rgba(85,85,85,.45),transparent 72%);animation:drift 20s ease-in-out infinite alternate}
+.lbox{position:relative;display:flex;flex-direction:column;align-items:center;width:min(420px,86vw);animation:rise .7s cubic-bezier(.22,1,.36,1) both}
+.licon{position:relative;width:132px;height:132px;display:grid;place-items:center;margin-bottom:26px}
+.licon::before{content:"";position:absolute;inset:0;border-radius:34px;padding:2px;background:conic-gradient(from var(--a),transparent 0 55%,#fff 90%,transparent);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:spin 1.6s linear infinite}
+@property --a{syntax:'<angle>';inherits:false;initial-value:0deg}
+.licon::after{content:"";position:absolute;inset:14px;border-radius:30px;box-shadow:0 0 60px rgba(255,255,255,.14);animation:pulse 2.4s ease-in-out infinite}
+.licon .ico{position:relative;z-index:1;width:104px;height:104px;font-size:44px;border-radius:24px;animation:float 3s ease-in-out infinite}
+.lname{font-size:34px;text-align:center;margin-bottom:22px;color:#f2f2f2}
+.lbar{width:100%;height:6px;border-radius:3px;background:#1a1a1a;overflow:hidden}
+.lbar i{display:block;height:100%;width:0;border-radius:3px;background:linear-gradient(90deg,#777,#fff);transition:width .25s ease;position:relative;overflow:hidden}
+.lbar i::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.7),transparent);animation:shim 1.2s linear infinite}
+.lbar.err i{background:#f87171}
+.lstat{margin-top:16px;font-size:14px;color:#c4c4c4;text-align:center;min-height:20px}
+.ltip{margin-top:10px;font-size:13px;color:#7d7d7d;text-align:center;min-height:36px;transition:opacity .4s}
+@keyframes spin{to{--a:360deg}}
+@keyframes pulse{50%{opacity:.4;transform:scale(1.08)}}
+@keyframes float{50%{transform:translateY(-5px)}}
+@keyframes shim{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+@media(prefers-reduced-motion:reduce){.licon::before,.licon::after,.licon .ico,.lbar i::after,.gstat::before{animation:none}}
+</style>
+</head>
+<body>
+<div class="bg"></div>
+<div id="splash"><div class="pixel">nebula</div><div class="bar"><i></i></div></div>
+
+<!-- HOME -->
+<section class="view active" id="home">
+  <div class="pixel logo">nebula</div>
+  <form class="search" id="sf">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+    <input id="q" type="text" placeholder="Search for a game..." autocomplete="off">
+    <span class="sep"></span>
+    <button type="submit" aria-label="Go"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+    <div class="results" id="res"></div>
+  </form>
+  <button class="addbm" id="bm"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Add Bookmark</button>
+  <div class="tagline" id="tag"></div>
+</section>
+
+<!-- GAMES -->
+<section class="view" id="games">
+  <div class="wrap">
+    <h1 class="pixel">games</h1>
+    <p class="sub">Take a breather. Pick a game.</p>
+    <div class="filter">
+      <label class="finput"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="fq" placeholder="Filter games..."></label>
+      <span class="count" id="cnt"></span>
+    </div>
+    <div class="grid" id="grid"></div>
+  </div>
+</section>
+
+<!-- SETTINGS -->
+<section class="view" id="settings">
+  <div class="wrap">
+    <h1 class="pixel">settings</h1>
+    <p class="sub">Personalize your experience.</p>
+    <div class="rows">
+      <div class="row"><div><b>About:Blank Cloak</b><small>Disguises the page as an about:blank url.</small></div><div class="ctl"><button class="btn" id="cloakNow">Cloak now</button><div class="tog" id="t-cloak" role="switch"></div></div></div>
+      <div class="row"><div><b>Anti-Close</b><small>Shows a popup before the tab closes. Useful for GoGuardian users.</small></div><div class="ctl"><div class="tog" id="t-anti" role="switch"></div></div></div>
+      <div class="row"><div><b>Subtexts</b><small>Toggles the rotating tagline beneath the search bar.</small></div><div class="ctl"><div class="tog" id="subtog" role="switch"></div></div></div>
+      <div class="row"><div><b>Tab Disguise</b><small>Disguises the tab into looking like another site.</small></div><div class="ctl"><select id="disg"><option>None</option><option>Google Docs</option><option>Google Classroom</option><option>Canvas</option></select></div></div>
+    </div>
+    <div class="foot"><span>Nebula Unblocker</span><button class="btn" id="reset">Reset settings</button></div>
+  </div>
+</section>
+
+<!-- DOCK -->
+<nav class="dock">
+  <button data-v="home" class="active"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><path d="M4 11l8-7 8 7v9H4z"/><path d="M10 20v-6h4v6"/></svg>Home</button>
+  <button data-v="games"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="15" height="8" rx="3"/><path d="M7 10.5v4M5 12.5h4M16 11h.01M18 14h.01"/></svg>Games</button>
+  <button data-v="settings"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>Settings</button>
+</nav>
+
+<!-- GAME PLAYER -->
+<div id="play">
+  <div class="stage" id="stage"><iframe id="gf" allow="fullscreen; autoplay; pointer-lock; clipboard-read; clipboard-write" title="Minecraft"></iframe><div class="gstat" id="gs"><div class="lbox"><div class="licon" id="lic"></div><div class="lname pixel" id="lnm"></div><div class="lbar"><i id="lfill"></i></div><div class="lstat" id="gst"></div><div class="ltip" id="ltip"></div></div></div>
+  <div id="pause">
+    <div id="pbar"><div id="clock" class="pixel"></div></div>
+    <div class="pside pl"><div class="pgame" id="pgame"></div></div>
+    <div class="pside pr"><div id="bat" hidden><span id="batp"></span><div class="batic"><i></i><svg viewBox="0 0 24 24"><path d="M13.5 2L4 14h6l-1.5 8L20 9.5h-6.5z"/></svg></div></div></div>
+    <div class="pmenu"><div class="pixel">paused</div><div class="pver"><label for="ver">Version:</label><select id="ver"><option>26.3</option><option>26.2</option><option>Voltan 26.2</option></select></div><button class="main" id="pr">Resume</button><button id="pf">Toggle fullscreen</button><button id="px">Exit to games</button></div>
+  </div>
+  <button class="fs" id="fs" aria-label="Fullscreen (hold hover for menu)"><svg class="ring" viewBox="0 0 44 44"><circle cx="22" cy="22" r="21"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+</div>
+
+<script>
+const SRC='<!DOCTYPE html>'+document.documentElement.outerHTML; // pristine copy of this page, used by the cloak
+// view switching
+const views=document.querySelectorAll('.view'),tabs=document.querySelectorAll('.dock button');
+let busy=false;
+function show(id){const cur=document.querySelector('.view.active'),next=document.getElementById(id);
+  if(busy||cur===next)return;busy=true;
+  tabs.forEach(b=>b.classList.toggle('active',b.dataset.v===id));
+  cur.classList.add('leaving');
+  setTimeout(()=>{cur.classList.remove('leaving','active');next.classList.add('active');scrollTo(0,0);busy=false},220)}
+tabs.forEach(b=>b.onclick=()=>show(b.dataset.v));
+
+// startup animation
+const splash=document.getElementById('splash');
+setTimeout(()=>{splash.classList.add('out');document.body.classList.add('ready')},1700);
+setTimeout(()=>splash.remove(),2500);
+
+// game search
+const q=document.getElementById('q'),res=document.getElementById('res');
+let sel=-1,items=[];
+const lite=['#eee','#f4f4f4','#edc22e','#e8c21a'];
+function findGames(v){v=v.toLowerCase();return games.filter(g=>g[0].toLowerCase().includes(v)).slice(0,6)}
+function openGames(text){document.getElementById('fq').value=text;render(text);closeRes();show('games')}
+function closeRes(){res.classList.remove('open');sel=-1}
+function renderRes(){const v=q.value.trim();sel=-1;res.innerHTML='';
+  if(!v){closeRes();return}
+  items=findGames(v).map(g=>({g,name:g[0],run:()=>openGames(g[0])}));
+  items.forEach(it=>{const b=document.createElement('button');b.type='button';
+    const i=makeIcon(it.g);
+    const t=document.createElement('span');t.textContent=it.name;b.append(i,t);b.onclick=it.run;res.appendChild(b)});
+  const w=document.createElement('button');w.type='button';w.className='web';
+  if(!items.length){w.textContent='No games found for "'+v+'"';w.style.pointerEvents='none';res.appendChild(w);res.classList.add('open');return}
+  w.textContent='See all matches for "'+v+'"';w.onclick=()=>openGames(v);res.appendChild(w);items.push({run:()=>openGames(v)});
+  res.classList.add('open')}
+function mark(){[...res.children].forEach((c,i)=>c.classList.toggle('sel',i===sel))}
+q.addEventListener('input',renderRes);
+q.addEventListener('focus',()=>{if(q.value.trim())renderRes()});
+q.addEventListener('keydown',e=>{
+  if(e.key==='ArrowDown'&&items.length){e.preventDefault();sel=(sel+1)%items.length;mark()}
+  else if(e.key==='ArrowUp'&&items.length){e.preventDefault();sel=(sel-1+items.length)%items.length;mark()}
+  else if(e.key==='Escape'){closeRes()}});
+document.getElementById('sf').onsubmit=e=>{e.preventDefault();const v=q.value.trim();if(!v)return;
+  if(sel>=0&&items[sel])return items[sel].run();
+  openGames(v)};
+document.addEventListener('click',e=>{if(!e.target.closest('#sf'))closeRes()});
+
+// games (replace the placeholder names/colors with your own list)
+const games=[["Minecraft","#2f5a2f","https://cdn.jsdelivr.net/gh/boibn/port-images@main/minecraft.webp"],["GTA Vice City","#e64a8a","https://cdn.jsdelivr.net/gh/boibn/port-images@main/gtavice.png"],["Clover Pit","#2e8b57","https://cdn.jsdelivr.net/gh/boibn/port-images@main/716.png","https://cdn.jsdelivr.net/gh/boibn/gms@main/716-fix3.html"],["Cuphead","#c9a227","https://cdn.jsdelivr.net/gh/boibn/port-images@main/465.png","https://cdn.jsdelivr.net/gh/boibn/gms@main/465-fix2.html"],["Dice a Million","#7a3fb5","https://cdn.jsdelivr.net/gh/boibn/port-images@main/759.png","https://cdn.jsdelivr.net/gh/boibn/gms@main/759-fix.html"],["Basketball Random","#e8742a","https://cdn.jsdelivr.net/gh/boibn/port-images@main/66.png","https://cdn.jsdelivr.net/gh/boibn/gms@main/66-fix.html"],["Baldi's Basics","#3a8f3a","https://cdn.jsdelivr.net/gh/boibn/port-images@main/65.png","https://cdn.jsdelivr.net/gh/boibn/gms@main/65-fix2.html"],["Baldi's Basics Classic Remastered","#2f7fbf","https://cdn.jsdelivr.net/gh/boibn/port-images@main/466.png","https://cdn.jsdelivr.net/gh/boibn/gms@main/466-fix2.html"],["Baldi's Basics Plus","#c9b22a","https://cdn.jsdelivr.net/gh/boibn/port-images@main/467.png","https://cdn.jsdelivr.net/gh/boibn/gms@main/467-fix2.html"],["Baldi's Basics The Ultra Decompile","#b33a3a","https://cdn.jsdelivr.net/gh/boibn/port-images@main/815.png","https://cdn.jsdelivr.net/gh/boibn/gms@main/815.html"],["Rogue Sergeant The Final Operation","#5a6b3a","https://cdn.jsdelivr.net/gh/boibn/port-images@main/656.jpg","https://cdn.jsdelivr.net/gh/boibn/gms@main/656-fix.html"],["Amanda The Adventurer","#d98a3d","https://cdn.jsdelivr.net/gh/boibn/port-images@main/450.png","https://cdn.jsdelivr.net/gh/boibn/gms@main/450-fix2.html"],["FNF vs Bob v2.0 (Bob’s Onslaught)","#d9442a","https://cdn.jsdelivr.net/gh/boibn/port-images@main/618.jpg","https://cdn.jsdelivr.net/gh/boibn/gms@main/618-fix.html"],["FNF vs Pibby Corrupted","#2f7fbf","https://cdn.jsdelivr.net/gh/boibn/port-images@main/700.jpg","https://cdn.jsdelivr.net/gh/boibn/gms@main/700-fix.html"],["FNF Vs. Hypno’s Lullaby v2","#7a3fb5","https://cdn.jsdelivr.net/gh/boibn/port-images@main/600.jpg","https://cdn.jsdelivr.net/gh/boibn/gms@main/600-fix.html"],["FNF Vs. Sonic.EXE 3.0/4.0","#b33a3a","https://cdn.jsdelivr.net/gh/boibn/port-images@main/601.jpg","https://cdn.jsdelivr.net/gh/boibn/gms@main/601-fix.html"],["Friday Night Funkin VS Impostor v4","#c0392b","https://cdn.jsdelivr.net/gh/boibn/port-images@main/608.jpg","https://cdn.jsdelivr.net/gh/boibn/gms@main/608-fix.html"],["Friday Night Funkin vs Nonsense","#e8a020","https://cdn.jsdelivr.net/gh/boibn/port-images@main/644.jpg","https://cdn.jsdelivr.net/gh/boibn/gms@main/644-fix.html"],["Friday Night Funkin Vs. Dave and Bambi v3","#3a8f3a","https://cdn.jsdelivr.net/gh/boibn/port-images@main/615.jpg","https://cdn.jsdelivr.net/gh/boibn/gms@main/615.html-a"],["They Are Coming","#8a3a2a","https://cdn.jsdelivr.net/gh/boibn/port-images@main/348.png","https://cdn.jsdelivr.net/gh/boibn/gms@main/348-fix2.html"]];
+function makeIcon(g){const i=document.createElement('span');i.className='ico';i.style.background=g[1];if(g[2]){i.style.backgroundImage='url("'+g[2]+'")';i.style.backgroundSize='cover';i.style.backgroundPosition='center'}else{if(['#eee','#f4f4f4','#edc22e','#e8c21a'].includes(g[1]))i.style.color='#111';i.textContent=g[0][0]}return i}
+const grid=document.getElementById('grid'),cnt=document.getElementById('cnt');
+function render(f=''){grid.innerHTML='';const list=games.filter(g=>g[0].toLowerCase().includes(f.toLowerCase()));
+  cnt.textContent=list.length+' games';
+  if(!list.length){grid.innerHTML='<div class="empty">No games match that. Try another name.</div>';return}
+  list.forEach((g,i)=>{const b=document.createElement('button');b.className='game';b.style.setProperty('--i',Math.min(i,16));
+    const nm=document.createElement('span');nm.textContent=g[0];b.append(makeIcon(g),nm);b.onclick=()=>openGame(g[0]);grid.appendChild(b)})}
+//
+render();document.getElementById('fq').oninput=e=>render(e.target.value);
+
+// settings toggles
+// rotating tagline (Subtexts)
+const lines=["Browse freely.","Take a breather.","Fast, simple, yours.","Nothing to see here."];let i=0;
+const tag=document.getElementById('tag');
+function updTag(){tag.textContent=cfg.sub?lines[i%lines.length]:''}
+setInterval(()=>{i++;updTag()},4000);
+
+// settings (saved in this browser)
+const DEF={cloak:false,anti:false,sub:false,disg:'None'};let cfg={...DEF};
+try{cfg={...DEF,...JSON.parse(localStorage.getItem('nebula-settings')||'{}')}}catch(e){}
+const save=()=>{try{localStorage.setItem('nebula-settings',JSON.stringify(cfg))}catch(e){}};
+const DIS={'Google Docs':['Untitled document - Google Docs','#4285f4','D'],'Google Classroom':['Classes','#0f9d58','C'],'Canvas':['Dashboard','#e72429','C']};
+function applyDisg(){let ic=document.querySelector('link[rel=icon]');const d=DIS[cfg.disg];
+  if(!d){document.title='Nebula';if(ic)ic.remove();return}
+  document.title=d[0];if(!ic){ic=document.createElement('link');ic.rel='icon';document.head.appendChild(ic)}
+  ic.href='data:image/svg+xml,'+encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='"+d[1]+"'/><text x='16' y='23' font-size='20' font-family='Arial' font-weight='700' text-anchor='middle' fill='white'>"+d[2]+"</text></svg>")}
+const toastEl=document.createElement('div');toastEl.id='toast';document.body.appendChild(toastEl);let toastT;
+function toast(m){toastEl.textContent=m;toastEl.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>toastEl.classList.remove('show'),5000)}
+function leave(){const u='https://www.google.com';try{top.location.replace(u);return}catch(e){}try{window.open(u,'_top')}catch(e){}if(self===top)location.replace(u)}
+function cloak(){if(window.name==='nebula-cloaked')return toast('This tab is already cloaked.');
+  let w=null;try{w=window.open('about:blank','_blank')}catch(e){}
+  if(!w)return toast('Pop-up blocked ('+(self!==top?'page is embedded inside another page':'top-level page')+', '+location.protocol+'). Allow pop-ups for this site, or open the site directly instead of inside another page.');
+  let n=0,err='';try{w.name='nebula-cloaked'}catch(e){}
+  const ok=()=>{try{return w.document.body&&w.document.body.children.length>3}catch(e){err=e.message;return false}};
+  const put=()=>{try{w.document.open();w.document.write(SRC);w.document.close()}catch(e){err=e.message}};
+  const done=()=>{window.onbeforeunload=null;setTimeout(leave,300)};
+  const step=()=>{if(n>0&&ok())return done();if(n++>=4){try{w.location.href=URL.createObjectURL(new Blob([SRC],{type:'text/html'}));toast('Could not write into about:blank here'+(err?' ('+err+')':'')+'. Opened the page in the new tab instead.')}catch(e){toast('Cloak failed: '+(err||e.message))}return done()}put();setTimeout(step,500)};
+  setTimeout(step,100)}
+const T={cloak:'t-cloak',anti:'t-anti',sub:'subtog'};
+function sync(){for(const k in T)document.getElementById(T[k]).classList.toggle('on',cfg[k]);
+  document.getElementById('disg').value=cfg.disg;applyDisg();updTag();
+  window.onbeforeunload=cfg.anti?e=>{e.preventDefault();e.returnValue=''}:null}
+for(const k in T)document.getElementById(T[k]).onclick=()=>{cfg[k]=!cfg[k];save();sync()};
+document.getElementById('disg').onchange=e=>{cfg.disg=e.target.value;save();sync()};
+document.getElementById('cloakNow').onclick=cloak;
+document.getElementById('reset').onclick=()=>{cfg={...DEF};save();sync()};
+if(cfg.cloak&&window.name!=='nebula-cloaked')document.addEventListener('pointerdown',cloak,{once:true});
+sync();
+
+document.getElementById('bm').onclick=()=>{const u=prompt('Bookmark URL');if(u)alert('Saved: '+u)};
+
+// Minecraft player. loadGame is the one-line loader: downloads the parts, joins them, and points the iframe at the result.
+const loadGame=async(b,n,f)=>loadDoc(await new Blob(await Promise.all([...Array(n).keys()].map(i=>fetch(b+(i+1)).then(r=>{if(!r.ok)throw 0;return r.blob()})))).text(),f);
+const GTA='PCFkb2N0eXBlIGh0bWw+PGh0bWwgbGFuZz0iZW4tdXMiPjxoZWFkPjxiYXNlIGhyZWY9Imh0dHBzOi8vY2RuLmpzZGVsaXZyLm5ldC9naC93ZWItcG9ydHMvdmljZS1jaXR5QDc5NjY3OGJlNGVkMjZhMTNjMTI1NmJlOTg3ODFjYTliOTBiZWI5ODEvIj48bWV0YSBjaGFyc2V0PSJ1dGYtOCI+PG1ldGEgbmFtZT0idmlld3BvcnQiIGNvbnRlbnQ9IndpZHRoPWRldmljZS13aWR0aCwgaW5pdGlhbC1zY2FsZT0xLCBtYXhpbXVtLXNjYWxlPTEsIG1pbmltdW0tc2NhbGU9MSwgdXNlci1zY2FsYWJsZT1ubyI+PHRpdGxlPkdUQSBWaWNlIENpdHk8L3RpdGxlPjxsaW5rIHJlbD0ic3R5bGVzaGVldCIgaHJlZj0ic3R5bGUuY3NzIj48L2hlYWQ+PGJvZHkgZGF0YS1pcy10b3VjaD0iMCIgZGF0YS1zdGF0ZS1jYXI9IjAiIGRhdGEtc3RhdGUtY2FyLWd1bj0iMCIgZGF0YS1zdGF0ZS1ndW49IjAiIGRhdGEtc3RhdGUtYmlrZT0iMCIgZGF0YS1zdGF0ZS1tZW51PSIxIiBkYXRhLXN0YXRlLWN1dHNjZW5lPSIwIiBkYXRhLXN0YXRlLW1vYnJpbmc9IjAiIGRhdGEtc3RhdGUtam9iPSIwIiBkYXRhLXN0YXRlLWRpc2FibGUtY29udHJvbHM9IjAiIGRhdGEtc3RhdGUtcGFuemVyPSIwIiBkYXRhLXN0YXRlLWNhci13aXRoLXdlYXBvbj0iMCIgZGF0YS1zdGF0ZS1odW50ZXI9IjAiIGRhdGEtc3RhdGUtc2NvcGUtbW9kZT0iMCIgZGF0YS1zdGF0ZS1zY29wZS1ndW49IjAiPjxkaXYgaWQ9ImxvYWRpbmctdGV4dCIgc3R5bGU9ImNvbG9yOndoaXRlO2ZvbnQtc2l6ZTo0OHB4O2ZvbnQtZmFtaWx5OmN1cnNpdmU7dGV4dC1hbGlnbjpjZW50ZXI7bWFyZ2luLXRvcDoyMHB4Ij4gTE9BRElORy4uLiA8L2Rpdj48ZGl2IGNsYXNzPSJ3YXN0ZWQtY29udGFpbmVyIiBoaWRkZW4+PC9kaXY+PGRpdiBjbGFzcz0iaW50cm8tY29udGFpbmVyIiBoaWRkZW4+PGRpdiBjbGFzcz0ibG9hZGVyLWNvbnRhaW5lciI+PGRpdiBjbGFzcz0icHJvZ3Jlc3MtYmFyLWNvbnRhaW5lciIgaWQ9InNwaW5uZXIiPjxkaXYgY2xhc3M9InByb2dyZXNzLWJhci1maWxsIj48L2Rpdj48L2Rpdj48ZGl2IGlkPSJzdGF0dXMiPkRvd25sb2FkaW5nLi4uPC9kaXY+PGRpdj48cHJvZ3Jlc3MgaWQ9InByb2dyZXNzIj48L3Byb2dyZXNzPjwvZGl2PjwvZGl2PjwvZGl2PjxpbnB1dCB0eXBlPSJmaWxlIiBpZD0ib3JpZ2luYWwtZ2FtZS1maWxlIiBoaWRkZW4+PGNhbnZhcyBjbGFzcz0iZW1zY3JpcHRlbiIgaWQ9ImNhbnZhcyIgb25jb250ZXh0bWVudT0iZXZlbnQucHJldmVudERlZmF1bHQoKSI+PC9jYW52YXM+PGRpdiBjbGFzcz0idG91Y2gtY29udHJvbHMtd3JhcHBlciI+PGRpdiBpZD0ibW92ZSI+PC9kaXY+PGRpdiBpZD0ibG9vayI+PC9kaXY+PGRpdiBjbGFzcz0idG91Y2gtY29udHJvbCByYWRpbyI+PC9kaXY+PGRpdiBjbGFzcz0idG91Y2gtY29udHJvbCB3ZWFwb24iPjwvZGl2PjxkaXYgY2xhc3M9InRvdWNoLWNvbnRyb2wgbWVudSI+PC9kaXY+PGRpdiBjbGFzcz0idG91Y2gtY29udHJvbCBmaXN0Ij48L2Rpdj48ZGl2IGNsYXNzPSJ0b3VjaC1jb250cm9sIGRyaWZ0Ij48L2Rpdj48ZGl2IGNsYXNzPSJ0b3VjaC1jb250cm9sIHJ1biI+PC9kaXY+PGRpdiBjbGFzcz0idG91Y2gtY29udHJvbCBjYXIgZ2V0SW4iPjwvZGl2PjxkaXYgY2xhc3M9InRvdWNoLWNvbnRyb2wgbGVmdCI+PC9kaXY+PGRpdiBjbGFzcz0idG91Y2gtY29udHJvbCByaWdodCI+PC9kaXY+PGRpdiBjbGFzcz0idG91Y2gtY29udHJvbCBqdW1wIj48L2Rpdj48ZGl2IGNsYXNzPSJ0b3VjaC1jb250cm9sIGNhciBnZXRPdXQiPjwvZGl2PjxkaXYgY2xhc3M9InRvdWNoLWNvbnRyb2wgY2FtZXJhIj48L2Rpdj48ZGl2IGNsYXNzPSJ0b3VjaC1jb250cm9sIG1vYmlsZSI+PC9kaXY+PGRpdiBjbGFzcz0idG91Y2gtY29udHJvbCBqb2IiPjwvZGl2PjxkaXYgY2xhc3M9InRvdWNoLWNvbnRyb2wgaG9ybiI+PC9kaXY+PGRpdiBjbGFzcz0idG91Y2gtY29udHJvbCBmaXJlUmlnaHQiPjwvZGl2PjxkaXYgY2xhc3M9InRvdWNoLWNvbnRyb2wgZmlyZUxlZnQiPjwvZGl2PjwvZGl2PjxzY3JpcHQ+YWxlcnQoIlRoYW5rIHlvdSB0byBicmVhZCBmb3IgdGhpcyBwb3J0ISBNYWtlIHN1cmUgdG8gdXNlIGduLW1hdGggZm9yIHRoZSBiZXN0IGdhbWVzIGFuZCB3ZWIgcG9ydHMsIGFsbCBsaW5rcyBhdCBkaXNjb3JkLmdnL2duLW1hdGggb3IgY2hlY2sgb3V0IG15IHBhcnRuZXJzIHBhZ2Ug4p2k77iPIik7Y29uc3QgbG9hZGluZ1RleHQ9ZG9jdW1lbnQucXVlcnlTZWxlY3RvcigiI2xvYWRpbmctdGV4dCIpO2xldCBsb2FkZWRCeXRlcz0wO2NvbnN0IERCX05BTUU9ImdhbWVGaWxlc0RCIixTVE9SRV9OQU1FPSJmaWxlcyI7ZnVuY3Rpb24gb3BlbkRCKCl7cmV0dXJuIG5ldyBQcm9taXNlKChyZXMscmVqKT0+e2NvbnN0IHI9aW5kZXhlZERCLm9wZW4oREJfTkFNRSwxKTtyLm9udXBncmFkZW5lZWRlZD1lPT57Y29uc3QgZGI9ZS50YXJnZXQucmVzdWx0O2RiLm9iamVjdFN0b3JlTmFtZXMuY29udGFpbnMoU1RPUkVfTkFNRSl8fGRiLmNyZWF0ZU9iamVjdFN0b3JlKFNUT1JFX05BTUUpfTtyLm9uc3VjY2Vzcz1lPT5yZXMoZS50YXJnZXQucmVzdWx0KTtyLm9uZXJyb3I9ZT0+cmVqKGUudGFyZ2V0LmVycm9yKX0pfWFzeW5jIGZ1bmN0aW9uIHNhdmVGaWxlKG4sYil7Y29uc3QgZGI9YXdhaXQgb3BlbkRCKCk7cmV0dXJuIG5ldyBQcm9taXNlKChyZXMscmVqKT0+e2NvbnN0IHR4PWRiLnRyYW5zYWN0aW9uKFNUT1JFX05BTUUsInJlYWR3cml0ZSIpO3R4Lm9iamVjdFN0b3JlKFNUT1JFX05BTUUpLnB1dChiLG4pO3R4Lm9uY29tcGxldGU9KCk9PnJlcygpO3R4Lm9uZXJyb3I9ZT0+cmVqKGUudGFyZ2V0LmVycm9yKX0pfWFzeW5jIGZ1bmN0aW9uIGdldEZpbGUobil7Y29uc3QgZGI9YXdhaXQgb3BlbkRCKCk7cmV0dXJuIG5ldyBQcm9taXNlKChyZXMscmVqKT0+e2NvbnN0IHE9ZGIudHJhbnNhY3Rpb24oU1RPUkVfTkFNRSwicmVhZG9ubHkiKS5vYmplY3RTdG9yZShTVE9SRV9OQU1FKS5nZXQobik7cS5vbnN1Y2Nlc3M9ZT0+cmVzKGUudGFyZ2V0LnJlc3VsdCk7cS5vbmVycm9yPWU9PnJlaihlLnRhcmdldC5lcnJvcil9KX1hc3luYyBmdW5jdGlvbiBmZXRjaFdpdGhDYWNoZShuLHUpe2xldCBjPW51bGw7dHJ5e2M9YXdhaXQgZ2V0RmlsZShuKX1jYXRjaChlKXt9aWYoYylyZXR1cm4gYztjb25zdCByPWF3YWl0IGZldGNoKHUpLHJkPXIuYm9keS5nZXRSZWFkZXIoKSxjaD1bXTtsZXQgZ290PTA7Zm9yKDs7KXtjb25zdHtkb25lLHZhbHVlfT1hd2FpdCByZC5yZWFkKCk7aWYoZG9uZSlicmVhaztnb3QrPXZhbHVlLmxlbmd0aDtsb2FkZWRCeXRlcys9dmFsdWUubGVuZ3RoO2NoLnB1c2godmFsdWUpO2xvYWRpbmdUZXh0LnRleHRDb250ZW50PSJMT0FESU5HLi4uICIrKGxvYWRlZEJ5dGVzLzEwNDg1NzYpLnRvRml4ZWQoMikrIiBNQiAvIDYzMy40NSBNQiJ9Y29uc3QgZnVsbD1uZXcgVWludDhBcnJheShnb3QpO2xldCBvPTA7Zm9yKGNvbnN0IGMyIG9mIGNoKXtmdWxsLnNldChjMixvKTtvKz1jMi5sZW5ndGh9dHJ5e2F3YWl0IHNhdmVGaWxlKG4sZnVsbC5idWZmZXIpfWNhdGNoKGUpe31yZXR1cm4gZnVsbC5idWZmZXJ9YXN5bmMgZnVuY3Rpb24gbWVyZ2VGaWxlcyhwYXJ0cyxwcmVmaXgpe2NvbnN0IGJ1ZnM9W107Zm9yKGxldCBpPTA7aTxwYXJ0cy5sZW5ndGg7aSsrKWJ1ZnMucHVzaChhd2FpdCBmZXRjaFdpdGhDYWNoZShwcmVmaXgrIi5wYXJ0IisoaSsxKSxwYXJ0c1tpXSkpO3JldHVybiBVUkwuY3JlYXRlT2JqZWN0VVJMKG5ldyBCbG9iKGJ1ZnMpKX1mdW5jdGlvbiBnZXRQYXJ0cyhmLHMsZSl7Y29uc3QgcD1bXTtmb3IobGV0IGk9cztpPD1lO2krKylwLnB1c2goZisiLnBhcnQiK2kpO3JldHVybiBwfVByb21pc2UuYWxsKFttZXJnZUZpbGVzKGdldFBhcnRzKCJpbmRleC5kYXRhIiwxLDcpLCJpbmRleC5kYXRhIiksbWVyZ2VGaWxlcyhnZXRQYXJ0cygiYXVkaW8vZW1vdGlvbi5hZGYiLDEsMyksImVtb3Rpb24uYWRmIiksbWVyZ2VGaWxlcyhnZXRQYXJ0cygiYXVkaW8vZXNwYW50LmFkZiIsMSwzKSwiZXNwYW50LmFkZiIpLG1lcmdlRmlsZXMoZ2V0UGFydHMoImF1ZGlvL2ZldmVyLmFkZiIsMSwzKSwiZmV2ZXIuYWRmIiksbWVyZ2VGaWxlcyhnZXRQYXJ0cygiYXVkaW8vZmxhc2guYWRmIiwxLDMpLCJmbGFzaC5hZGYiKSxtZXJnZUZpbGVzKGdldFBhcnRzKCJhdWRpby9rY2hhdC5hZGYiLDEsMyksImtjaGF0LmFkZiIpLG1lcmdlRmlsZXMoZ2V0UGFydHMoImF1ZGlvL3ZjcHIuYWRmIiwxLDIpLCJ2Y3ByLmFkZiIpLG1lcmdlRmlsZXMoZ2V0UGFydHMoImF1ZGlvL3Zyb2NrLmFkZiIsMSw0KSwidnJvY2suYWRmIiksbWVyZ2VGaWxlcyhnZXRQYXJ0cygiYXVkaW8vd2F2ZS5hZGYiLDEsNCksIndhdmUuYWRmIiksbWVyZ2VGaWxlcyhnZXRQYXJ0cygiYXVkaW8vd2lsZC5hZGYiLDEsNCksIndpbGQuYWRmIildKS50aGVuKHU9Pntjb25zdCBLPVsiaW5kZXguZGF0YSIsImVtb3Rpb24uYWRmIiwiZXNwYW50LmFkZiIsImZldmVyLmFkZiIsImZsYXNoLmFkZiIsImtjaGF0LmFkZiIsInZjcHIuYWRmIiwidnJvY2suYWRmIiwid2F2ZS5hZGYiLCJ3aWxkLmFkZiJdLHBpY2s9cz0+e2NvbnN0IGw9cy50b0xvd2VyQ2FzZSgpO2ZvcihsZXQgaT0wO2k8Sy5sZW5ndGg7aSsrKWlmKGwuaW5jbHVkZXMoS1tpXSkpcmV0dXJuIHVbaV07cmV0dXJuIG51bGx9O2NvbnN0IG9mPXdpbmRvdy5mZXRjaDt3aW5kb3cuZmV0Y2g9YXN5bmMgZnVuY3Rpb24oaW5wdXQsaW5pdCl7Y29uc3QgbT1waWNrKGlucHV0IGluc3RhbmNlb2YgUmVxdWVzdD9pbnB1dC51cmw6U3RyaW5nKGlucHV0KSk7aWYobSlpbnB1dD1tO3JldHVybiBvZih0eXBlb2YgaW5wdXQ9PT0ic3RyaW5nIj9pbnB1dC50b0xvd2VyQ2FzZSgpOmlucHV0LGluaXQpfTtjb25zdCBvbz1YTUxIdHRwUmVxdWVzdC5wcm90b3R5cGUub3BlbjtYTUxIdHRwUmVxdWVzdC5wcm90b3R5cGUub3Blbj1mdW5jdGlvbihtZXRob2QsdXJsLC4uLnJlc3Qpe3VybD1TdHJpbmcodXJsKTtpZih1cmwuaW5jbHVkZXMoImh0dHBzOi8vY2RuLmRvcy56b25lL3Zjc2t5L2ZldGNoZWQvIikpdXJsPXVybC5yZXBsYWNlKCJodHRwczovL2Nkbi5kb3Muem9uZS92Y3NreS9mZXRjaGVkLyIsIiIpO2NvbnN0IG09cGljayh1cmwpO2lmKG0pdXJsPW07cmV0dXJuIG9vLmNhbGwodGhpcyxtZXRob2QsdXJsLnRvTG93ZXJDYXNlKCksLi4ucmVzdCl9O1siZ2FtZXBhZGVtdWxhdG9yLmpzIiwiaWRiZnMuanMiLCJnYW1lLmpzIl0uZm9yRWFjaChzcmM9Pntjb25zdCBzPWRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoInNjcmlwdCIpO3Muc3JjPXNyYztkb2N1bWVudC5ib2R5LmFwcGVuZENoaWxkKHMpfSk7bG9hZGluZ1RleHQucmVtb3ZlKCl9KTs8L3NjcmlwdD48L2JvZHk+PC9odG1sPg==';
+const loadDoc=(h,f)=>{const cb=f.onload;f.onload=()=>{f.onload=null;const d=f.contentDocument;d.open();d.write(h);d.close();setTimeout(()=>cb&&cb(),400)};f.src='about:blank'};
+const VERS={"26.3":["https://cdn.jsdelivr.net/gh/boibn/ports@main/eaglercraft26-3.html.part",4],"26.2":["https://cdn.jsdelivr.net/gh/boibn/ports@main/eaglercraft26-2%5B1%5D.html.part",4],"Voltan 26.2":["https://cdn.jsdelivr.net/gh/boibn/mc@main/Voltan-26.2-U2.1.html.part",4]};
+const play=document.getElementById('play'),gf=document.getElementById('gf'),gs=document.getElementById('gs'),gst=document.getElementById('gst'),pause=document.getElementById('pause'),fsb=document.getElementById('fs'),ver=document.getElementById('ver');
+let hoverT;
+// game loading screen: shows the game's icon + name, a smooth progress bar and rotating tips, and stays up for at least MINLOAD ms
+const MINLOAD=3500,TIPS=["Tip: hold the fullscreen button for 3 seconds to open the pause menu.","Tip: you can switch Minecraft versions from the pause menu.","Tip: the first launch of a big game takes longest. After that it loads faster.","Tip: press Esc to close the pause menu.","Tip: use the search bar on the home page to find a game fast."];
+let loadT0=0,loadP=0,loadI,tipI,loadW;
+function stopLoad(){clearInterval(loadI);clearInterval(tipI);clearTimeout(loadW)}
+function showLoad(g,msg){stopLoad();const lic=document.getElementById('lic'),tip=document.getElementById('ltip'),fill=document.getElementById('lfill');
+  gs.classList.remove('hide');document.querySelector('.lbar').classList.remove('err');lic.innerHTML='';lic.append(makeIcon(g));document.getElementById('lnm').textContent=g[0];gst.textContent=msg;
+  loadT0=Date.now();loadP=0;fill.style.width='0%';let t=Math.floor(Math.random()*TIPS.length);tip.textContent=TIPS[t];
+  loadI=setInterval(()=>{loadP+=(92-loadP)*.035;fill.style.width=loadP+'%'},120);
+  tipI=setInterval(()=>{tip.style.opacity=0;setTimeout(()=>{t=(t+1)%TIPS.length;tip.textContent=TIPS[t];tip.style.opacity=1},400)},3200)}
+function hideLoad(){clearTimeout(loadW);loadW=setTimeout(()=>{clearInterval(loadI);document.getElementById('lfill').style.width='100%';gst.textContent='Ready!';loadW=setTimeout(()=>{gs.classList.add('hide');clearInterval(tipI);gf.focus()},500)},Math.max(0,MINLOAD-(Date.now()-loadT0)))}
+function failLoad(m){stopLoad();document.querySelector('.lbar').classList.add('err');gst.textContent=m}
+function startVer(v){showLoad(games.find(x=>x[0]==='Minecraft'),'Loading Minecraft '+v+'...');gf.onload=hideLoad;
+  loadGame(VERS[v][0],VERS[v][1],gf).catch(()=>failLoad("Couldn't load version "+v+". Pick another version or try again."))}
+const clock=document.getElementById('clock');
+function tick(){clock.textContent=new Date().toLocaleTimeString([],{hour:'numeric',minute:'2-digit'})}tick();setInterval(tick,1000);
+function openGame(name){const g=games.find(x=>x[0]===name),pg=document.getElementById('pgame');pg.innerHTML='';const t=document.createElement('div');t.innerHTML='<small>Now playing</small><b></b>';t.querySelector('b').textContent=g[0];pg.append(makeIcon(g),t);gf.title=name;document.querySelector('.pver').style.display=name==='Minecraft'?'':'none';play.classList.add('open');
+  if(name==='Minecraft'){ver.value='26.3';startVer('26.3')}else if(g[3])startUrl(g);else startGta()}
+// add any game by link: games entry = ["Name","#color","image-url","game-page-url"]. Fetches the page, adds a <base> so its relative files load, shows it in the iframe.
+function startUrl(g){showLoad(g,'Loading '+g[0]+'...');gf.onload=hideLoad;
+  fetch(g[3]).then(r=>{if(!r.ok)throw 0;return r.text()}).then(h=>{const b='<base href="'+g[3].replace(/[^\/]*$/,'')+'">';if(!/<base\s/i.test(h))h=/<head[^>]*>/i.test(h)?h.replace(/<head[^>]*>/i,m=>m+b):b+h;loadDoc(h,gf)}).catch(()=>failLoad("Couldn't load "+g[0]+". Check the link or your connection."))}
+function startGta(){showLoad(games.find(x=>x[0]==='GTA Vice City'),'Loading GTA Vice City... the first launch downloads about 630 MB, then it is saved for next time.');gf.onload=hideLoad;try{loadDoc(new TextDecoder().decode(Uint8Array.from(atob(GTA),c=>c.charCodeAt(0))),gf)}catch(e){failLoad("Couldn't load GTA Vice City.")}}
+function closePause(){pause.classList.remove('open');gf.focus()}
+function toggleFS(){document.fullscreenElement?document.exitFullscreen():play.requestFullscreen&&play.requestFullscreen()}
+function exitGame(){stopLoad();closePause();if(document.fullscreenElement)document.exitFullscreen();gf.onload=null;gf.src='about:blank';play.classList.remove('open')}
+fsb.onclick=()=>{clearTimeout(hoverT);toggleFS()};
+fsb.onmouseenter=()=>{hoverT=setTimeout(()=>pause.classList.add('open'),3000)};
+fsb.onmouseleave=()=>clearTimeout(hoverT);
+ver.onchange=()=>startVer(ver.value);
+document.getElementById('pr').onclick=closePause;
+document.getElementById('pf').onclick=toggleFS;
+document.getElementById('px').onclick=exitGame;
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&pause.classList.contains('open'))closePause()});
+
+// battery (Chromium browsers only; hidden elsewhere). "Low power" is estimated as 20% or less and not charging.
+const bat=document.getElementById('bat');
+navigator.getBattery&&navigator.getBattery().then(b=>{const u=()=>{const p=Math.round(b.level*100);bat.hidden=false;document.getElementById('batp').textContent=p+'%';bat.style.setProperty('--lv',p+'%');bat.querySelector('i').style.setProperty('--lv',p+'%');bat.classList.toggle('charging',b.charging);bat.classList.toggle('low',!b.charging&&p<=20)};u();b.onchargingchange=b.onlevelchange=u}).catch(()=>{});
+</script>
+</body>
+</html>
+
