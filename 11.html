@@ -182,6 +182,8 @@ body:not(.ready) .dock{opacity:0;transform:translate(-50%,40px)}
 @keyframes float{50%{transform:translateY(-5px)}}
 @keyframes shim{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
 @media(prefers-reduced-motion:reduce){.licon::before,.licon::after,.licon .ico,.lbar i::after,.gstat::before{animation:none}}
+.lwarn{margin-top:14px;max-width:380px;font-size:13px;line-height:1.45;color:#fb923c;text-align:center}.lwarn:empty{display:none}
+#glst{font:600 14px Inter,sans-serif}
 </style>
 </head>
 <body>
@@ -224,6 +226,7 @@ body:not(.ready) .dock{opacity:0;transform:translate(-50%,40px)}
       <div class="row"><div><b>About:Blank Cloak</b><small>Disguises the page as an about:blank url.</small></div><div class="ctl"><button class="btn" id="cloakNow">Cloak now</button><div class="tog" id="t-cloak" role="switch"></div></div></div>
       <div class="row"><div><b>Anti-Close</b><small>Shows a popup before the tab closes. Useful for GoGuardian users.</small></div><div class="ctl"><div class="tog" id="t-anti" role="switch"></div></div></div>
       <div class="row"><div><b>Subtexts</b><small>Toggles the rotating tagline beneath the search bar.</small></div><div class="ctl"><div class="tog" id="subtog" role="switch"></div></div></div>
+      <div class="row"><div><b>WebGL</b><small id="glsmall">Needed for 3D games.</small></div><div class="ctl"><span id="glst"></span></div></div>
       <div class="row"><div><b>Tab Disguise</b><small>Disguises the tab into looking like another site.</small></div><div class="ctl"><select id="disg"><option>None</option><option>Google Docs</option><option>Google Classroom</option><option>Canvas</option></select></div></div>
     </div>
     <div class="foot"><span>Nebula Unblocker</span><button class="btn" id="reset">Reset settings</button></div>
@@ -239,12 +242,12 @@ body:not(.ready) .dock{opacity:0;transform:translate(-50%,40px)}
 
 <!-- GAME PLAYER -->
 <div id="play">
-  <div class="stage" id="stage"><iframe id="gf" allow="fullscreen; autoplay; pointer-lock; clipboard-read; clipboard-write" title="Minecraft"></iframe><div class="gstat" id="gs"><div class="lbox"><div class="licon" id="lic"></div><div class="lname pixel" id="lnm"></div><div class="lbar"><i id="lfill"></i></div><div class="lstat" id="gst"></div><div class="ltip" id="ltip"></div></div></div>
+  <div class="stage" id="stage"><iframe id="gf" allow="fullscreen; autoplay; pointer-lock; clipboard-read; clipboard-write" title="Minecraft"></iframe><div class="gstat" id="gs"><div class="lbox"><div class="licon" id="lic"></div><div class="lname pixel" id="lnm"></div><div class="lbar"><i id="lfill"></i></div><div class="lstat" id="gst"></div><div class="lwarn" id="lwarn"></div><div class="ltip" id="ltip"></div></div></div>
   <div id="pause">
     <div id="pbar"><div id="clock" class="pixel"></div></div>
     <div class="pside pl"><div class="pgame" id="pgame"></div></div>
     <div class="pside pr"><div id="bat" hidden><span id="batp"></span><div class="batic"><i></i><svg viewBox="0 0 24 24"><path d="M13.5 2L4 14h6l-1.5 8L20 9.5h-6.5z"/></svg></div></div></div>
-    <div class="pmenu"><div class="pixel">paused</div><div class="pver"><label for="ver">Version:</label><select id="ver"><option>26.3</option><option>26.2</option><option>Voltan 26.2</option></select></div><button class="main" id="pr">Resume</button><button id="pf">Toggle fullscreen</button><button id="px">Exit to games</button></div>
+    <div class="pmenu"><div class="pixel">paused</div><div class="pver"><label for="ver">Version:</label><select id="ver"><option>26.3</option><option>26.2</option><option>Voltan 26.2</option></select></div><button class="main" id="pr">Resume</button><button id="pf">Toggle fullscreen</button><button id="pm" style="display:none">Try another loading method</button><button id="px">Exit to games</button></div>
   </div>
   <button class="fs" id="fs" aria-label="Fullscreen (hold hover for menu)"><svg class="ring" viewBox="0 0 44 44"><circle cx="22" cy="22" r="21"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
 </div>
@@ -358,9 +361,13 @@ let hoverT;
 // game loading screen: shows the game's icon + name, a smooth progress bar and rotating tips, and stays up for at least MINLOAD ms
 const MINLOAD=3500,TIPS=["Tip: hold the fullscreen button for 3 seconds to open the pause menu.","Tip: you can switch Minecraft versions from the pause menu.","Tip: the first launch of a big game takes longest. After that it loads faster.","Tip: press Esc to close the pause menu.","Tip: use the search bar on the home page to find a game fast."];
 let loadT0=0,loadP=0,loadI,tipI,loadW;
+// WebGL: a web page cannot switch it on (it is a browser/graphics setting), so detect it and explain how to enable it
+const GL=(()=>{try{const c=document.createElement('canvas');return !!(c.getContext('webgl2')||c.getContext('webgl'))}catch(e){return false}})();
+const GLHELP='WebGL is turned off in this browser, so 3D games may not load. Open your browser settings > System, turn on "Use graphics acceleration when available", then restart the browser.';
+(()=>{const st=document.getElementById('glst');st.textContent=GL?'Enabled':'Disabled';st.style.color=GL?'#4ade80':'#fb923c';if(!GL)document.getElementById('glsmall').textContent='Off. Browser setting: Settings > System > "Use graphics acceleration", then restart.'})();
 function stopLoad(){clearInterval(loadI);clearInterval(tipI);clearTimeout(loadW)}
 function showLoad(g,msg){stopLoad();const lic=document.getElementById('lic'),tip=document.getElementById('ltip'),fill=document.getElementById('lfill');
-  gs.classList.remove('hide');document.querySelector('.lbar').classList.remove('err');lic.innerHTML='';lic.append(makeIcon(g));document.getElementById('lnm').textContent=g[0];gst.textContent=msg;
+  gs.classList.remove('hide');document.getElementById('lwarn').textContent=GL?'':GLHELP;document.querySelector('.lbar').classList.remove('err');lic.innerHTML='';lic.append(makeIcon(g));document.getElementById('lnm').textContent=g[0];gst.textContent=msg;
   loadT0=Date.now();loadP=0;fill.style.width='0%';let t=Math.floor(Math.random()*TIPS.length);tip.textContent=TIPS[t];
   loadI=setInterval(()=>{loadP+=(92-loadP)*.035;fill.style.width=loadP+'%'},120);
   tipI=setInterval(()=>{tip.style.opacity=0;setTimeout(()=>{t=(t+1)%TIPS.length;tip.textContent=TIPS[t];tip.style.opacity=1},400)},3200)}
@@ -370,11 +377,18 @@ function startVer(v){showLoad(games.find(x=>x[0]==='Minecraft'),'Loading Minecra
   loadGame(VERS[v][0],VERS[v][1],gf).catch(()=>failLoad("Couldn't load version "+v+". Pick another version or try again."))}
 const clock=document.getElementById('clock');
 function tick(){clock.textContent=new Date().toLocaleTimeString([],{hour:'numeric',minute:'2-digit'})}tick();setInterval(tick,1000);
-function openGame(name){const g=games.find(x=>x[0]===name),pg=document.getElementById('pgame');pg.innerHTML='';const t=document.createElement('div');t.innerHTML='<small>Now playing</small><b></b>';t.querySelector('b').textContent=g[0];pg.append(makeIcon(g),t);gf.title=name;document.querySelector('.pver').style.display=name==='Minecraft'?'':'none';play.classList.add('open');
+function openGame(name){const g=games.find(x=>x[0]===name),pg=document.getElementById('pgame');pg.innerHTML='';const t=document.createElement('div');t.innerHTML='<small>Now playing</small><b></b>';t.querySelector('b').textContent=g[0];pg.append(makeIcon(g),t);gf.title=name;document.querySelector('.pver').style.display=name==='Minecraft'?'':'none';document.getElementById('pm').style.display='none';play.classList.add('open');
   if(name==='Minecraft'){ver.value='26.3';startVer('26.3')}else if(g[3])startUrl(g);else startGta()}
 // add any game by link: games entry = ["Name","#color","image-url","game-page-url"]. Fetches the page, adds a <base> so its relative files load, shows it in the iframe.
-function startUrl(g){showLoad(g,'Loading '+g[0]+'...');gf.onload=hideLoad;
-  fetch(g[3]).then(r=>{if(!r.ok)throw 0;return r.text()}).then(h=>{const b='<base href="'+g[3].replace(/[^\/]*$/,'')+'">';if(!/<base\s/i.test(h))h=/<head[^>]*>/i.test(h)?h.replace(/<head[^>]*>/i,m=>m+b):b+h;loadDoc(h,gf)}).catch(()=>failLoad("Couldn't load "+g[0]+". Check the link or your connection."))}
+const mirrors=u=>{const m=u.match(/^https:\/\/cdn\.jsdelivr\.net\/gh\/([^\/@]+)\/([^\/@]+)@([^\/]+)\/(.+)$/);return m?[u,'https://gcore.jsdelivr.net/gh/'+m[1]+'/'+m[2]+'@'+m[3]+'/'+m[4],'https://fastly.jsdelivr.net/gh/'+m[1]+'/'+m[2]+'@'+m[3]+'/'+m[4],'https://raw.githubusercontent.com/'+m[1]+'/'+m[2]+'/'+m[3]+'/'+m[4]]:[u]};
+const direct=u=>{const m=u.match(/^https:\/\/cdn\.jsdelivr\.net\/gh\/([^\/@]+)\/([^\/@]+)@([^\/]+)\/(.+)$/);return m?'https://raw.githack.com/'+m[1]+'/'+m[2]+'/'+m[3]+'/'+m[4]:u};
+const fetchAny=async us=>{for(const u of us){try{const r=await fetch(u);if(r.ok)return await r.text()}catch(e){}}throw 0};
+// loading methods: 0 = fetch (tries mirrors) and write into about:blank, 1 = fetch and open as a blob page, 2 = open a mirror directly in the frame. A failed fetch moves on to method 2 by itself.
+let curG=null,curM=0;
+function startUrl(g,m=0){curG=g;curM=m;showLoad(g,'Loading '+g[0]+(m?' (method '+(m+1)+')':'')+'...');gf.onload=hideLoad;document.getElementById('pm').style.display='';
+  if(m===2){gf.src=direct(g[3]);return}
+  const b='<base href="'+g[3].replace(/[^\/]*$/,'')+'">';
+  fetchAny(mirrors(g[3])).then(h=>{if(!/<base\s/i.test(h))h=/<head[^>]*>/i.test(h)?h.replace(/<head[^>]*>/i,x=>x+b):b+h;m?gf.src=URL.createObjectURL(new Blob([h],{type:'text/html'})):loadDoc(h,gf)}).catch(()=>m<2?startUrl(g,2):failLoad("Couldn't load "+g[0]+". Open the pause menu and try another loading method."))}
 function startGta(){showLoad(games.find(x=>x[0]==='GTA Vice City'),'Loading GTA Vice City... the first launch downloads about 630 MB, then it is saved for next time.');gf.onload=hideLoad;try{loadDoc(new TextDecoder().decode(Uint8Array.from(atob(GTA),c=>c.charCodeAt(0))),gf)}catch(e){failLoad("Couldn't load GTA Vice City.")}}
 function closePause(){pause.classList.remove('open');gf.focus()}
 function toggleFS(){document.fullscreenElement?document.exitFullscreen():play.requestFullscreen&&play.requestFullscreen()}
@@ -386,6 +400,7 @@ ver.onchange=()=>startVer(ver.value);
 document.getElementById('pr').onclick=closePause;
 document.getElementById('pf').onclick=toggleFS;
 document.getElementById('px').onclick=exitGame;
+document.getElementById('pm').onclick=()=>{if(curG){closePause();startUrl(curG,(curM+1)%3)}};
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&pause.classList.contains('open'))closePause()});
 
 // battery (Chromium browsers only; hidden elsewhere). "Low power" is estimated as 20% or less and not charging.
