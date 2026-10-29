@@ -408,6 +408,8 @@ html.cc body.playing:not(:has(#pause.open)) #cdot,html.cc body.playing:not(:has(
     <p class="sub">Personalize your experience.</p>
     <div class="rows">
       <div class="row"><div><b>Custom Cursor</b><small>Replaces the mouse pointer with a dot and a trailing ring. Desktop only.</small></div><div class="ctl"><div class="tog" id="t-cur" role="switch"></div></div></div>
+      <div class="row"><div><b>About:Blank Launcher</b><small id="ab-s">Opens this site in a new about:blank tab.</small></div><div class="ctl"><button class="btn" id="ab-go">Launch</button></div></div>
+      <div class="row"><div><b>Blob URL Launcher</b><small id="bl-s">Opens this site from a blob: address in a new tab.</small></div><div class="ctl"><button class="btn" id="bl-go">Launch</button></div></div>
       <div class="row"><div><b>Subtexts</b><small>Toggles the rotating tagline beneath the search bar.</small></div><div class="ctl"><div class="tog" id="subtog" role="switch"></div></div></div>
       <div class="row"><div><b>Performance Mode</b><small>Higher FPS in games: renders at 1x resolution and turns off anti-aliasing. Turn off if games look blurry.</small></div><div class="ctl"><div class="tog" id="t-perf" role="switch"></div></div></div>
       <div class="row"><div><b>WebGL</b><small id="glsmall">Needed for 3D games.</small></div><div class="ctl"><span id="glst"></span></div></div>
@@ -438,6 +440,7 @@ html.cc body.playing:not(:has(#pause.open)) #cdot,html.cc body.playing:not(:has(
 </div>
 
 <script>
+const SRC='<!DOCTYPE html>'+document.documentElement.outerHTML; // snapshot of this page, used by the launchers
 // view switching
 const views=document.querySelectorAll('.view'),tabs=document.querySelectorAll('.dock button');
 let busy=false;
@@ -557,6 +560,14 @@ addEventListener('pointerup',()=>cring.classList.remove('down'));
 root.addEventListener('mouseleave',()=>root.classList.remove('cshow'));
 root.addEventListener('mouseenter',()=>{if(seen)root.classList.add('cshow')});
 
+// launchers: open a copy of this page in a new tab (the original tab stays as it is)
+function note(id,msg){const e=document.getElementById(id),old=e.dataset.o||(e.dataset.o=e.textContent);e.textContent=msg;clearTimeout(e._t);e._t=setTimeout(()=>e.textContent=old,4500)}
+document.getElementById('ab-go').onclick=()=>{let w=null;try{w=window.open('about:blank','_blank')}catch(e){}
+  if(!w)return note('ab-s','Pop-up blocked. Allow pop-ups for this site and try again.');
+  try{w.document.open();w.document.write(SRC);w.document.close();note('ab-s','Launched in a new about:blank tab.')}catch(e){note('ab-s','Could not write into the new tab: '+e.message)}};
+document.getElementById('bl-go').onclick=()=>{try{const u=URL.createObjectURL(new Blob([SRC],{type:'text/html'})),w=window.open(u,'_blank');
+  note('bl-s',w?'Launched from a blob: address.':'Pop-up blocked. Allow pop-ups for this site and try again.')}catch(e){note('bl-s','Launch failed: '+e.message)}};
+
 // settings (saved in this browser)
 const DEF={cur:true,sub:false,perf:true};let cfg={...DEF};
 try{cfg={...DEF,...JSON.parse(localStorage.getItem('nebula-settings')||'{}')}}catch(e){}
@@ -655,7 +666,8 @@ document.getElementById('rnd').onclick=()=>{const pool=games.filter(g=>g[3]||g[0
 
 // update log
 const UPDATES=[
- {v:'1.8',date:'Oct 28, 2026',tag:'Latest',items:['Redesigned pause menu: glass panel with the game\'s art blurred behind it, an icon on every button, a mute button on the volume slider, and a shortcuts bar.','Now playing and battery are shown as cards, and the session timer is a pill under the clock.']},
+ {v:'1.9',date:'Oct 28, 2026',tag:'Latest',items:['New launchers in Settings: open the site in an about:blank tab or from a blob: URL.']},
+ {v:'1.8',date:'Oct 28, 2026',items:['Redesigned pause menu: glass panel with the game\'s art blurred behind it, an icon on every button, a mute button on the volume slider, and a shortcuts bar.','Now playing and battery are shown as cards, and the session timer is a pill under the clock.']},
  {v:'1.7',date:'Oct 28, 2026',items:['Redesigned game loading screen: blurred game art backdrop, glowing icon with orbiting lights, floating embers in the game color, a percentage readout and Connect / Download / Launch steps.']},
  {v:'1.6',date:'Oct 28, 2026',items:['Live starfield background with mouse parallax and occasional shooting stars.','Home screen: floating game art, a shimmering logo, stat cards and a glowing search bar.','Games page: featured hero banner that picks up your last played game, and cards that glow in their own color on hover.','Navigation dock has a sliding highlight.']},
  {v:'1.5',date:'Oct 28, 2026',items:['Home screen now greets you and shows a "Jump back in" row with your last played games.','New Random game button for when you cannot decide.','Added this update log.']},
@@ -726,3 +738,4 @@ navigator.getBattery&&navigator.getBattery().then(b=>{const u=()=>{const p=Math.
 </script>
 </body>
 </html>
+
