@@ -276,7 +276,7 @@ body.playing .bg,body.playing .view,body.playing .dock,body.playing #floaters{di
 #vol::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--accent);border:0}
 .prow{display:flex;gap:10px}
 .pmenu .prow button{flex:1;height:42px;font-size:13px}
-.pkeys{position:absolute;z-index:2;left:50%;bottom:26px;transform:translateX(-50%);display:flex;gap:22px;color:var(--mute);font:500 12px Inter,sans-serif;white-space:nowrap;opacity:0;transition:opacity .5s .3s}
+.pkeys{position:absolute;z-index:2;left:50%;bottom:26px;transform:translateX(-50%);display:flex;gap:22px;color:var(--mute);font:500 12px Inter,sans-serif;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .5s .3s}
 #pause.open~.pkeys{opacity:1}
 .pkeys span{display:flex;align-items:center;gap:5px}
 kbd{font:600 11px Inter,sans-serif;padding:3px 7px;border-radius:6px;background:var(--card);border:1px solid var(--line);color:var(--text);margin-right:2px}
@@ -646,7 +646,8 @@ navigator.getBattery&&navigator.getBattery().then(b=>{const u=()=>{const p=Math.
 
 // ---- update log ----
 const UPDATES=[
- {v:'3.1',date:'Oct 31, 2026',tag:'Latest',items:['Minecraft 1.21.11 now loads from a single file in the ports repo instead of 3 parts.']},
+ {v:'3.2',date:'Oct 31, 2026',tag:'Latest',items:['Fixed an invisible bar at the bottom of the game window that blocked clicks and stopped the mouse from locking to the game.']},
+ {v:'3.1',date:'Oct 31, 2026',items:['Minecraft 1.21.11 now loads from a single file in the ports repo instead of 3 parts.']},
  {v:'3.0',date:'Oct 31, 2026',items:['Cleaned up and shortened the code.','Fixed the Minecraft loading screen error, the missing splash animations, the panic key in the search box and inside games, and the streak day counting.','Screenshots and recordings now download as real files.']},
  {v:'2.9',date:'Oct 30, 2026',items:['Added Minecraft 1.21.11 WASM to the version list.']},
  {v:'2.8',date:'Oct 30, 2026',items:['Added themes, Retro CRT mode, the FPS counter, tab disguise, the panic key, screenshot and record buttons, and a daily streak.']}];
@@ -700,3 +701,4 @@ on('whats',openLog);on('logx',closeLog);logEl.addEventListener('click',e=>{if(e.
 </script>
 </body>
 </html>
+
