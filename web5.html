@@ -217,7 +217,7 @@ body.playing .bg,body.playing .view,body.playing .dock,body.playing #floaters{di
 #play{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;background:radial-gradient(ellipse 60% 50% at 50% 40%,#1a1a1a,#030303)}
 #play.open{display:flex;animation:viewIn .4s cubic-bezier(.22,1,.36,1) both}
 .stage{position:absolute;inset:0;overflow:hidden;background:#000;contain:strict}
-.stage iframe{width:calc(100%/var(--s,1));height:calc(100%/var(--s,1));border:0;display:block;transform:scale(var(--s,1));transform-origin:0 0}
+.stage iframe{width:calc(100%*var(--s,1));height:calc(100%*var(--s,1));border:0;display:block;transform:scale(var(--u,1));transform-origin:0 0}
 .gstat{position:absolute;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#030303;color:#bbb;transition:opacity .4s}
 .gstat.hide{opacity:0;pointer-events:none}
 .lbox{display:flex;flex-direction:column;align-items:center;width:min(360px,86vw);animation:rise .4s ease-out both}
@@ -228,6 +228,13 @@ body.playing .bg,body.playing .view,body.playing .dock,body.playing #floaters{di
 .lbar i{display:block;height:100%;width:0;border-radius:3px;background:linear-gradient(90deg,var(--mute),var(--accent));transition:width .2s}
 .lmeta{display:flex;justify-content:space-between;align-items:center;width:100%;margin-top:12px;font-size:13px;color:#a0a0a0}
 .ltip{margin-top:14px;min-height:30px;font-size:12px;color:#666;text-align:center}
+.vtitle{font-size:34px;margin-bottom:6px;background:linear-gradient(180deg,#fff 35%,#7a7a7a);-webkit-background-clip:text;background-clip:text;color:transparent}
+#vpick{position:absolute;inset:0;z-index:12;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:20px;background:radial-gradient(ellipse 60% 50% at 50% 40%,#1a1a1a,#030303)}
+#vpick.open{display:flex;animation:viewIn .4s cubic-bezier(.22,1,.36,1) both}
+.vlist{display:flex;flex-direction:column;gap:10px;width:min(320px,86vw)}
+#vpick button{height:50px;border-radius:25px;background:var(--card);border:1px solid var(--line);color:var(--text);font:500 15px Inter,sans-serif;cursor:pointer;transition:background .15s,border-color .15s,color .15s}
+#vpick button:hover{background:var(--line);border-color:var(--accent);color:var(--accent)}
+#vpick .vback{height:40px;margin-top:8px;width:min(320px,86vw);font-size:13px;color:var(--mute);background:none}
 .lwarn{margin-top:10px;max-width:340px;font-size:12px;line-height:1.4;color:#fb923c;text-align:center}
 .lwarn:empty{display:none}
 #pause{position:absolute;inset:0;z-index:65;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.82);opacity:0;visibility:hidden;transition:opacity .4s,visibility .4s}
@@ -364,6 +371,7 @@ kbd{font:600 11px Inter,sans-serif;padding:3px 7px;border-radius:6px;background:
       <div class="row"><div><b>Blob URL Launcher</b><small id="bl-s">Opens this site from a blob: address in a new tab.</small></div><div class="ctl"><button class="btn" id="bl-go">Launch</button></div></div>
       <div class="row"><div><b>Subtexts</b><small>Toggles rotating tagline beneath search bar.</small></div><div class="ctl"><div class="tog" id="subtog" role="switch"></div></div></div>
       <div class="row"><div><b>Performance Mode</b><small>Ultra renders games at 50% size, Max FPS at 75%. Both turn off anti-aliasing and hide CRT in games. Fast keeps full size without anti-aliasing.</small></div><div class="ctl"><select id="t-perf"><option value="ultra">Ultra (peak FPS)</option><option value="max">Max FPS</option><option value="on">Fast</option><option value="off">Off</option></select></div></div>
+      <div class="row"><div><b>Game Zoom</b><small>Zoom out to make games look smaller with more room around them. Higher zoom costs some FPS.</small></div><div class="ctl"><select id="t-zoom"><option value="1">Normal</option><option value="1.25">A bit out</option><option value="1.5">More out</option><option value="2">Far out</option></select></div></div>
       <div class="row"><div><b>WebGL Check</b><small id="glsmall">Needed for 3D web games.</small></div><div class="ctl"><span id="glst"></span></div></div>
     </div>
     <div class="foot"><span>Nebula</span><button class="btn" id="reset">Reset settings</button></div>
@@ -383,6 +391,7 @@ kbd{font:600 11px Inter,sans-serif;padding:3px 7px;border-radius:6px;background:
   <div class="stage">
     <iframe id="gf" allow="fullscreen; autoplay; pointer-lock; clipboard-read; clipboard-write" title="Game"></iframe>
     <div class="gstat" id="gs"><div class="lbox"><div class="licon" id="lic"></div><div class="lname pixel" id="lnm"></div><div class="lbar"><i id="lfill"></i></div><div class="lmeta"><span id="gst">Loading...</span><output id="lpct">0%</output></div><div class="lwarn" id="lwarn"></div><div class="ltip" id="ltip"></div></div></div>
+    <div id="vpick"><div class="pixel vtitle">choose version</div><div class="vlist" id="vlist"></div><button type="button" class="vback" id="vback">Back to games</button></div>
   </div>
   <div id="pause">
     <div id="pbar"><div class="ctr"><div id="clock" class="pixel"></div><div id="sess"></div></div></div>
@@ -447,12 +456,13 @@ function makeIcon(g){const i=document.createElement('span');i.className='ico';i.
 // ---- state & settings ----
 const PAGE1=30,RMAX=6;
 let mode='all',page=1,favs=new Set(ls('nebula-favs',[])),recent=ls('nebula-recent',[]).filter(n=>gm(n));
-const DEF={cur:true,sub:false,perf:'ultra',perfv:2,disguise:'none',panic:true,theme:'nebula',crt:false};
+const DEF={cur:true,sub:false,perf:'ultra',perfv:2,zoom:1.25,disguise:'none',panic:true,theme:'nebula',crt:false};
 let cfg={...DEF,...ls('nebula-settings',{})};
 if(!['off','on','max','ultra'].includes(cfg.perf))cfg.perf=cfg.perf===false?'off':'ultra';
 if(cfg.perfv!==2){if(cfg.perf!=='off')cfg.perf='ultra';cfg.perfv=2}
 const SCALE={max:.75,ultra:.5};
-let bgWake=()=>{};
+if(![1,1.25,1.5,2].includes(cfg.zoom))cfg.zoom=1.25;
+let bgWake=()=>{},curVer='';
 let vol=ls('nebula-vol',1);if(!(vol>=0&&vol<=1))vol=1;
 const day=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 let streak=ls('nebula-streak',{count:1,lastDate:''});
@@ -569,13 +579,16 @@ on('ab-go',()=>{let w=null;try{w=open('about:blank','_blank')}catch(e){}
 on('bl-go',()=>{try{const w=open(URL.createObjectURL(new Blob([SRC],{type:'text/html'})),'_blank');note('bl-s',w?'Launched from a blob: address.':'Pop-up blocked. Allow pop-ups for this site and try again.')}catch(e){note('bl-s','Launch failed: '+e.message)}});
 const T={cur:'t-cur',sub:'subtog',panic:'t-panic',crt:'t-crt'};
 function sync(){for(const k in T)$(T[k]).classList.toggle('on',cfg[k]);
-  $('t-disguise').value=cfg.disguise;$('t-theme').value=cfg.theme;$('t-perf').value=cfg.perf;document.body.classList.toggle('maxperf',!!SCALE[cfg.perf]);$('gf').style.setProperty('--s',SCALE[cfg.perf]||1);root.dataset.theme=cfg.theme;document.body.classList.toggle('crt',cfg.crt);
+  $('t-disguise').value=cfg.disguise;$('t-theme').value=cfg.theme;$('t-perf').value=cfg.perf;document.body.classList.toggle('maxperf',!!SCALE[cfg.perf]);$('t-zoom').value=String(cfg.zoom);applyScale();root.dataset.theme=cfg.theme;document.body.classList.toggle('crt',cfg.crt);
   applyDisguise(panicked?'gdrive':cfg.disguise);updTag();root.classList.toggle('cc',cfg.cur&&FINE);if(!cfg.cur)root.classList.remove('cshow')}
+// game window size: Performance Mode + Game Zoom, except 1.21.11 WASM which always runs at normal size
+function applyScale(){const f=curVer==='1.21.11 WASM'?1:(SCALE[cfg.perf]||1)*cfg.zoom,g=$('gf');g.style.setProperty('--s',f);g.style.setProperty('--u',1/f)}
 const saveCfg=()=>{sv('nebula-settings',cfg);sync()};
 for(const k in T)on(T[k],()=>{cfg[k]=!cfg[k];saveCfg()});
 $('t-disguise').onchange=e=>{cfg.disguise=e.target.value;saveCfg()};
 $('t-theme').onchange=e=>{cfg.theme=e.target.value;saveCfg()};
 $('t-perf').onchange=e=>{cfg.perf=e.target.value;saveCfg()};
+$('t-zoom').onchange=e=>{cfg.zoom=+e.target.value;saveCfg()};
 on('reset',()=>{cfg={...DEF};saveCfg()});
 sync();
 function doPanic(){panicked=!panicked;applyDisguise(panicked?'gdrive':cfg.disguise);if(panicked){if(document.body.classList.contains('playing'))exitGame();show('home')}}
@@ -614,10 +627,11 @@ function showLoad(g,msg){tries=0;stopLoad();gs.style.display='';gs.classList.rem
 function hideLoad(){clearTimeout(loadW);loadW=setTimeout(()=>{clearInterval(loadI);$('lfill').style.width='100%';$('lpct').textContent='100%';$('gst').textContent='Ready!';
   loadW=setTimeout(()=>{gs.classList.add('hide');gf.focus();showHint();setTimeout(()=>{if(gs.classList.contains('hide'))gs.style.display='none'},400)},300)},Math.max(0,MINLOAD-(Date.now()-loadT0)))}
 // Minecraft versions: [file, number of parts]. Split files are downloaded together and joined back into one page; 0 parts means a single file.
-const VERS={"26.3":["ports@main/eaglercraft26-3.html.part",4],"26.2":["ports@main/eaglercraft26-2%5B1%5D.html.part",4],"Voltan 26.2":["mc@main/Voltan-26.2-U2.1.html.part",4],"1.21.11 WASM":["ports@main/1.21.11.html",0]};
+const VERS={"26.3":["ports@main/eaglercraft26-3.html.part",4],"26.2":["ports@main/eaglercraft26-2%5B1%5D.html.part",4],"Voltan 26.2":["mc@main/Voltan-26.2-U2.1.html.part",4],"1.21.11 WASM":["mc@main/1.21loader.html",0]};
 const loadGame=async(b,n,f)=>loadDoc(await new Blob(await Promise.all((n?[...Array(n).keys()].map(i=>i+1):['']).map(x=>fetchAny(mirrors(P+b+x),'blob')))).text(),f);
-function startVer(v,q){if(!q)showLoad(gm('Minecraft'),'Loading Minecraft '+v+'...');gf.onload=hideLoad;
+function startVer(v,q){curVer=v;applyScale();if(!q)showLoad(gm('Minecraft'),'Loading Minecraft '+v+'...');gf.onload=hideLoad;
   loadGame(VERS[v][0],VERS[v][1],gf).catch(()=>setTimeout(()=>{if(stillLoading()&&ver.value===v)startVer(v,true)},retryIn()))}
+$('vlist').replaceChildren(...Object.keys(VERS).map(v=>{const b=document.createElement('button');b.type='button';b.textContent=v;b.onclick=()=>{$('vpick').classList.remove('open');ver.value=v;startVer(v)};return b}));
 // other games: method 0 = fetch + write into about:blank, 1 = blob URL, 2 = srcdoc
 let curG=null,curM=0,curName='',sessT0=0;
 function startUrl(g,m=0,q){curG=g;curM=m;if(!q)showLoad(g,'Loading '+g[0]+'...');gf.onload=hideLoad;gf.removeAttribute('srcdoc');revoke();$('pm').style.display='';
@@ -628,21 +642,21 @@ function startUrl(g,m=0,q){curG=g;curM=m;if(!q)showLoad(g,'Loading '+g[0]+'...')
     if(m===0)loadDoc(h,gf);else if(m===1){blobUrl=URL.createObjectURL(new Blob([patch(h)],{type:'text/html'}));gf.src=blobUrl}else gf.srcdoc=patch(h);
     setTimeout(()=>{if(curG===g&&curM===m&&play.classList.contains('open')&&!alive(gf))startUrl(g,(m+1)%3)},ALIVE_MS)
   }).catch(()=>setTimeout(()=>{if(curG===g&&stillLoading())startUrl(g,(m+1)%3,true)},retryIn()))}
-function openGame(name){pushRecent(name);curName=name;sessT0=Date.now();const g=gm(name),pg=$('pgame');
+function openGame(name){curVer='';applyScale();pushRecent(name);curName=name;sessT0=Date.now();const g=gm(name),pg=$('pgame');
   pg.innerHTML='<div><small>Now playing</small><b></b></div>';pg.querySelector('b').textContent=g[0];pg.prepend(makeIcon(g));
   pause.style.setProperty('--c',g[1]);pause.style.setProperty('--art',art(g));pg.style.setProperty('--c',g[1]);gf.title=name;
   document.querySelector('.pver').style.display=name==='Minecraft'?'':'none';$('pm').style.display='none';play.classList.add('open');document.body.classList.add('playing');
-  if(name==='Minecraft'){curG=null;ver.value='26.3';startVer('26.3')}else startUrl(g)}
+  if(name==='Minecraft'){curG=null;stopLoad();gs.classList.add('hide');gs.style.display='none';gf.onload=null;$('vpick').classList.add('open')}else{$('vpick').classList.remove('open');startUrl(g)}}
 // pause menu
 function hint(h,ms=6000){phint.innerHTML=h;phint.classList.add('show');clearTimeout(hint.t);hint.t=setTimeout(()=>phint.classList.remove('show'),ms)}
 const showHint=()=>hint('Press <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd> for pause menu');
 const closePause=()=>{pause.classList.remove('open');gf.style.display='';gf.focus()};
 function togglePause(){phint.classList.remove('show');pause.classList.contains('open')?closePause():(pause.classList.add('open'),gf.style.display='none')}
-function exitGame(){stopLoad();phint.classList.remove('show');gf.removeAttribute('srcdoc');revoke();closePause();if(document.fullscreenElement)document.exitFullscreen();gf.onload=null;gf.src='about:blank';play.classList.remove('open');document.body.classList.remove('playing');sessT0=0;curName='';curG=null;curHTML='';bgWake()}
-ver.onchange=()=>startVer(ver.value);
-on('pr',closePause);on('px',exitGame);
+function exitGame(){stopLoad();phint.classList.remove('show');gf.removeAttribute('srcdoc');revoke();closePause();if(document.fullscreenElement)document.exitFullscreen();gf.onload=null;gf.src='about:blank';play.classList.remove('open');document.body.classList.remove('playing');sessT0=0;curName='';curG=null;curHTML='';curVer='';applyScale();$('vpick').classList.remove('open');bgWake()}
+ver.onchange=()=>{$('vpick').classList.remove('open');startVer(ver.value)};
+on('pr',closePause);on('px',exitGame);on('vback',exitGame);
 on('pf',()=>document.fullscreenElement?document.exitFullscreen():play.requestFullscreen&&play.requestFullscreen());
-on('prl',()=>{closePause();if(curName==='Minecraft')startVer(ver.value);else if(curG&&curName===curG[0])startUrl(curG,0)});
+on('prl',()=>{closePause();if($('vpick').classList.contains('open'))return;if(curName==='Minecraft')startVer(ver.value);else if(curG&&curName===curG[0])startUrl(curG,0)});
 on('pm',()=>{if(curG){closePause();startUrl(curG,(curM+1)%3)}});
 function flash(id,msg){const sp=$(id).querySelector('span'),o=sp.textContent;sp.textContent=msg;setTimeout(()=>sp.textContent=o,2500)}
 function openCopy(how,id){if(!curHTML)return flash(id,'Not loaded yet');
@@ -674,7 +688,12 @@ navigator.getBattery&&navigator.getBattery().then(b=>{const u=()=>{const p=Math.
 
 // ---- update log ----
 const UPDATES=[
- {v:'3.5',date:'Oct 31, 2026',tag:'Latest',items:['Pause menu is now organized into Audio, Game, Capture and Open in a new tab sections.','New About:Blank and Blob URL buttons in the pause menu open the running game\'s page in a new tab.']},
+ {v:'4.0',date:'Nov 1, 2026',tag:'Latest',items:['Minecraft 1.21.11 WASM now always runs at normal size, ignoring Performance Mode scaling and Game Zoom.']},
+ {v:'3.9',date:'Nov 1, 2026',items:['Minecraft now asks you to choose a version first, then loads it. You can still switch versions later from the pause menu.']},
+ {v:'3.8',date:'Nov 1, 2026',items:['Minecraft 1.21.11 WASM now loads from 1.21loader.html in the mc repo.']},
+ {v:'3.7',date:'Nov 1, 2026',items:['New Game Zoom setting in Settings (Normal, A bit out, More out, Far out). It is set to A bit out by default, so games look a bit more zoomed out.']},
+ {v:'3.6',date:'Nov 1, 2026',items:['Fixed games looking zoomed out in Ultra and Max FPS. The size scaling was backwards: it made the game window bigger instead of smaller, which also cost FPS.']},
+ {v:'3.5',date:'Oct 31, 2026',items:['Pause menu is now organized into Audio, Game, Capture and Open in a new tab sections.','New About:Blank and Blob URL buttons in the pause menu open the running game\'s page in a new tab.']},
  {v:'3.4',date:'Oct 31, 2026',items:['New top Performance level: Ultra renders games at 50% size and is now the default.','Opening the pause menu now really pauses the game window, so it uses no power while paused.','Silenced console logging inside games, which can slow some games down.']},
  {v:'3.3',date:'Oct 31, 2026',items:['Big FPS boost for games: Performance Mode now has Max FPS (renders at 75% size), Fast and Off.','The background animation and clock now stop while you play, so all your computer power goes to the game.','The FPS counter shows the real FPS of the game you are playing.','Removed the blur behind the FPS counter in games and the CRT effect in Max FPS mode.']},
  {v:'3.2',date:'Oct 31, 2026',items:['Fixed an invisible bar at the bottom of the game window that blocked clicks and stopped the mouse from locking to the game.']},
@@ -734,4 +753,3 @@ on('whats',openLog);on('logx',closeLog);logEl.addEventListener('click',e=>{if(e.
 </script>
 </body>
 </html>
-
