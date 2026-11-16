@@ -106,7 +106,7 @@ body[data-view="games"] #games,body[data-view="settings"] #settings{display:bloc
 .seg button{display:flex;align-items:center;gap:7px;height:34px;padding:0 14px;border:0;border-radius:12px;background:none;color:#b98d96;font:600 12.5px Inter,system-ui,sans-serif;cursor:pointer}
 .seg button.on{background:rgba(255,255,255,.08);color:#fff}
 .seg small{font-size:11px;font-weight:500;opacity:.6}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:20px;margin-top:22px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(var(--tile,150px),1fr));gap:20px;margin-top:22px}
 .g{position:relative;aspect-ratio:1;border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,.08);cursor:pointer;transition:transform .18s}
 .g:hover{transform:translateY(-3px)}
 .g:focus-visible{outline:2px solid var(--hot);outline-offset:2px}
@@ -146,6 +146,33 @@ body[data-view="games"] #games,body[data-view="settings"] #settings{display:bloc
 .nx:hover{filter:brightness(1.1)}
 .nx:focus-visible{outline:2px solid #fff;outline-offset:2px}
 .nx .i{width:15px;height:15px}
+/* games toolbar */
+.gh2{margin-bottom:22px}
+.gbar{position:sticky;top:calc(102px + env(safe-area-inset-top,0px));z-index:4;display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:10px;border-radius:20px;background:rgba(24,9,14,.76);border:1px solid rgba(255,140,160,.14);box-shadow:0 12px 34px rgba(0,0,0,.4);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.gbar .gs{flex:1 1 240px;height:42px}
+.gs kbd{flex:none;display:grid;place-items:center;min-width:22px;height:22px;padding:0 6px;border-radius:7px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.05);color:#b98d96;font:600 11px Inter,system-ui,sans-serif}
+.gs:focus-within kbd{display:none}
+.gx{flex:none;display:grid;place-items:center;width:24px;height:24px;border:0;border-radius:8px;background:rgba(255,255,255,.1);color:#f1d6dc;font-size:15px;line-height:1;cursor:pointer}
+.gx:hover{background:rgba(255,255,255,.18)}
+.gbar .seg{grid-column:auto;margin:0;padding:4px;border-radius:14px}
+.gbar .seg button{height:32px}
+.gsel{position:relative}
+.gsel select{height:42px;padding:0 34px 0 14px;border:1px solid rgba(255,255,255,.08);border-radius:12px;background:rgba(255,255,255,.04);color:#e9cdd3;font:600 12.5px Inter,system-ui,sans-serif;appearance:none;-webkit-appearance:none;cursor:pointer}
+.gsel select option{background:#1d0b11;color:#fff}
+.gsel select:hover{background:rgba(255,255,255,.08)}
+.gsel .i{position:absolute;right:11px;top:13px;pointer-events:none;color:#b98d96}
+.zoom{display:flex;gap:2px;padding:3px;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04)}
+.zoom button{width:32px;height:34px;border:0;border-radius:9px;background:none;color:#b98d96;font:700 11.5px Inter,system-ui,sans-serif;cursor:pointer}
+.zoom button:hover{color:#fff}
+.zoom button.on{background:rgba(255,255,255,.12);color:#fff}
+.ibtn{flex:none;display:grid;place-items:center;width:42px;height:42px;border:1px solid rgba(255,255,255,.08);border-radius:12px;background:rgba(255,255,255,.04);color:#e9cdd3;cursor:pointer;transition:background .15s,transform .15s}
+.ibtn:hover{background:rgba(255,255,255,.1);transform:translateY(-1px)}
+.ibtn .i{width:17px;height:17px}
+.gbar .pill{height:42px;padding:0 16px;border-radius:12px;border-color:transparent;background:var(--hot);color:#1a0509;font-weight:700}
+.gbar .pill:hover{background:var(--hot);filter:brightness(1.1)}
+.gbar :is(select,.zoom button,.ibtn,.pill,.gx):focus-visible{outline:2px solid var(--hot);outline-offset:2px}
+.empty{grid-column:1/-1;padding:28px 4px}
+@media (max-width:800px){.gbar{position:static}}
 /* loading screens */
 #boot{position:fixed;inset:0;z-index:50;display:grid;place-items:center;background:radial-gradient(120% 90% at 50% 40%,#1b0a10 0%,#0b0407 70%) #0b0407;transition:opacity .5s ease,transform .5s cubic-bezier(.2,.7,.2,1),visibility 0s .5s;animation:bfail .4s 6s forwards}
 #boot.done{opacity:0;transform:scale(1.04);visibility:hidden;pointer-events:none}
@@ -167,6 +194,28 @@ body.booting :is(main,footer,#nav,.nv){animation-play-state:paused}
 #pnote:empty{display:none}
 .spin{width:44px;height:44px;border-radius:50%;border:3px solid rgba(255,255,255,.1);border-top-color:var(--hot);animation:spin .8s linear infinite}
 @media (prefers-reduced-motion:reduce){.bt .logo,.spin,.bar.ind i{animation:none}}
+/* loading screen v2 */
+@property --r{syntax:'<length-percentage>';inherits:false;initial-value:0%}
+#boot{overflow:hidden;background:radial-gradient(90% 70% at 50% 45%,#240d15 0%,#0d0408 65%,#070204 100%);-webkit-mask-image:radial-gradient(circle at 50% 50%,transparent var(--r),#000 calc(var(--r) + 2px));mask-image:radial-gradient(circle at 50% 50%,transparent var(--r),#000 calc(var(--r) + 2px));transition:opacity .45s ease .3s,visibility 0s .75s}
+#boot.done{opacity:0;transform:none;visibility:hidden;pointer-events:none;animation:bopen .75s cubic-bezier(.65,0,.25,1) forwards}
+@keyframes bopen{to{--r:150%}}
+.bglow{position:absolute;border-radius:50%;filter:blur(70px);opacity:.55;pointer-events:none}
+.bg1{width:46vmax;height:46vmax;left:-12vmax;top:-14vmax;background:radial-gradient(circle,rgba(255,60,100,.55),transparent 65%);animation:bdrift 9s ease-in-out infinite alternate}
+.bg2{width:40vmax;height:40vmax;right:-10vmax;bottom:-16vmax;background:radial-gradient(circle,rgba(190,40,90,.5),transparent 65%);animation:bdrift 11s ease-in-out infinite alternate-reverse}
+@keyframes bdrift{to{transform:translate(6vmax,4vmax) scale(1.15)}}
+#boot .bt{position:relative;z-index:1;gap:18px}
+.bmark{position:relative;display:grid;place-items:center;width:112px;height:112px}
+.ring{position:absolute;inset:0;border-radius:50%;border:1.5px solid rgba(255,100,135,.5);opacity:0;animation:bring 2.4s cubic-bezier(.2,.6,.3,1) infinite}
+.ring.r2{animation-delay:1.2s}
+@keyframes bring{0%{transform:scale(.55);opacity:.7}100%{transform:scale(1.5);opacity:0}}
+.bt .logo{position:relative;width:68px;height:68px}
+#boot .bt b{display:flex;background:none;font-size:2.4rem}
+#boot .bt b span{display:inline-block;background:linear-gradient(180deg,#f78ea3,#dc5f7b);-webkit-background-clip:text;background-clip:text;color:transparent;animation:bletter .6s cubic-bezier(.2,.8,.3,1) backwards;animation-delay:calc(.15s + var(--i) * 60ms)}
+@keyframes bletter{from{opacity:0;transform:translateY(16px);filter:blur(6px)}}
+#boot .bar{width:min(240px,64vw);height:4px;overflow:visible}
+#boot .bar i{box-shadow:0 0 14px rgba(255,92,133,.7);transition:transform .45s cubic-bezier(.2,.7,.2,1)}
+.bmeta{display:flex;justify-content:space-between;width:min(240px,64vw);margin-top:-6px;font-size:12px;color:#b98d96;font-variant-numeric:tabular-nums}
+@media (prefers-reduced-motion:reduce){.ring,.bglow,#boot .bt b span{animation:none}#boot.done{animation:none;transition:opacity .2s}}
 /* game player */
 #player{position:fixed;inset:0;z-index:30;display:flex;flex-direction:column;background:#0c0508;animation:vin .3s cubic-bezier(.2,.7,.2,1)}
 .pbar{display:flex;align-items:center;gap:14px;padding:calc(10px + env(safe-area-inset-top,0px)) 14px 10px}
@@ -220,6 +269,11 @@ body:not([data-view="home"]) #nav::after{animation:none}
 .nx .i{transition:transform .2s}
 .nx:hover .i{transform:translateX(3px)}
 @media (prefers-reduced-motion:reduce){#tour,#tour *{animation:none!important;transition:none!important}}
+.act{display:inline-flex;align-items:center;gap:8px;margin-top:18px;height:40px;padding:0 16px;border:1px solid rgba(255,100,130,.4);border-radius:12px;background:rgba(255,80,110,.14);color:#ffb3c4;font:700 14px Inter,system-ui,sans-serif;cursor:pointer;transition:background .15s,transform .15s}
+.act:hover{background:rgba(255,80,110,.24)}
+.act:active{transform:scale(.97)}
+.act:focus-visible{outline:2px solid var(--hot);outline-offset:2px}
+.tb .act{animation:tup .4s .22s cubic-bezier(.2,.7,.2,1) both}
 .st{max-width:420px;margin-top:6px}
 /* page transitions */
 @keyframes vin{from{opacity:0;transform:translateY(14px) scale(.985)}}
@@ -242,7 +296,7 @@ body.out2 #chrome{opacity:0;transform:translateY(-14px);transition:opacity .17s 
 </style>
 </head>
 <body data-view="home" class="booting">
-<div id="boot" role="status" aria-label="Loading"><div class="bt"><svg class="logo" viewBox="0 0 48 48" aria-hidden="true"><use href="#vault"/></svg><b id="bn">vaulted</b><div class="bar"><i></i></div></div></div>
+<div id="boot" role="status" aria-label="Loading"><i class="bglow bg1"></i><i class="bglow bg2"></i><div class="bt"><div class="bmark"><i class="ring"></i><i class="ring r2"></i><svg class="logo" viewBox="0 0 48 48" aria-hidden="true"><use href="#vault"/></svg></div><b id="bn">vaulted</b><div class="bar"><i></i></div><div class="bmeta"><span id="bmsg">Unlocking the vault…</span><span id="bpct">0%</span></div></div></div>
 <canvas id="bg" aria-hidden="true"></canvas>
 <div class="veil"></div>
 
@@ -293,14 +347,14 @@ body.out2 #chrome{opacity:0;transform:translateY(-14px);transition:opacity .17s 
 </div>
 
 <section class="pg" id="games" aria-label="Games">
- <div class="gh">
-  <div><h2 class="pt">Games</h2><p class="sub">Pick a game and jump right in</p><p class="sub n" id="cnt"></p></div>
-  <div class="gt">
-   <label class="gs"><span data-i="search" style="display:contents"></span><input id="gq" placeholder="Search games" autocomplete="off" spellcheck="false" aria-label="Search games"></label>
-   <button class="pill" id="src">GH vaulted/Games <span data-i="chev" style="display:contents"></span></button>
-   <button class="pill" id="rnd"><span data-i="shuffle" style="display:contents"></span>Random</button>
-  </div>
+ <div class="gh2"><h2 class="pt">Games</h2><p class="sub">Pick a game and jump right in</p><p class="sub n" id="cnt"></p></div>
+ <div class="gbar" id="gbar">
+  <label class="gs"><span data-i="search" style="display:contents"></span><input id="gq" placeholder="Search games" autocomplete="off" spellcheck="false" aria-label="Search games"><button class="gx" id="gclr" aria-label="Clear search" hidden>×</button><kbd>/</kbd></label>
   <div class="seg" id="seg"></div>
+  <div class="gsel"><select id="gsort" aria-label="Sort games"><option value="az">A–Z</option><option value="za">Z–A</option><option value="recent">Recently played</option><option value="fav">Favorites first</option></select><span data-i="chev" style="display:contents"></span></div>
+  <div class="zoom" id="zoom" role="group" aria-label="Tile size"><button data-z="s" aria-label="Small tiles">S</button><button data-z="m" aria-label="Medium tiles">M</button><button data-z="l" aria-label="Large tiles">L</button></div>
+  <button class="ibtn" id="gblob" title="Open in Blob URL" aria-label="Open in Blob URL"><span data-i="ext" style="display:contents"></span></button>
+  <button class="pill" id="rnd"><span data-i="shuffle" style="display:contents"></span>Random</button>
  </div>
  <div class="grid" id="grid"></div>
 </section>
@@ -308,7 +362,7 @@ body.out2 #chrome{opacity:0;transform:translateY(-14px);transition:opacity .17s 
 <section class="pg" id="settings" aria-label="Settings">
  <h2 class="pt">Settings</h2><p class="sub">Theme and tab cloak save on this device.</p>
  <div class="fx st" id="sfx"></div>
- <button class="pill" id="rt" style="margin-top:22px">Replay tour</button>
+ <div class="gt" style="margin-top:22px;flex-wrap:wrap"><button class="pill" id="blobbtn"><span data-i="ext" style="display:contents"></span>Open in Blob URL</button><button class="pill" id="rt">Replay tour</button></div>
 </section>
 
 <footer><span id="fl"></span><span class="c" id="fc"></span><span id="fr"></span></footer>
@@ -320,6 +374,7 @@ body.out2 #chrome{opacity:0;transform:translateY(-14px);transition:opacity .17s 
 const CONFIG={name:'vaulted',searchUrl:'https://duckduckgo.com/?q=',lights:true,online:8,peak:16,footer:'Made with <3',version:'v1.0.0',maker:'b'};
 
 const $=s=>document.querySelector(s);
+const BOOT=$('#boot').outerHTML;
 
 /* ---- text, clock, greeting ---- */
 document.title=CONFIG.name;
@@ -456,8 +511,8 @@ $('#bar').onclick=e=>{
 nav.addEventListener('pointerdown',()=>nav.classList.add('open'));
 document.addEventListener('pointerdown',e=>{if(!nav.contains(e.target))nav.classList.remove('open')});
 
-/* games: placeholder tiles, add your own titles here */
-const GAMES=['-3','-b','1','1 on 1 Soccer','1v1 (fixed)','3D Bowling','8 Ball Classic','8 Ball Pool','10 Minutes Till Dawn','12 Mini Battles','20 Minutes Till Dawn','30','60 Seconds, Webport','99 Balls','2048','2048 Merge Run','A Bite at Freddy’s','A Dance of Fire and Ice','A Difficult Game About Climbing','A Game About Feeding A Blackhole','A Small World Cup','Abandoned','Academytale, Webport','Achievement Unlocked','Achievement Unlocked 2','Achievement Unlocked 3','ADOFAI','AdVenture Capitalist','Ages of Conflict','Amanda the Adventurer'];
+/* games: every entry in SRC (below) gets a tile once it has an html source */
+const GAMES=[];
 /* one line per game: title -> URL of its html file */
 const SRC={
  '-b':'https://cdn.jsdelivr.net/gh/boibn/g@main/-b.html',
@@ -467,6 +522,7 @@ const SRC={
 const NOTE={
  '1v1 (fixed)':'this game has been fixed and unblock*d by “vaulted”. since its been fixed its now working and online features are now working. thx to myself duh...'
 };
+GAMES.push(...Object.keys(SRC));
 
 /* game player: fetches the game's html and runs it in a full-screen frame */
 function play(g){
@@ -485,34 +541,42 @@ function play(g){
   .catch(()=>{o.hidden=true;f.srcdoc='';toast('Couldn’t load “'+g+'”. Check the link or your connection.')});
 }
 
-const fav=new Set(LS.get('fav',[])),rec=LS.get('rec',[]);let flt='all',qry='';
+const fav=new Set(LS.get('fav',[])),rec=LS.get('rec',[]);let flt='all',qry='',srt=LS.get('sort','az'),zoom=LS.get('zoom','m');
+const SORTS={az:(a,b)=>a.localeCompare(b),za:(a,b)=>b.localeCompare(a),recent:(a,b)=>(rec.indexOf(a)+1||99)-(rec.indexOf(b)+1||99),fav:(a,b)=>fav.has(b)-fav.has(a)||a.localeCompare(b)};
+const TILE={s:118,m:150,l:210};
+function launch(g){rec.splice(0,rec.length,g,...rec.filter(x=>x!==g).slice(0,19));LS.set('rec',rec);drawGames();play(g)}
 const esc=s=>s.replace(/[&<>"]/g,c=>'&#'+c.charCodeAt(0)+';');
 function visible(){
  const a=flt==='fav'?GAMES.filter(g=>fav.has(g)):flt==='rec'?rec.filter(g=>GAMES.includes(g)):GAMES,q=qry.trim().toLowerCase();
- return q?a.filter(g=>g.toLowerCase().includes(q)):a;
+ return [...(q?a.filter(g=>g.toLowerCase().includes(q)):a)].sort(SORTS[srt]||SORTS.az);
 }
 function drawGames(){
  const a=visible();
  $('#cnt').textContent=a.length+' of '+GAMES.length;
- $('#seg').innerHTML=[['all','games','All',GAMES.length],['fav','star','Favorites',fav.size],['rec','clock','Recent',rec.length]].map(([k,i,l,n])=>`<button data-f="${k}" class="${flt===k?'on':''}">${ic(i)}<span>${l}</span><small>${n}</small></button>`).join('');
+ $('#seg').innerHTML=[['all','games','All',GAMES.length],['fav','star','Favorites',GAMES.filter(g=>fav.has(g)).length],['rec','clock','Recent',rec.filter(g=>GAMES.includes(g)).length]].map(([k,i,l,n])=>`<button data-f="${k}" class="${flt===k?'on':''}">${ic(i)}<span>${l}</span><small>${n}</small></button>`).join('');
  $('#grid').innerHTML=a.map((g,n)=>{let h=0;for(const c of g)h=(h*31+c.charCodeAt(0))%360;
-  return `<div class="g" tabindex="0" role="button" data-g="${esc(g)}" style="--i:${n};background:linear-gradient(155deg,hsl(${h} 68% 50%),hsl(${(h+45)%360} 60% 20%))"><div class="art">${esc(g.trim()[0].toUpperCase())}</div><div class="ov"></div><div class="tt">${esc(g)}</div><div class="ac"><button data-a="dl" aria-label="Download ${esc(g)}">${ic('dl')}</button><button data-a="fav" aria-label="Favorite ${esc(g)}" class="${fav.has(g)?'on':''}">${ic('star')}</button></div></div>`}).join('')||'<p class="sub">No games found.</p>';
+  return `<div class="g" tabindex="0" role="button" data-g="${esc(g)}" style="--i:${n};background:linear-gradient(155deg,hsl(${h} 68% 50%),hsl(${(h+45)%360} 60% 20%))"><div class="art">${esc(g.trim()[0].toUpperCase())}</div><div class="ov"></div><div class="tt">${esc(g)}</div><div class="ac"><button data-a="dl" aria-label="Download ${esc(g)}">${ic('dl')}</button><button data-a="fav" aria-label="Favorite ${esc(g)}" class="${fav.has(g)?'on':''}">${ic('star')}</button></div></div>`}).join('')||'<p class="sub empty">'+(qry.trim()?'No games match your search.':({fav:'No favorites yet. Tap the star on a game to add it.',rec:'Nothing played yet.'}[flt]||'No games found.'))+'</p>';
+ $('#grid').style.setProperty('--tile',TILE[zoom]+'px');
+ document.querySelectorAll('#zoom button').forEach(b=>b.classList.toggle('on',b.dataset.z===zoom));
+ $('#gsort').value=srt;$('#gclr').hidden=!qry;
 }
 $('#grid').onclick=e=>{
  const el=e.target.closest('.g');if(!el)return;const g=el.dataset.g,b=e.target.closest('[data-a]');
  if(b&&b.dataset.a==='fav'){fav.has(g)?fav.delete(g):fav.add(g);LS.set('fav',[...fav]);return drawGames()}
  if(b)return toast('Downloads aren’t built yet');
- rec.splice(0,rec.length,g,...rec.filter(x=>x!==g).slice(0,19));LS.set('rec',rec);
- drawGames();SRC[g]?play(g):toast('No game source is connected for “'+g+'” yet');
+ launch(g);
 };
 $('#grid').onkeydown=e=>{if(e.key==='Enter'&&e.target.classList.contains('g'))e.target.click()};
 $('#seg').onclick=e=>{const b=e.target.closest('[data-f]');if(b){flt=b.dataset.f;drawGames()}};
 $('#gq').oninput=e=>{qry=e.target.value;drawGames()};
-$('#src').onclick=()=>toast('Game sources aren’t built yet');
+$('#gclr').onclick=()=>{qry='';$('#gq').value='';drawGames();$('#gq').focus()};
+$('#gsort').onchange=e=>{srt=e.target.value;LS.set('sort',srt);drawGames()};
+$('#zoom').onclick=e=>{const b=e.target.closest('[data-z]');if(b){zoom=b.dataset.z;LS.set('zoom',zoom);drawGames()}};
+$('#gblob').onclick=openBlob;
 $('#rnd').onclick=()=>{
  const t=[...document.querySelectorAll('.g')];if(!t.length)return toast('No games to pick from');
  const el=t[Math.random()*t.length|0];el.scrollIntoView({block:'center',behavior:'smooth'});
- el.classList.add('pop');setTimeout(()=>el.classList.remove('pop'),1600);
+ el.classList.add('pop');setTimeout(()=>{el.classList.remove('pop');launch(el.dataset.g)},700);
 };
 setView('home');
 
@@ -545,14 +609,15 @@ applyCloak(LS.get('cloak','none'));
 const STEPS=[
  {i:'spark',t:()=>`No longer Nebula, but still made by ${CONFIG.maker}`,b:'A browser, a completely reimagined UI, and tons of games in one tab. Take 30 seconds to get comfy.'},
  {i:'palette',t:()=>'Make it yours',b:'Pick a theme, or make a custom one. While you’re there, add a recovery email (can be your school one) on your profile so you never get locked out.',f:1},
- {i:'check',t:()=>'You’re all set',b:'Press / to search from anywhere, and hover the top edge of any page to bring the menu back. You can change your theme and tab cloak in Settings.'}
+ {i:'ext',t:()=>'Open it in a Blob URL',b:`Want ${CONFIG.name} running from a blob: link instead of its usual address? One click opens a copy in a new tab. You can do it again anytime from Settings.`,a:1},
+ {i:'check',t:()=>'You’re all set',b:'Press / to search from anywhere, and hover the top edge of any page to bring the menu back. You can change your tab cloak or reopen the Blob URL in Settings.'}
 ];
 let ti=0;
 function tour(i){
  ti=i;const s=STEPS[i],last=i===STEPS.length-1,tc=$('#tour .tc'),was=$('#tour').hidden?0:tc.getBoundingClientRect().height;
  tc.style.height='';tc.style.transition='';tc.classList.remove('lv');$('#tour').hidden=false;
  tc.innerHTML=`<div class="th"><div class="dots">${STEPS.map((_,k)=>`<i class="${k===i?'on':''}"></i>`).join('')}</div><button class="tx" data-t="skip" aria-label="Close tour">${ic('x')}</button></div>`
- +`<div class="tb"><div class="ti">${ic(s.i)}</div><h3 id="tt">${s.t()}</h3><p>${s.b}</p>${s.f?'<div class="fx">'+fields()+'</div>':''}</div>`
+ +`<div class="tb"><div class="ti">${ic(s.i)}</div><h3 id="tt">${s.t()}</h3><p>${s.b}</p>${s.a?'<button class="act" data-t="blob">'+ic('ext')+'Open in Blob URL</button>':''}${s.f?'<div class="fx">'+fields()+'</div>':''}</div>`
  +`<div class="tf"><button class="sk" data-t="skip">Skip tour</button><button class="nx" data-t="next">${last?'Get started':'Next'} ${ic('fwd')}</button></div>`;
  tc.querySelector('.nx').focus({preventScroll:true});
  if(was&&!RMq()){ /* morph the card to its new height */
@@ -570,6 +635,7 @@ function endTour(){
 $('#tour').onclick=e=>{
  const a=e.target.closest('[data-t]');
  if(a){
+  if(a.dataset.t==='blob')return openBlob();
   if(a.dataset.t!=='next'||ti>=STEPS.length-1)return endTour();
   const tc=$('#tour .tc');if(RMq())return tour(ti+1);
   if(tc.classList.contains('lv'))return;
@@ -579,18 +645,49 @@ $('#tour').onclick=e=>{
 };
 addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#tour').hidden)endTour()});
 $('#rt').onclick=()=>tour(0);
+$('#blobbtn').onclick=openBlob;
+/* ---- open this page from a blob: URL ---- */
+async function pageHTML(){
+ if(/^(https?|blob):$/.test(location.protocol)){
+  try{const r=await fetch(location.href);if(r.ok)return await r.text()}catch(e){}
+ }
+ /* fallback (e.g. opened from disk): rebuild a clean copy of the live page */
+ const c=document.documentElement.cloneNode(true),all=s=>c.querySelectorAll(s);
+ all('[data-i],#tabs,#grid,#seg,#sfx,#lights,#tour .tc').forEach(e=>{e.innerHTML=''});
+ const nv=c.querySelector('#nav');nv.innerHTML='';nv.removeAttribute('class');
+ const ts=c.querySelector('#toast');ts.textContent='';ts.removeAttribute('class');
+ c.querySelector('#tour').hidden=true;
+ all('#player,link[rel=icon]').forEach(e=>e.remove());
+ c.removeAttribute('style');c.removeAttribute('class');
+ const b=c.querySelector('body');b.className='booting';b.dataset.view='home';b.removeAttribute('style');
+ if(!c.querySelector('#boot'))b.insertAdjacentHTML('afterbegin',BOOT);
+ return '<!DOCTYPE html>\n'+c.outerHTML;
+}
+async function openBlob(){
+ const w=window.open('','_blank');
+ if(!w){toast('Popup blocked. Allow popups for this site and try again.');return}
+ try{
+  const html=await pageHTML();
+  w.location.replace(URL.createObjectURL(new Blob([html],{type:'text/html'})));
+ }catch(e){w.close();toast('Couldn’t open the Blob URL.')}
+}
+
 /* ---- loading screen: shows until fonts and the page finish loading, then fades out ---- */
 (function(){
- const boot=$('#boot'),bar=boot.querySelector('.bar i'),t0=performance.now(),min=RMq()?150:1000;
- const set=p=>{bar.style.transform='scaleX('+p+')'};
- set(.3);setTimeout(()=>set(.65),300);
+ const boot=$('#boot'),bn=$('#bn'),bar=boot.querySelector('.bar i'),pct=$('#bpct'),msg=$('#bmsg'),t0=performance.now(),min=RMq()?150:1600;
+ bn.innerHTML=[...bn.textContent].map((c,i)=>`<span style="--i:${i}">${esc(c)}</span>`).join('');
+ const MSG=['Unlocking the vault…','Loading games…','Polishing the UI…','Welcome'];
+ let target=0,shown=0,live=true;
+ const set=p=>{target=p;bar.style.transform='scaleX('+p+')';msg.textContent=MSG[p>=1?3:p>.66?2:p>.33?1:0]};
+ set(.12);const crawl=setInterval(()=>set(Math.min(.9,target+.07)),220);
+ (function tick(){shown+=(target-shown)*.14;pct.textContent=Math.round(shown*100)+'%';if(live)requestAnimationFrame(tick)})();
  const loaded=new Promise(r=>document.readyState==='complete'?r():addEventListener('load',r,{once:true}));
  Promise.race([Promise.all([document.fonts?document.fonts.ready:0,loaded]),new Promise(r=>setTimeout(r,2500))]).then(()=>{
-  set(1);
+  clearInterval(crawl);set(1);
   setTimeout(()=>{
    boot.classList.add('done');document.body.classList.remove('booting');
-   setTimeout(()=>{boot.remove();if(!LS.get('toured',0))tour(0)},RMq()?0:520);
-  },Math.max(350,min-(performance.now()-t0)));
+   setTimeout(()=>{live=false;boot.remove();if(!LS.get('toured',0))tour(0)},RMq()?0:800);
+  },Math.max(450,min-(performance.now()-t0)));
  });
 })();
 
@@ -604,7 +701,7 @@ function go(){
 }
 $('#go').onclick=go;
 q.addEventListener('keydown',e=>{if(e.key==='Enter')go()});
-addEventListener('keydown',e=>{if(e.key==='/'&&document.activeElement!==q){e.preventDefault();q.focus()}});
+addEventListener('keydown',e=>{const t=view==='games'?$('#gq'):q;if(e.key==='/'&&document.activeElement!==t&&!/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName)){e.preventDefault();t.focus()}});
 
 /* ---- holiday lights around the search bar ---- */
 function lights(){
