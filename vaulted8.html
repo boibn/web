@@ -477,13 +477,31 @@ body.haswin #wgt{opacity:0}
 }
 #w-game-alt [id^="pframe2"]{display:none!important}
 #w-game-alt [id^="pload"]{
+ position:absolute;
+ left:0;
+ right:0;
+ bottom:0;
+ top:0;
+ z-index:2;
+ display:flex;
+ flex-direction:column;
+ align-items:center;
+ justify-content:center;
+ gap:18px;
  inset:0;
  margin:0;
  border-radius:0;
  background:rgba(8,10,18,.82);
+ color:#d5d9e8;
+ font-size:14px;
  backdrop-filter:blur(12px);
  -webkit-backdrop-filter:blur(12px);
 }
+#w-game-alt [id^="pload"].off{
+ display:none!important;
+}
+#w-game-alt [id^="pnote"]{max-width:min(440px,86vw);margin:6px 0 0;padding:12px 16px;border-radius:14px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.22);color:#cfcfcf;line-height:1.55;text-align:center}
+#w-game-alt [id^="pnote"]:empty{display:none}
 #w-game:fullscreen{left:0!important;top:0!important;width:100%!important;height:100%!important;border:0;border-radius:0}
 #w-game.pseudo{position:fixed!important;inset:0!important;left:0!important;top:0!important;right:0!important;bottom:0!important;width:auto!important;height:auto!important;z-index:75!important;border:0;border-radius:0}
 /* layering over the old page chrome */
@@ -1017,14 +1035,11 @@ function hideApp(id){
 function closeApp(id){
  const w=winEl(id);if(!w)return;
  if(id==='game')stopGame();
- if(id==='game-alt'){
-  clearFrame(w.querySelector('iframe'));
-  w.classList.remove('max','full','pseudo');
-  if(document.fullscreenElement===w)document.exitFullscreen?.();
- }
+ if(id==='game-alt')stopAltGameWindow();
  w.hidden=true;w.classList.remove('max');delete OPEN[id];
  if(curApp===id)curApp='';
  syncDock();
+ syncPlayingState();
 }
 
 /* start menu */
@@ -1176,6 +1191,62 @@ function altStop(){
 }
 let altWindowHTML='';
 let altWindowBusy=false;
+let altWindowLoadId=0;
+function altWindowParts(w){
+ const f=w?.querySelector('iframe');
+ return {f,loading:w?.querySelector('[id^="pload"]')};
+}
+function stopAltGameWindow(){
+ const w=$('#w-game-alt');
+ if(!w)return;
+ altWindowLoadId++;
+ altWindowBusy=false;
+ const {f,loading}=altWindowParts(w);
+ if(loading){loading.classList.add('off');loading.hidden=true}
+ if(f){f.onload=null;f.src='about:blank';f.removeAttribute('srcdoc')}
+ w.classList.remove('max','full','pseudo');
+ if(document.fullscreenElement===w)document.exitFullscreen?.();
+ syncPlayingState();
+}
+function loadAltWindow(w,refresh=false){
+ const {loading}=altWindowParts(w);
+ let f=resetFrame(w?.querySelector('iframe'));
+ if(!f)return;
+ const loadId=++altWindowLoadId;
+ if(loading){
+  loading.hidden=false;
+  loading.classList.remove('off');
+  const label=loading.querySelector('b');
+  if(label)label.textContent='Geometry Dash - Alt';
+ }
+ const hideLoading=()=>{
+  if(loadId!==altWindowLoadId)return;
+  if(loading){loading.classList.add('off');loading.hidden=true}
+ };
+ const start=html=>{
+  if(loadId!==altWindowLoadId||w.hidden)return;
+  f.onload=()=>{if(loadId!==altWindowLoadId)return;boostDoc(f);hideLoading()};
+  runHTML(f,html);
+  setTimeout(hideLoading,500);
+ };
+ if(altWindowHTML&&!refresh){start(altWindowHTML);return}
+ altWindowBusy=true;
+ fetch(GDALT,{cache:refresh?'reload':'default'}).then(r=>{
+  if(!r.ok)throw new Error('HTTP '+r.status);
+  return r.text();
+ }).then(t=>{
+  if(loadId!==altWindowLoadId)return;
+  altWindowHTML=boost(t);
+  altWindowBusy=false;
+  start(altWindowHTML);
+ }).catch(error=>{
+  if(loadId!==altWindowLoadId)return;
+  altWindowBusy=false;
+  hideLoading();
+  toast('Couldn’t refresh the alt Geometry Dash build.');
+  console.error('Alt Geometry Dash failed to load:',error);
+ });
+}
 function openAltGameWindow(){
  let w=$('#w-game-alt');
  if(!w){
@@ -1204,36 +1275,11 @@ function openAltGameWindow(){
    else w.classList.add('pseudo');
   };
   if(fsx)fsx.onclick=()=>{if(document.fullscreenElement)document.exitFullscreen?.();w.classList.remove('pseudo','full')};
-  if(prl)prl.onclick=()=>{
-   if(!altWindowHTML)return;
-   const loading=f.parentElement.querySelector('[id^="pload"]');
-   if(loading)loading.classList.remove('off');
-   f.onload=()=>{boostDoc(f);loading?.classList.add('off')};
-   runHTML(f,altWindowHTML);
-   setTimeout(()=>loading?.classList.add('off'),350);
-  };
-
-  altWindowBusy=true;
-  if(altWindowHTML){
-   const loading=w.querySelector('[id^="pload"]');
-   f.onload=()=>{boostDoc(f);loading?.classList.add('off')};
-   runHTML(f,altWindowHTML);
-   setTimeout(()=>loading?.classList.add('off'),350);
-   altWindowBusy=false;
-  }
-  else{
-   const loadingBar=w.querySelector('[id^="pload"]');if(loadingBar)loadingBar.querySelector('b').textContent='Geometry Dash - Alt';
-   fetch(GDALT).then(r=>{if(!r.ok)throw 0;return r.text()}).then(t=>{
-    altWindowHTML=boost(t);
-    const loading=w.querySelector('[id^="pload"]');
-    f.onload=()=>{boostDoc(f);loading?.classList.add('off')};
-    runHTML(f,altWindowHTML);altWindowBusy=false;
-    setTimeout(()=>loading?.classList.add('off'),350);
-   }).catch(()=>{altWindowBusy=false;toast('Couldn’t load the alt Geometry Dash build.')});
-  }
+  if(prl)prl.onclick=()=>loadAltWindow(w,true);
  }
  if(!OPEN['game-alt']){OPEN['game-alt']=1;placeWin(w,'game-alt')}
  w.hidden=false;w.classList.remove('min');focusWin('game-alt');
+ loadAltWindow(w);
  toast('Alt Geometry Dash opened in a new window');
 }
 function altToggle(){
@@ -1242,10 +1288,18 @@ function altToggle(){
 
 /* every game runs in an about:blank document we write to, so the refresh button can rebuild it */
 let lastHTML='',lastURL='';
+let currentGame='',gameLoadId=0;
 function runHTML(f,html){
  f.removeAttribute('srcdoc');
  const d=f.contentDocument;if(!d||!html)return;
  d.open();d.write(html);d.close();
+}
+function resetFrame(f){
+ if(!f)return null;
+ const fresh=f.cloneNode(false);
+ fresh.onload=null;
+ f.replaceWith(fresh);
+ return fresh;
 }
 function clearFrame(f){
  try{const d=f&&f.contentDocument;if(d){d.open();d.write('');d.close()}}catch{}
@@ -1253,21 +1307,27 @@ function clearFrame(f){
 }
 function refreshGame(){
  const o=winEl('game');if(!o||o.hidden)return;
- if(gdAltOn){if(!altHTML)return;const a=$('#pframe2');a.onload=()=>boostDoc(a);runHTML(a,altHTML);return}
- const f=$('#pframe');
- if(lastURL){f.onload=()=>boostDoc(f);f.src=lastURL}
- else if(lastHTML){f.onload=()=>boostDoc(f);runHTML(f,lastHTML)}
+ if(gdAltOn){altToggle();return}
+ if(currentGame)startGame(currentGame,true);
 }
 
 /* games run in a window; both frames are about:blank documents so refresh can rebuild them */
+function syncPlayingState(){
+ const primary=winEl('game'),alternate=winEl('game-alt');
+ document.body.classList.toggle('playing',!!((primary&&!primary.hidden)||(alternate&&!alternate.hidden)));
+}
 function stopGame(){
  const w=winEl('game');
+ gameLoadId++;
+ clearTimeout(play.t);
  if(w&&document.fullscreenElement===w)document.exitFullscreen?.();
  if(w)w.classList.remove('full','pseudo');
  altStop();
- clearFrame($('#pframe'));clearFrame($('#pframe2'));
- lastHTML='';lastURL='';document.body.classList.remove('playing');
+ const frame=$('#pframe'),altFrameEl=$('#pframe2');
+ for(const f of [frame,altFrameEl])if(f){f.onload=null;f.removeAttribute('srcdoc');f.src='about:blank'}
+ lastHTML='';lastURL='';currentGame='';
  $('#pload').classList.remove('off');$('#pnote').textContent='';
+ syncPlayingState();
 }
 function openGame(){
  const w=winEl('game');if(!w)return;
@@ -1301,27 +1361,35 @@ let exitGameFS=()=>{};
 
 /* open a game: same window every time, loading screen until it paints */
 function play(g){
- const o=winEl('game'),f=$('#pframe');if(!o)return;
+ return startGame(g,false);
+}
+function startGame(g,forceRefresh){
+ const o=winEl('game');let f=$('#pframe');if(!o)return;
  openGame();
  $('#ptitle').textContent=g;
  altStop();$('#palt').hidden=g!=='Geometry Dash';lastHTML='';lastURL='';
+ currentGame=g;
+ const loadId=++gameLoadId;
  const L=$('#pload'),bar=L.querySelector('.bar'),fill=bar.querySelector('i');
  bar.classList.add('ind');fill.style.transform='';
  L.classList.remove('off');L.querySelector('b').textContent=g;$('#pnote').textContent=NOTE[g]||'';
- document.body.classList.add('playing');
- f.onload=null;clearFrame(f);clearTimeout(play.t);
+ syncPlayingState();
+ f=resetFrame(f);clearTimeout(play.t);
  play.t=setTimeout(()=>L.classList.add('off'),8000);
- if(DL[g])return loadParts(g,DL[g]);
- fetch(SRC[g]).then(r=>{if(!r.ok)throw 0;return r.text()}).then(t=>{
-  if(o.hidden)return;
+ if(DL[g]){
+  if(forceRefresh&&joined[g]){URL.revokeObjectURL(joined[g]);delete joined[g]}
+  return loadParts(g,DL[g],loadId,forceRefresh);
+ }
+ fetch(SRC[g],{cache:forceRefresh?'reload':'default'}).then(r=>{if(!r.ok)throw 0;return r.text()}).then(t=>{
+  if(o.hidden||loadId!==gameLoadId)return;
   lastHTML=boost(t);f.onload=()=>{boostDoc(f);fadeLoad()};runHTML(f,lastHTML);
- }).catch(()=>{stopGame();closeApp('game');toast('Couldn\u2019t load \u201c'+g+'\u201d. Check the link or your connection.')});
+ }).catch(()=>{if(loadId===gameLoadId){stopGame();closeApp('game');toast('Couldn\u2019t load \u201c'+g+'\u201d. Check the link or your connection.')}});
 }
 
 /* split games: fetch every part, join them in memory, play the result in the frame.
    nothing touches the disk, and a joined copy is reused if you open the game again. */
 const MB=n=>(n/1048576).toFixed(1)+' MB',joined={};
-async function loadParts(g,d){
+async function loadParts(g,d,loadId,forceRefresh=false){
  const o=winEl('game'),f=$('#pframe'),L=$('#pload'),bar=L.querySelector('.bar'),fill=bar.querySelector('i');
  L.classList.remove('off');L.querySelector('b').textContent=g;bar.classList.remove('ind');fill.style.transform='scaleX(0)';
  const t0=Date.now();
@@ -1329,14 +1397,14 @@ async function loadParts(g,d){
  try{
   let url=joined[g];
   if(!url){
-   const res=await Promise.all(Array.from({length:d.parts},(_,i)=>fetch(d.base+(i+1)).then(r=>{if(!r.ok)throw 0;return r})));
+   const res=await Promise.all(Array.from({length:d.parts},(_,i)=>fetch(d.base+(i+1),{cache:forceRefresh?'reload':'default'}).then(r=>{if(!r.ok)throw 0;return r})));
    const total=res.reduce((t,r)=>t+(+r.headers.get('content-length')||0),0)||d.size;
    const chunks=[];let got=0;
    for(let i=0;i<res.length;i++){
     const rd=res[i].body.getReader();
     for(;;){
      const q=await rd.read();if(q.done)break;
-     if(o.hidden)return;
+     if(o.hidden||loadId!==gameLoadId)return;
      chunks.push(q.value);got+=q.value.length;
      fill.style.transform='scaleX('+Math.min(1,got/total)+')';
      $('#pnote').textContent=MB(got)+' of '+MB(total)+' · part '+(i+1)+' of '+d.parts;
@@ -1344,13 +1412,13 @@ async function loadParts(g,d){
    }
    url=joined[g]=URL.createObjectURL(new Blob(chunks,{type:'text/html'}));
   }
-  if(o.hidden)return;
+  if(o.hidden||loadId!==gameLoadId)return;
   $('#pnote').textContent='';
   lastHTML='';lastURL=url;
   f.onload=()=>{boostDoc(f);fadeLoad()};
   f.removeAttribute('srcdoc');f.src=url;
  }catch{
-  stopGame();closeApp('game');toast('Couldn’t load “'+g+'”. Check the link or your connection.');
+  if(loadId===gameLoadId){stopGame();closeApp('game');toast('Couldn’t load “'+g+'”. Check the link or your connection.')}
  }
 }
 
