@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minimal Button</title>
+    <!-- Load Tailwind CSS for clean, responsive styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Inter font for modern typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen flex flex-col items-center justify-center p-4 selection:bg-indigo-500 selection:text-white transition-colors duration-300">
+
+    <!-- Main Container centered on screen -->
+    <main class="flex flex-col items-center justify-center space-y-6">
+        
+        <!-- Primary Interactive Button -->
+        <button 
+            id="actionButton" 
+            type="button"
+            class="px-8 py-4 bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white font-medium text-lg rounded-2xl shadow-lg shadow-indigo-500/25 hover:shadow-xl hover:shadow-indigo-500/30 transform hover:-translate-y-0.5 active:translate-y-0 active:scale-95 transition-all duration-150 focus:outline-none focus:ring-4 focus:ring-indigo-500/40 select-none cursor-pointer"
+        >
+            Click Me
+        </button>
+
+        <!-- Subtle Click Feedback Status -->
+        <p id="statusText" class="text-sm font-medium text-slate-500 dark:text-slate-400 h-5 transition-opacity duration-200 opacity-0">
+            Clicked 0 times
+        </p>
+
+    </main>
+
+    <script>
+        // Wait for the DOM to be fully loaded before attaching event listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                const button = document.getElementById('actionButton');
+                const statusText = document.getElementById('statusText');
+                let clickCount = 0;
+
+                if (!button || !statusText) {
+                    throw new Error('Required DOM elements not found.');
+                }
+
+                // Handle button click / tap interaction
+                button.addEventListener('click', () => {
+                    clickCount++;
+                    
+                    // Update button label briefly for tactile confirmation
+                    button.textContent = 'Clicked!';
+                    
+                    // Reveal and update subtle counter text
+                    statusText.textContent = `Clicked ${clickCount} ${clickCount === 1 ? 'time' : 'times'}`;
+                    statusText.classList.remove('opacity-0');
+                    statusText.classList.add('opacity-100');
+
+                    // Reset button text smoothly after a short delay
+                    clearTimeout(button.resetTimeout);
+                    button.resetTimeout = setTimeout(() => {
+                        button.textContent = 'Click Me';
+                    }, 400);
+                });
+            } catch (error) {
+                console.error('Error initializing button interaction:', error);
+            }
+        });
+    </script>
+</body>
+</html>
